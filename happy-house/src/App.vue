@@ -1,5 +1,24 @@
 <template>
-  <div id="app"></div>
+  <div id="app">
+    <HeaderNavbar />
+    <router-view />
+  </div>
 </template>
 
-<style></style>
+<script type="module">
+import HeaderNavbar from "@/components/common/HeaderNavbar.vue";
+
+export default {
+  name: "App",
+  components: {
+    HeaderNavbar,
+  },
+};
+</script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+</style>
