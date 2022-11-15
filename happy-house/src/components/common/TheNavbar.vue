@@ -2,7 +2,7 @@
   <header>
     <!-- a -> router-link -->
     <div>
-      <a class="logo navbar-menus">HappyHouse</a>
+      <router-link to="/" class="logo navbar-menus">HappyHouse</router-link>
     </div>
     <div>
       <a class="navbar-menus">실거래가조회</a>

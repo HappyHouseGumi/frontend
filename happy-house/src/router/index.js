@@ -1,9 +1,16 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import AppMain from "@/views/AppMain.vue";
 
 Vue.use(VueRouter);
 
-const routes = [];
+const routes = [
+  {
+    path: "/",
+    name: "main",
+    component: AppMain,
+  },
+];
 
 const router = new VueRouter({
   mode: "history",
