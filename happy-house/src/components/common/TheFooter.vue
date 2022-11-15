@@ -1,14 +1,14 @@
 <template>
   <footer>
     <div class="wrapper">
+      <a href="https://github.com/HappyHouseGumi" target="_blank"
+        ><b-icon icon="github" font-scale="1.5" variant="dark"></b-icon
+      ></a>
       <a
         href="https://www.notion.so/ssafys/6d4a924e1b7543849596d770bf10f6f2"
         target="_blank"
-        ><img src="" alt="노션"
-      /></a>
-      <a href="https://github.com/HappyHouseGumi" target="_blank"
-        ><img src="" alt="깃허브"
-      /></a>
+        ><b-icon icon="journal" font-scale="1.5" variant="dark"></b-icon
+      ></a>
       &copy; HappyHouse | 박소연 | 사공지은 | 성광현
     </div>
   </footer>
