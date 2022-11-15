@@ -25,4 +25,9 @@ export default {
   margin: 0;
   padding: 0;
 }
+
+#app {
+  /* footer 하단 고정 */
+  height: 100vh;
+}
 </style>
