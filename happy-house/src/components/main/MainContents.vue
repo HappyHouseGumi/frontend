@@ -13,9 +13,11 @@
         <a><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
       </div>
       <div class="ask">
-        <p>1:1문의</p>
+        <p>QnA</p>
         <div class="divide-line"></div>
-        <a><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
+        <router-link to="/qna"
+          ><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x"
+        /></router-link>
       </div>
     </div>
   </div>
