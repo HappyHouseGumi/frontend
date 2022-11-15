@@ -57,10 +57,10 @@ header > div {
 
 .logo {
   font-size: 1.5rem;
-  color: #3c90e2;
+  color: #0a58ca;
 }
 
 .logo:hover {
-  color: skyblue;
+  color: #3c90e2;
 }
 </style>

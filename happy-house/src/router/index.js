@@ -1,6 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import AppMain from "@/views/AppMain.vue";
+import AppQna from "@/views/AppQna.vue";
+import QnaList from "@/components/qna/QnaList.vue";
+import QnaRegist from "@/components/qna/QnaRegist.vue";
 
 Vue.use(VueRouter);
 
@@ -9,6 +12,24 @@ const routes = [
     path: "/",
     name: "main",
     component: AppMain,
+  },
+  {
+    path: "/qna",
+    name: "qna",
+    component: AppQna,
+    redirect: "/qna/list",
+    children: [
+      {
+        path: "list",
+        name: "qnalist",
+        component: QnaList,
+      },
+      {
+        path: "regist",
+        name: "qnaregist",
+        component: QnaRegist,
+      },
+    ],
   },
 ];
 
