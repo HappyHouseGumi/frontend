@@ -2,29 +2,14 @@
   <div class="content">
     <div class="wrapper">
       <span>QnA</span>
-      <QnaSearch />
-      <button @click="registQna">질문 등록하기</button>
-      <QnaList />
-      <div>페이징</div>
+      <router-view />
     </div>
   </div>
 </template>
 
-<script type="module">
-import QnaSearch from "@/components/qna/QnaSearch.vue";
-import QnaList from "@/components/qna/QnaList.vue";
-
+<script>
 export default {
   name: "AppQna",
-  components: {
-    QnaSearch,
-    QnaList,
-  },
-  methods: {
-    registQna() {
-      this.$router.push({ path: "/qna/regist" });
-    },
-  },
 };
 </script>
 
