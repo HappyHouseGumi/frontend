@@ -1,7 +1,7 @@
 <template>
   <div>
-    <QnaSearch />
-    <button class="qna-regist-btn" @click="qnaRegist">질문 등록하기</button>
+    <QnaSearch @searchBtn="searchBtn" />
+    <button class="qna-regist-btn" @click="registQna">질문 등록하기</button>
     <div class="questions-wrapper">
       <table>
         <QnaListItem v-for="(question, index) in questions" :key="index" :question="question" />
@@ -27,8 +27,19 @@ export default {
     };
   },
   methods: {
-    qnaRegist() {
+    registQna() {
       this.$router.push({ path: "/qna/regist" });
+    },
+    searchBtn(searchInput) {
+      // 제목으로 검색
+      // 유저이름으로 검색도 구현 필요
+      http.get(`/qna/search/${"title"}/${searchInput}`).then(({ data }) => {
+        if (data.flag === "success") {
+          this.questions = data.data;
+        } else {
+          alert("해당 제목의 글이 없습니다.");
+        }
+      });
     },
   },
   created() {
