@@ -12,7 +12,7 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <input type="text" />
+            <input type="text" v-model="question.userName" />
           </td>
         </tr>
         <tr>
@@ -21,7 +21,7 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <input type="password" />
+            <input type="password" v-model="question.password" />
           </td>
         </tr>
         <tr>
@@ -30,7 +30,7 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <input type="text" />
+            <input type="text" v-model="question.title" />
           </td>
         </tr>
         <tr>
@@ -39,7 +39,7 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <textarea />
+            <textarea v-model="question.content" />
           </td>
         </tr>
       </tbody>
@@ -51,12 +51,32 @@
   </div>
 </template>
 
-<script>
+<script type="module">
+import http from "@/api/http.js";
+
 export default {
   name: "QnaRegist",
+  data() {
+    return {
+      question: {
+        userName: "",
+        password: "",
+        title: "",
+        content: "",
+      },
+    };
+  },
   methods: {
     registQna() {
       // 서버에 등록
+      http.post("/qna", this.question).then(({ data }) => {
+        if (data.flag === "success") {
+          alert("글 등록 성공!!");
+        } else {
+          // 추후
+        }
+        this.$router.push({ path: "/qna/list" });
+      });
     },
     cancelBtn() {
       this.$router.push({ path: "/qna/list" });

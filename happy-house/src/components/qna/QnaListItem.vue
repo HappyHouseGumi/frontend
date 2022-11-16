@@ -7,13 +7,11 @@
     <tbody>
       <tr>
         <th>
-          <label>서버에서 받아온 질문자 이름</label>
+          <label>{{ question.userName }}</label>
           <label>님의 질문</label>
         </th>
         <td>
-          <router-link :to="{ name: 'qnadetail', params: { id: question.id } }"
-            >Q. {{ "서버에서 받아온 질문 제목" }}</router-link
-          >
+          <router-link :to="{ name: 'qnadetail', params: { id: question.id } }">Q. {{ question.title }}</router-link>
         </td>
       </tr>
     </tbody>

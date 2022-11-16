@@ -4,11 +4,7 @@
     <button class="qna-regist-btn" @click="qnaRegist">질문 등록하기</button>
     <div class="questions-wrapper">
       <table>
-        <QnaListItem
-          v-for="(question, index) in questions"
-          :key="index"
-          :question="question"
-        />
+        <QnaListItem v-for="(question, index) in questions" :key="index" :question="question" />
       </table>
     </div>
   </div>
@@ -17,6 +13,7 @@
 <script type="module">
 import QnaSearch from "@/components/qna/QnaSearch.vue";
 import QnaListItem from "@/components/qna/QnaListItem.vue";
+import http from "@/api/http";
 
 export default {
   name: "QnaList",
@@ -36,6 +33,13 @@ export default {
   },
   created() {
     // 서버에서 리스트 목록 가져오기
+    http.get(`/qna`).then(({ data }) => {
+      if (data.flag === "success") {
+        this.questions = data.data;
+      } else {
+        // 추후
+      }
+    });
   },
 };
 </script>
