@@ -4,7 +4,7 @@
       <span>관리자</span> |
       <span>{{ comment.regDate }}</span>
     </div>
-    <div class="comment-content-wrapper">A. {{ comment.content }}</div>
+    <div class="comment-content-wrapper"><b>A.</b> {{ comment.content }}</div>
   </div>
 </template>
 

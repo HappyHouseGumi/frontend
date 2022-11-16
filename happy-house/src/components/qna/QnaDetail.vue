@@ -15,13 +15,13 @@
     </div>
     <!-- 수정 삭제 영역 -->
     <div class="question-modify-wrapper">
-      <div v-if="isStatusOn">
+      <div v-if="isWriter">
         <button class="question-modify-btn" @click="moveModifyQna">수정</button>
         <button class="question-delete-btn" @click="deleteQna">삭제</button>
       </div>
       <div v-else>
-        <input type="password" v-model="password" />
-        <button class="question-delete-btn" @click="toggleOnOff">확인</button>
+        <input type="password" v-model="password" placeholder="비밀번호 확인" />
+        <button class="check-writer-btn" @click="checkWriter">확인</button>
       </div>
     </div>
     <!-- 답글 영역 -->
@@ -33,7 +33,11 @@
       </div>
       <!-- 답글 보여주는 영역 -->
       <div class="comments-show-wrapper">
-        <QnaComment v-for="(comment, index) in originComments" :key="index" :comment="comment" />
+        <QnaComment
+          v-for="(comment, index) in originComments"
+          :key="index"
+          :comment="comment"
+        />
       </div>
     </div>
   </div>
@@ -50,32 +54,33 @@ export default {
   },
   data() {
     return {
-      // 임시 데이터
       password: "",
-      isStatusOn: false,
+      isWriter: false,
       question: {},
       comments: {
         content: "",
         qnaId: this.$route.params.id,
-        userId: 4, // 임시데이터
+        userId: 4, // 임시 데이터
       },
       originComments: [], // 서버로부터 받는 댓글 리스트
     };
   },
   methods: {
-    toggleOnOff() {
+    checkWriter() {
       if (this.password === this.question.password) {
-        this.isStatusOn = true;
+        this.isWriter = true;
+      } else {
+        alert("비밀번호가 일치하지 않습니다.");
       }
     },
     moveModifyQna() {
-      // 아이디 확인 필요
-      this.$router.push({ name: "qnamodify", params: { id: this.question.id } });
+      this.$router.push({
+        name: "qnamodify",
+        params: { id: this.question.id },
+      });
     },
     deleteQna() {
-      // 아이디 확인 필요
       if (confirm("정말 삭제하시겠습니까?")) {
-        // 서버에 삭제 요청
         http.delete(`/qna/${this.question.id}`).then(({ data }) => {
           if (data.flag === "success") {
             alert("글 삭제 완료!!");
@@ -95,7 +100,6 @@ export default {
     },
   },
   created() {
-    // 서버에서 deatil 정보 가져오기
     http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
       if (data.flag === "success") {
         this.question = data.data[0];
@@ -104,7 +108,6 @@ export default {
       }
     });
 
-    // 서버에서 댓글 정보 가져오기
     http.get(`/qnacomment/${this.$route.params.id}`).then(({ data }) => {
       if (data.flag === "success") {
         this.originComments = data.data;
@@ -167,11 +170,19 @@ export default {
   text-align: right;
 }
 
-.question-modify-wrapper > button {
+.question-modify-wrapper > div > button {
   color: white;
   font-weight: bold;
   padding: 5px 10px;
   border: none;
+  border-radius: 5px;
+}
+
+.question-modify-wrapper > div > input {
+  margin-right: 10px;
+  border: 1px solid #666;
+  padding: 5px;
+  outline: none;
   border-radius: 5px;
 }
 
@@ -182,6 +193,10 @@ export default {
 
 .question-delete-btn {
   background: #c82333;
+}
+
+.check-writer-btn {
+  background: #218838;
 }
 
 .comments-wrapper {
