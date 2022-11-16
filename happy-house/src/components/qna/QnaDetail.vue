@@ -15,8 +15,14 @@
     </div>
     <!-- 수정 삭제 영역 -->
     <div class="question-modify-wrapper">
-      <button class="question-modify-btn" @click="moveModifyQna">수정</button>
-      <button class="question-delete-btn" @click="deleteQna">삭제</button>
+      <div v-if="isStatusOn">
+        <button class="question-modify-btn" @click="moveModifyQna">수정</button>
+        <button class="question-delete-btn" @click="deleteQna">삭제</button>
+      </div>
+      <div v-else>
+        <input type="password" v-model="password" />
+        <button class="question-delete-btn" @click="toggleOnOff">확인</button>
+      </div>
     </div>
     <!-- 답글 영역 -->
     <div class="comments-wrapper">
@@ -44,6 +50,9 @@ export default {
   },
   data() {
     return {
+      // 임시 데이터
+      password: "",
+      isStatusOn: false,
       question: {},
       comments: {
         content: "",
@@ -54,15 +63,27 @@ export default {
     };
   },
   methods: {
+    toggleOnOff() {
+      if (this.password === this.question.password) {
+        this.isStatusOn = true;
+      }
+    },
     moveModifyQna() {
       // 아이디 확인 필요
-      this.$router.push({ name: "qnamodify" });
+      this.$router.push({ name: "qnamodify", params: { id: this.question.id } });
     },
     deleteQna() {
       // 아이디 확인 필요
       if (confirm("정말 삭제하시겠습니까?")) {
         // 서버에 삭제 요청
-        this.$router.push({ path: "/qna/list" });
+        http.delete(`/qna/${this.question.id}`).then(({ data }) => {
+          if (data.flag === "success") {
+            alert("글 삭제 완료!!");
+            this.$router.push({ path: "/qna/list" });
+          } else {
+            // 추후
+          }
+        });
       } else return;
     },
     registComment() {
