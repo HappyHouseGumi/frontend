@@ -1,7 +1,7 @@
 <template>
   <div class="comment-wrapper">
     <div class="comment-header-wrapper">
-      <span>{{ comment.name }}</span> |
+      <span>관리자</span> |
       <span>{{ comment.regDate }}</span>
     </div>
     <div class="comment-content-wrapper">A. {{ comment.content }}</div>

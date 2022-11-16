@@ -22,12 +22,12 @@
     <div class="comments-wrapper">
       <!-- 답글 쓰는 영역 : 관리자만 보이게 하기 -->
       <div class="comments-write-wrapper">
-        <textarea placeholder="답글을 입력하세요." />
-        <div><button>답글 등록</button></div>
+        <textarea placeholder="답글을 입력하세요." v-model="comments.content" />
+        <div><button @click="registComment">답글 등록</button></div>
       </div>
       <!-- 답글 보여주는 영역 -->
       <div class="comments-show-wrapper">
-        <QnaComment v-for="(comment, index) in comments" :key="index" :comment="comment" />
+        <QnaComment v-for="(comment, index) in originComments" :key="index" :comment="comment" />
       </div>
     </div>
   </div>
@@ -44,9 +44,13 @@ export default {
   },
   data() {
     return {
-      // 임시 데이터
       question: {},
-      comments: [],
+      comments: {
+        content: "",
+        qnaId: this.$route.params.id,
+        userId: 4, // 임시데이터
+      },
+      originComments: [], // 서버로부터 받는 댓글 리스트
     };
   },
   methods: {
@@ -61,14 +65,28 @@ export default {
         this.$router.push({ path: "/qna/list" });
       } else return;
     },
+    registComment() {
+      http.post("/qnacomment", this.comments).then(({ data }) => {
+        if (data.flag === "success") {
+          alert("댓글 작성 완료!!");
+        }
+      });
+    },
   },
   created() {
     // 서버에서 deatil 정보 가져오기
-    http.get(`qna/${this.$route.params.id}`).then(({ data }) => {
+    http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
       if (data.flag === "success") {
         this.question = data.data[0];
       } else {
         // 추후
+      }
+    });
+
+    // 서버에서 댓글 정보 가져오기
+    http.get(`/qnacomment/${this.$route.params.id}`).then(({ data }) => {
+      if (data.flag === "success") {
+        this.originComments = data.data;
       }
     });
   },
