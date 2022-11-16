@@ -4,14 +4,14 @@
     <div class="detail-wrapper">
       <!-- 질문 제목 작성자 작성일시 -->
       <div class="detail-header-wrapper">
-        <span>서버에서 받아온 질문 제목</span>
+        <span>{{ question.title }}</span>
         <div>
-          <span>서버에서 받아온 질문자 이름</span> |
-          <span>서버에서 받아온 작성일자</span>
+          <span>{{ question.userName }}</span> |
+          <span>{{ question.regDate }}</span>
         </div>
       </div>
       <!-- 질문 내용 -->
-      <div class="detail-content-wrapper">서버에서 받아온 질문 내용</div>
+      <div class="detail-content-wrapper">{{ question.content }}</div>
     </div>
     <!-- 수정 삭제 영역 -->
     <div class="question-modify-wrapper">
@@ -27,11 +27,7 @@
       </div>
       <!-- 답글 보여주는 영역 -->
       <div class="comments-show-wrapper">
-        <QnaComment
-          v-for="(comment, index) in comments"
-          :key="index"
-          :comment="comment"
-        />
+        <QnaComment v-for="(comment, index) in comments" :key="index" :comment="comment" />
       </div>
     </div>
   </div>
@@ -39,6 +35,7 @@
 
 <script type="module">
 import QnaComment from "@/components/qna/QnaComment.vue";
+import http from "@/api/http.js";
 
 export default {
   name: "QnaDetail",
@@ -48,7 +45,7 @@ export default {
   data() {
     return {
       // 임시 데이터
-      question: [],
+      question: {},
       comments: [],
     };
   },
@@ -67,6 +64,13 @@ export default {
   },
   created() {
     // 서버에서 deatil 정보 가져오기
+    http.get(`qna/${this.$route.params.id}`).then(({ data }) => {
+      if (data.flag === "success") {
+        this.question = data.data[0];
+      } else {
+        // 추후
+      }
+    });
   },
 };
 </script>
