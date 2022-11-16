@@ -2,19 +2,19 @@
   <div id="app">
     <TheNavbar />
     <router-view />
-    <TheFooter />
+    <!-- <TheFooter /> -->
   </div>
 </template>
 
 <script type="module">
 import TheNavbar from "@/components/common/TheNavbar.vue";
-import TheFooter from "@/components/common/TheFooter.vue";
+// import TheFooter from "@/components/common/TheFooter.vue";
 
 export default {
   name: "App",
   components: {
     TheNavbar,
-    TheFooter,
+    // TheFooter,
   },
 };
 </script>
@@ -28,6 +28,6 @@ export default {
 
 #app {
   /* footer 하단 고정 */
-  height: 100vh;
+  /* height: 100vh; */
 }
 </style>

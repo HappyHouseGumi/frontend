@@ -4,6 +4,8 @@ import AppMain from "@/views/AppMain.vue";
 import AppQna from "@/views/AppQna.vue";
 import QnaList from "@/components/qna/QnaList.vue";
 import QnaRegist from "@/components/qna/QnaRegist.vue";
+import QnaDetail from "@/components/qna/QnaDetail.vue";
+import QnaModify from "@/components/qna/QnaModify.vue";
 
 Vue.use(VueRouter);
 
@@ -28,6 +30,16 @@ const routes = [
         path: "regist",
         name: "qnaregist",
         component: QnaRegist,
+      },
+      {
+        path: "detail/:id",
+        name: "qnadetail",
+        component: QnaDetail,
+      },
+      {
+        path: "modify",
+        name: "qnamodify",
+        component: QnaModify,
       },
     ],
   },

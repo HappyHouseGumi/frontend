@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="table-wrapper">
     <table>
       <colgroup>
         <col style="width: 185px" />
@@ -45,7 +45,7 @@
       </tbody>
     </table>
     <div>
-      <button class="regist-btn">등록</button>
+      <button class="regist-btn" @click="registQna">등록</button>
       <button class="cancel-btn" @click="cancelBtn">취소</button>
     </div>
   </div>
@@ -55,6 +55,9 @@
 export default {
   name: "QnaRegist",
   methods: {
+    registQna() {
+      // 서버에 등록
+    },
     cancelBtn() {
       this.$router.push({ path: "/qna/list" });
     },
@@ -63,9 +66,10 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
+/* .table-wrapper {
   margin: 30px 0 50px;
-}
+  height: 100%;
+} */
 
 table {
   width: 100%;
@@ -100,7 +104,7 @@ th {
 
 td {
   height: 55px;
-  padding: 5px 15px;
+  padding: 10px 15px;
   color: #222;
   border-bottom: 1px solid #d8d8d8;
   border-left: 1px solid #d8d8d8;
@@ -123,6 +127,7 @@ td > textarea {
   border: 1px solid #cbcbcb;
   vertical-align: middle;
   outline: 0;
+  resize: none;
 }
 
 .essentail-mark {
@@ -131,8 +136,15 @@ td > textarea {
   font-weight: bold;
 }
 
+.table-wrapper > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 button {
   margin-top: 30px;
+  margin-bottom: 100px;
   width: 120px;
   height: 40px;
   font-weight: bold;
