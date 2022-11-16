@@ -11,7 +11,9 @@
           <label>님의 질문</label>
         </th>
         <td>
-          <router-link :to="{ name: 'qnadetail', params: { id: question.id } }">Q. {{ question.title }}</router-link>
+          <router-link :to="{ name: 'qnadetail', params: { id: question.id } }"
+            ><b>Q.</b> {{ question.title }}</router-link
+          >
         </td>
       </tr>
     </tbody>

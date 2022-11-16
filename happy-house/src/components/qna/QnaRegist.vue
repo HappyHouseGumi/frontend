@@ -68,7 +68,19 @@ export default {
   },
   methods: {
     registQna() {
-      // 서버에 등록
+      if (
+        this.question.userName === "" ||
+        this.question.password === "" ||
+        this.question.title === "" ||
+        this.question.content === ""
+      ) {
+        alert("필수 항목을 채워주세요.");
+        return;
+      }
+      if (this.question.userName.length > 6) {
+        alert("이름은 최대 6글자까지 가능합니다.");
+        return;
+      }
       http.post("/qna", this.question).then(({ data }) => {
         if (data.flag === "success") {
           alert("글 등록 성공!!");

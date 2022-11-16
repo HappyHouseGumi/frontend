@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="wrapper">
-      <span>QnA</span>
+      <router-link to="/qna/list">QnA</router-link>
       <router-view />
     </div>
   </div>
@@ -27,9 +27,11 @@ export default {
   align-items: center;
 }
 
-.wrapper > span {
+.wrapper > a {
   font-size: 3rem;
   font-weight: bold;
   margin: 50px 0;
+  text-decoration: none;
+  color: black;
 }
 </style>
