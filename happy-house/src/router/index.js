@@ -37,7 +37,7 @@ const routes = [
         component: QnaDetail,
       },
       {
-        path: "modify",
+        path: "modify/:id",
         name: "qnamodify",
         component: QnaModify,
       },

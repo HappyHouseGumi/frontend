@@ -10,13 +10,13 @@
           <th>
             <label>이름</label>
           </th>
-          <td>서버에서 받은 이름</td>
+          <td>{{ question.userName }}</td>
         </tr>
         <tr>
           <th>
             <label>비밀번호</label>
           </th>
-          <td>서버에서 받은 비밀번호</td>
+          <td>{{ question.password }}</td>
         </tr>
         <tr>
           <th>
@@ -24,7 +24,7 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <input type="text" />
+            <input type="text" v-model="question.title" />
           </td>
         </tr>
         <tr>
@@ -33,7 +33,7 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <textarea />
+            <textarea v-model="question.content" />
           </td>
         </tr>
       </tbody>
@@ -46,14 +46,53 @@
 </template>
 
 <script>
+import http from "@/api/http";
+
 export default {
   name: "QnaModify",
+  data() {
+    return {
+      question: {},
+      origin: {
+        title: "",
+        content: "",
+      },
+      sendingData: {},
+    };
+  },
+  created() {
+    // 서버에서 글 내용 받아오기
+    http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
+      if (data.flag === "success") {
+        this.question = data.data[0];
+        this.origin.title = this.question.title;
+        this.origin.content = this.question.content;
+      } else {
+        // 추후
+      }
+    });
+  },
   methods: {
     modifyQna() {
       // 서버에 수정
+      if (this.origin.title !== this.question.title) {
+        this.sendingData.title = this.question.title;
+      }
+      if (this.origin.content !== this.question.content) {
+        this.sendingData.content = this.question.content;
+      }
+
+      http.put(`/qna/${this.question.id}`, this.sendingData).then(({ data }) => {
+        if (data.flag === "success") {
+          alert("글 수정 완료!!");
+          this.$router.push({ name: "qnadetail", params: { id: this.question.id } });
+        } else {
+          // 추후
+        }
+      });
     },
     cancelModifyBtn() {
-      this.$router.push({ path: "/qna/list" });
+      this.$router.push({ name: "qnadetail", params: { id: this.question.id } });
     },
   },
 };
