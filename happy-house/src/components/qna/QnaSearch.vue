@@ -1,8 +1,8 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <input />
-      <button>검색</button>
+      <input placeholder="제목을 검색해주세요." v-model="searchInput" />
+      <button @click="searchBtn">검색</button>
     </div>
   </div>
 </template>
@@ -10,6 +10,16 @@
 <script>
 export default {
   name: "QnaSearch",
+  data() {
+    return {
+      searchInput: "",
+    };
+  },
+  methods: {
+    searchBtn() {
+      this.$emit("searchBtn", this.searchInput);
+    },
+  },
 };
 </script>
 
