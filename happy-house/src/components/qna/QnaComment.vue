@@ -50,6 +50,7 @@ export default {
         http.put(`/qnacomment/${this.comment.id}`, this.changedComment).then(({ data }) => {
           if (data.flag === "success") {
             alert("답글을 수정하였습니다.");
+            this.$router.go();
           }
         });
       }
@@ -59,6 +60,7 @@ export default {
         http.delete(`/qnacomment/${this.comment.id}`).then(({ data }) => {
           if (data.flag === "success") {
             alert("답글을 삭제하였습니다.");
+            this.$router.go();
           }
         });
       }
