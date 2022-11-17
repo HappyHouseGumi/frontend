@@ -1,5 +1,5 @@
 <template>
-  <div class="table-wrapper">
+  <div class="qna-regist-wrapper">
     <table>
       <colgroup>
         <col style="width: 185px" />
@@ -98,11 +98,6 @@ export default {
 </script>
 
 <style scoped>
-/* .table-wrapper {
-  margin: 30px 0 50px;
-  height: 100%;
-} */
-
 table {
   width: 100%;
   table-layout: fixed;
@@ -168,7 +163,7 @@ td > textarea {
   font-weight: bold;
 }
 
-.table-wrapper > div {
+.qna-regist-wrapper > div {
   display: flex;
   flex-direction: row;
   justify-content: center;

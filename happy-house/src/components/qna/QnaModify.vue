@@ -1,5 +1,5 @@
 <template>
-  <div class="table-wrapper">
+  <div class="qna-modify-wrapper">
     <table>
       <colgroup>
         <col style="width: 185px" />
@@ -39,8 +39,8 @@
       </tbody>
     </table>
     <div>
-      <button class="modify-done-btn" @click="modifyQna">수정</button>
-      <button class="cancel-btn" @click="cancelModifyBtn">취소</button>
+      <button class="qna-modify-done-btn" @click="modifyQna">수정</button>
+      <button class="qna-modify-cancel-btn" @click="cancelModifyBtn">취소</button>
     </div>
   </div>
 </template>
@@ -61,7 +61,6 @@ export default {
     };
   },
   created() {
-    // 서버에서 글 내용 받아오기
     http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
       if (data.flag === "success") {
         this.question = data.data[0];
@@ -74,7 +73,6 @@ export default {
   },
   methods: {
     modifyQna() {
-      // 서버에 수정
       if (this.origin.title !== this.question.title) {
         this.sendingData.title = this.question.title;
       }
@@ -164,7 +162,7 @@ td > textarea {
   font-weight: bold;
 }
 
-.table-wrapper > div {
+.qna-modify-wrapper > div {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -182,12 +180,12 @@ button {
   border-radius: 5px;
 }
 
-.modify-done-btn {
+.qna-modify-done-btn {
   background: #3c90e2;
   margin-right: 20px;
 }
 
-.cancel-btn {
+.qna-modify-cancel-btn {
   background: rgb(138, 137, 137);
 }
 </style>

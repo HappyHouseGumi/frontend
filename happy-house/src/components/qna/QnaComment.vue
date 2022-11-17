@@ -7,7 +7,7 @@
       </div>
       <div v-if="!isModifyStatus" class="comment-content-wrapper"><b>A.</b> {{ comment.content }}</div>
       <div v-else class="comment-content-wrapper">
-        <input class="comment-modify-input" :placeholder="`${comment.content}`" v-model="changedComment" />
+        <input class="comment-modify-input" :placeholder="`${comment.content}`" v-model="changedComment.content" />
       </div>
     </div>
     <div v-if="isAdmin" class="comment-right-wrapper">
@@ -36,7 +36,9 @@ export default {
     return {
       isAdmin: true, // 임시 데이터
       isModifyStatus: false,
-      changedComment: "",
+      changedComment: {
+        content: "",
+      },
     };
   },
   methods: {
@@ -45,7 +47,12 @@ export default {
     },
     modifyComment() {
       if (this.comment.content !== this.changedComment) {
-        // http.put(`/qnacomment/${this.comment.id}`).then();
+        http.put(`/qnacomment/${this.comment.id}`, this.changedComment).then(({ data }) => {
+          if (data.flag === "success") {
+            alert("답글을 수정하였습니다.");
+            this.$router.go();
+          }
+        });
       }
     },
     deleteComment() {
@@ -53,6 +60,7 @@ export default {
         http.delete(`/qnacomment/${this.comment.id}`).then(({ data }) => {
           if (data.flag === "success") {
             alert("답글을 삭제하였습니다.");
+            this.$router.go();
           }
         });
       }

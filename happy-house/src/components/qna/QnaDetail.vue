@@ -1,5 +1,5 @@
 <template>
-  <div class="question-detail-wrapper">
+  <div class="qna-detail-wrapper">
     <!-- 질문 상세 영역 -->
     <div class="detail-wrapper">
       <!-- 질문 제목 작성자 작성일시 -->
@@ -14,10 +14,10 @@
       <div class="detail-content-wrapper">{{ question.content }}</div>
     </div>
     <!-- 수정 삭제 영역 -->
-    <div class="question-modify-wrapper">
+    <div class="qna-modify-delete-wrapper">
       <div v-if="isWriter">
-        <button class="question-modify-btn" @click="moveModifyQna">수정</button>
-        <button class="question-delete-btn" @click="deleteQna">삭제</button>
+        <button class="qna-modify-btn" @click="moveModifyQna">수정</button>
+        <button class="qna-delete-btn" @click="deleteQna">삭제</button>
       </div>
       <div v-else>
         <input type="password" v-model="password" placeholder="비밀번호 확인" />
@@ -25,19 +25,15 @@
       </div>
     </div>
     <!-- 답글 영역 -->
-    <div class="comments-wrapper">
+    <div class="qna-comments-wrapper">
       <!-- 답글 쓰는 영역 : 관리자만 보이게 하기 -->
-      <div class="comments-write-wrapper">
+      <div class="qna-comments-write-wrapper">
         <textarea placeholder="답글을 입력하세요." v-model="comments.content" />
         <div><button @click="registComment">답글 등록</button></div>
       </div>
       <!-- 답글 보여주는 영역 -->
-      <div class="comments-show-wrapper">
-        <QnaComment
-          v-for="(comment, index) in originComments"
-          :key="index"
-          :comment="comment"
-        />
+      <div class="qna-comments-show-wrapper">
+        <QnaComment v-for="(comment, index) in originComments" :key="index" :comment="comment" />
       </div>
     </div>
   </div>
@@ -95,6 +91,7 @@ export default {
       http.post("/qnacomment", this.comments).then(({ data }) => {
         if (data.flag === "success") {
           alert("댓글 작성 완료!!");
+          this.$router.go();
         }
       });
     },
@@ -118,7 +115,7 @@ export default {
 </script>
 
 <style scoped>
-.question-detail-wrapper {
+.qna-detail-wrapper {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -164,13 +161,13 @@ export default {
   border-bottom: 1px solid #e3e7eb;
 }
 
-.question-modify-wrapper {
+.qna-modify-delete-wrapper {
   width: 100%;
   margin-top: 30px;
   text-align: right;
 }
 
-.question-modify-wrapper > div > button {
+.qna-modify-delete-wrapper > div > button {
   color: white;
   font-weight: bold;
   padding: 5px 10px;
@@ -178,7 +175,7 @@ export default {
   border-radius: 5px;
 }
 
-.question-modify-wrapper > div > input {
+.qna-modify-delete-wrapper > div > input {
   margin-right: 10px;
   border: 1px solid #666;
   padding: 5px;
@@ -186,12 +183,12 @@ export default {
   border-radius: 5px;
 }
 
-.question-modify-btn {
+.qna-modify-btn {
   background: #3c90e2;
   margin-right: 10px;
 }
 
-.question-delete-btn {
+.qna-delete-btn {
   background: #c82333;
 }
 
@@ -199,19 +196,19 @@ export default {
   background: #218838;
 }
 
-.comments-wrapper {
+.qna-comments-wrapper {
   width: 100%;
   margin-top: 50px;
 }
 
-.comments-write-wrapper {
+.qna-comments-write-wrapper {
   width: 100%;
   padding: 20px;
   background: #fafafa;
   border: 1px solid #e3e7eb;
 }
 
-.comments-write-wrapper > textarea {
+.qna-comments-write-wrapper > textarea {
   width: 100%;
   height: 150px;
   border: 1px solid #e3e7eb;
@@ -222,11 +219,11 @@ export default {
   resize: none;
 }
 
-.comments-write-wrapper > div {
+.qna-comments-write-wrapper > div {
   text-align: right;
 }
 
-.comments-write-wrapper > div > button {
+.qna-comments-write-wrapper > div > button {
   background: #3c90e2;
   color: white;
   font-weight: bold;
@@ -236,7 +233,7 @@ export default {
   margin-top: 10px;
 }
 
-.comments-show-wrapper {
+.qna-comments-show-wrapper {
   width: 100%;
   margin-top: 50px;
   margin-bottom: 100px;
