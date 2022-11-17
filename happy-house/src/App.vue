@@ -28,6 +28,6 @@ export default {
 
 #app {
   /* footer 하단 고정 */
-  /* height: 100vh; */
+  height: 100vh;
 }
 </style>
