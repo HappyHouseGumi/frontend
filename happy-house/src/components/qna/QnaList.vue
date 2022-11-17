@@ -27,7 +27,7 @@ export default {
     };
   },
   methods: {
-    moveRegistQna() {
+    moveRegistQna() { 
       this.$router.push({ path: "/qna/regist" });
     },
     searchBtn(searchInput) {
