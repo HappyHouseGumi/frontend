@@ -1,8 +1,8 @@
 <template>
   <div>
     <QnaSearch @searchBtn="searchBtn" />
-    <button class="qna-regist-btn" @click="registQna">질문 등록하기</button>
-    <div class="questions-wrapper">
+    <button class="qna-regist-btn" @click="moveRegistQna">질문 등록하기</button>
+    <div>
       <table>
         <QnaListItem v-for="(question, index) in questions" :key="index" :question="question" />
       </table>
@@ -27,7 +27,7 @@ export default {
     };
   },
   methods: {
-    registQna() {
+    moveRegistQna() {
       this.$router.push({ path: "/qna/regist" });
     },
     searchBtn(searchInput) {
@@ -37,13 +37,12 @@ export default {
         if (data.flag === "success") {
           this.questions = data.data;
         } else {
-          alert("해당 제목의 글이 없습니다.");
+          alert("검색어와 일치하는 항목이 없습니다.");
         }
       });
     },
   },
   created() {
-    // 서버에서 리스트 목록 가져오기
     http.get(`/qna`).then(({ data }) => {
       if (data.flag === "success") {
         this.questions = data.data;
