@@ -10,9 +10,13 @@
       <a class="navbar-menus">공지사항</a>
       <a class="navbar-menus">자유게시판</a>
     </div>
-    <div>
-      <a class="navbar-menus">로그인</a>
+    <div v-if="!isLoginStatus">
+      <router-link to="/user/login" class="navbar-menus">로그인</router-link>
       <router-link to="/user/join" class="navbar-menus">회원가입</router-link>
+    </div>
+    <div v-else>
+      <a class="navbar-menus" @click="logout">로그아웃</a>
+      <a class="navbar-menus">마이페이지</a>
     </div>
   </header>
 </template>
@@ -21,7 +25,23 @@
 export default {
   name: "TheNavbar",
   data() {
-    return {};
+    return {
+      isLoginStatus: false,
+      userName: "",
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("loginUser");
+      this.isLoginStatus = false;
+    },
+  },
+  created() {
+    const loginUser = localStorage.getItem("loginUser");
+
+    if (loginUser) {
+      this.isLoginStatus = true;
+    } else this.isLoginStatus = false;
   },
 };
 </script>
