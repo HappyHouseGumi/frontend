@@ -19,7 +19,12 @@
             <input placeholder="* Email을 입력해주세요" type="email" v-model="user.email" class="user-email-input" />
             <button @click="certifyEmail"><font-awesome-icon icon="fa-solid fa-check" /></button>
           </div>
-
+          <div class="user-join-email-wrapper">
+            <input v-if="isSendEmailAuthor" placeholder="인증 코드를 입력해주세요." v-model="inputCode" />
+            <button v-if="isSendEmailAuthor" @click="certifyEmailCode">
+              <font-awesome-icon icon="fa-solid fa-check" />
+            </button>
+          </div>
           <button @click="joinUser">회원가입</button>
         </div>
       </div>
@@ -36,6 +41,9 @@ export default {
     return {
       isAvailableID: false,
       isAvailableEmail: false,
+      isSendEmailAuthor: false,
+      inputCode: "",
+      authorizedCode: "",
       user: {
         account: "",
         password: "",
@@ -59,7 +67,7 @@ export default {
         return;
       }
 
-      http.post("/user").then(({ data }) => {
+      http.post("/user", this.user).then(({ data }) => {
         if (data.flag === "success") {
           alert("회원가입이 완료되었습니다!!");
           this.$router.push({ path: "/" });
@@ -70,14 +78,34 @@ export default {
     },
     checkAvailableID() {
       http.get(`/user/idcheck/${this.user.account}`).then(({ data }) => {
-        console.log(data.flag);
         if (data.flag === "success") {
           this.isAvailableID = true;
         } else this.isAvailableID = false;
       });
     },
     certifyEmail() {
-      // 이메일 인증 api
+      this.isSendEmailAuthor = true;
+
+      http.post("/email", this.user).then(({ data }) => {
+        if (data.flag === "success") {
+          this.authorizedCode = data.data[0].code;
+        } else {
+          this.isAvailableEmail = false;
+          alert("유효하지 않은 이메일입니다!");
+          return;
+        }
+      });
+    },
+    certifyEmailCode() {
+      if (this.inputCode === "") {
+        alert("코드를 입력해주세요.");
+        return;
+      }
+      console.log();
+      if (this.inputCode === this.authorizedCode) {
+        alert("유효한 이메일입니다!");
+        this.isAvailableEmail = true;
+      }
     },
   },
 };
@@ -94,7 +122,7 @@ export default {
 .user-join-types {
   margin: 0 auto;
   width: 500px;
-  height: 650px;
+  height: 700px;
   border: 1px solid white;
   border-radius: 10px;
   background: white;
