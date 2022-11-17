@@ -33,7 +33,7 @@
       </div>
       <!-- 답글 보여주는 영역 -->
       <div class="qna-comments-show-wrapper">
-        <QnaComment v-for="(comment, index) in originComments" :key="index" :comment="comment" />
+        <QnaComment v-for="(comment, index) in originComments" :key="index" :idx="index" :comment="comment"  @changData = "changData"/>
       </div>
     </div>
   </div>
@@ -91,10 +91,14 @@ export default {
       http.post("/qnacomment", this.comments).then(({ data }) => {
         if (data.flag === "success") {
           alert("댓글 작성 완료!!");
-          this.$router.go();
+          this.originComments = data.data;
+          this.comments.content = "";
         }
       });
     },
+    changData(idx, content) {
+      this.originComments[idx].content = content.content;
+    }
   },
   created() {
     http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
