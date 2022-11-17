@@ -31,6 +31,7 @@ export default {
   name: "QnaComment",
   props: {
     comment: Object,
+    idx: Number,
   },
   data() {
     return {
@@ -46,11 +47,14 @@ export default {
       this.isModifyStatus = !this.isModifyStatus;
     },
     modifyComment() {
+      
       if (this.comment.content !== this.changedComment) {
-        http.put(`/qnacomment/${this.comment.id}`, this.changedComment).then(({ data }) => {
+       
+       http.put(`/qnacomment/${this.comment.id}`, this.changedComment).then(({ data }) => {
           if (data.flag === "success") {
             alert("답글을 수정하였습니다.");
-            this.$router.go();
+            this.$emit("changData",this.idx,this.changedComment);
+            this.isModifyStatus = false; 
           }
         });
       }
