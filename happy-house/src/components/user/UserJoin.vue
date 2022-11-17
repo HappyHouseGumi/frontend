@@ -84,6 +84,15 @@ export default {
       });
     },
     certifyEmail() {
+      const regex =
+        // eslint-disable-next-line
+        /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+      if (this.user.email === "" || !regex.test(this.user.email)) {
+        alert("이메일 형식으로 입력해주세요.");
+        return;
+      }
+
       this.isSendEmailAuthor = true;
 
       http.post("/email", this.user).then(({ data }) => {
