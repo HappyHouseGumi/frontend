@@ -6,6 +6,8 @@ import QnaList from "@/components/qna/QnaList.vue";
 import QnaRegist from "@/components/qna/QnaRegist.vue";
 import QnaDetail from "@/components/qna/QnaDetail.vue";
 import QnaModify from "@/components/qna/QnaModify.vue";
+import AppUser from "@/views/AppUser.vue";
+import UserJoin from "@/components/user/UserJoin.vue";
 
 Vue.use(VueRouter);
 
@@ -41,6 +43,23 @@ const routes = [
         name: "qnamodify",
         component: QnaModify,
       },
+    ],
+  },
+  {
+    path: "/user",
+    name: "user",
+    component: AppUser,
+    children: [
+      {
+        path: "join",
+        name: "userjoin",
+        component: UserJoin,
+      },
+      // {
+      //   path: "oauthjoin",
+      //   name: "useroauthjoin",
+      //   component: UserOauthJoin,
+      // },
     ],
   },
 ];

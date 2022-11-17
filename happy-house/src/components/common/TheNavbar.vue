@@ -12,7 +12,7 @@
     </div>
     <div>
       <a class="navbar-menus">로그인</a>
-      <a class="navbar-menus">회원가입</a>
+      <router-link to="/user/join" class="navbar-menus">회원가입</router-link>
     </div>
   </header>
 </template>
