@@ -61,7 +61,6 @@ const userStore = {
 
             commit("SET_IS_LOGIN_STATUS", true);
             localStorage.setItem("loginUser", JSON.stringify(loginUser));
-            alert("로그인 성공!!");
 
             router.push("/");
             router.go();
