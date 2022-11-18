@@ -3,7 +3,7 @@
     <div class="user-login-types">
       <div>
         <span>로그인</span>
-        <button>네이버로 로그인</button>
+        <div id="naver_id_login"></div>
         <div class="divide-line"></div>
         <div class="user-login-personal-wrapper">
           <input placeholder="Email" type="email" v-model="user.email" />
@@ -29,6 +29,13 @@ export default {
         password: "",
       },
     };
+  },
+  mounted() {
+    const naver_id_login = new window.naver_id_login("sTS2XWnrv1VAaHN25n9w", "http://localhost:8080/user/oauthjoin");
+    const state = naver_id_login.getUniqState();
+    naver_id_login.setButton("green", 3, 50);
+    naver_id_login.setState(state);
+    naver_id_login.init_naver_id_login();
   },
   computed: {
     ...mapState(userStore, ["isLoginStatus"]),
@@ -131,5 +138,9 @@ export default {
   font-weight: bold;
   border-radius: 10px;
   background: #3c90e2;
+}
+
+#naver_id_login {
+  margin-bottom: 20px;
 }
 </style>

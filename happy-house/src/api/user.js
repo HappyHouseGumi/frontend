@@ -22,4 +22,8 @@ function login(user, success, fail) {
   api.post(`/user/login`, user).then(success).catch(fail);
 }
 
-export { registUser, getCheckNickName, checkEmail, login };
+function loginOauth(token, success, fail) {
+  api.post(`/naver`, token).then(success).catch(fail);
+}
+
+export { registUser, getCheckNickName, checkEmail, login, loginOauth };
