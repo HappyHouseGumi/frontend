@@ -16,7 +16,8 @@
 </template>
 
 <script type="module">
-import http from "@/api/http.js";
+// import http from "@/api/index.js";
+import login from "@/api/user";
 
 export default {
   name: "UserLogin",
@@ -35,26 +36,52 @@ export default {
         return;
       }
 
-      http.post("/user/login", this.user).then(({ data }) => {
-        if (data.flag === "success") {
-          const accessToken = data.data[0]["access-token"];
-          const base64Payload = atob(accessToken.split(".")[1]);
-          const payload = JSON.parse(base64Payload.toString());
-          const userId = payload.userId;
+      login(
+        this.user,
+        ({ data }) => {
+          if (data.flag === "success") {
+            const accessToken = data.data[0]["access-token"];
+            const base64Payload = atob(accessToken.split(".")[1]);
+            const payload = JSON.parse(base64Payload.toString());
+            const userId = payload.userId;
 
-          const loginUser = {
-            userId,
-            accessToken,
-          };
+            const loginUser = {
+              userId,
+              accessToken,
+            };
 
-          localStorage.setItem("loginUser", JSON.stringify(loginUser));
+            localStorage.setItem("loginUser", JSON.stringify(loginUser));
 
-          this.$router.push("/");
-        } else {
-          alert("일치하는 회원 정보가 없습니다.");
-          return;
+            this.$router.push("/");
+          } else {
+            alert("일치하는 회원 정보가 없습니다.");
+            return;
+          }
+        },
+        (error) => {
+          console.log("로그인 오류 : " + error);
         }
-      });
+      );
+      // http.post("/user/login", this.user).then(({ data }) => {
+      //   if (data.flag === "success") {
+      //     const accessToken = data.data[0]["access-token"];
+      //     const base64Payload = atob(accessToken.split(".")[1]);
+      //     const payload = JSON.parse(base64Payload.toString());
+      //     const userId = payload.userId;
+
+      //     const loginUser = {
+      //       userId,
+      //       accessToken,
+      //     };
+
+      //     localStorage.setItem("loginUser", JSON.stringify(loginUser));
+
+      //     this.$router.push("/");
+      //   } else {
+      //     alert("일치하는 회원 정보가 없습니다.");
+      //     return;
+      //   }
+      // });
     },
   },
 };

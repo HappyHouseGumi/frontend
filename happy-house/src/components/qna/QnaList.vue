@@ -13,7 +13,8 @@
 <script type="module">
 import QnaSearch from "@/components/qna/QnaSearch.vue";
 import QnaListItem from "@/components/qna/QnaListItem.vue";
-import http from "@/api/http";
+// import http from "@/api";
+import { getQnaList, getQnaSearchList } from "@/api/qna";
 
 export default {
   name: "QnaList",
@@ -27,29 +28,46 @@ export default {
     };
   },
   methods: {
-    moveRegistQna() { 
+    moveRegistQna() {
       this.$router.push({ path: "/qna/regist" });
     },
+
     searchBtn(searchInput) {
-      // 제목으로 검색
-      // 유저이름으로 검색도 구현 필요
-      http.get(`/qna/search/${"title"}/${searchInput}`).then(({ data }) => {
-        if (data.flag === "success") {
-          this.questions = data.data;
-        } else {
-          alert("검색어와 일치하는 항목이 없습니다.");
+      getQnaSearchList(
+        searchInput,
+        ({ data }) => {
+          if (data.flag === "success") this.questions = data.data;
+          else alert("검색어와 일치하는 항목이 없습니다.");
+        },
+        (error) => {
+          console.log("QnA 검색결과 리스트 가져오기 오류 : " + error);
         }
-      });
+      );
+
+      // http.get(`/qna/search/${"title"}/${searchInput}`).then(({ data }) => {
+      //   if (data.flag === "success") {
+      //     this.questions = data.data;
+      //   } else {
+      //     alert("검색어와 일치하는 항목이 없습니다.");
+      //   }
+      // });
     },
   },
   created() {
-    http.get(`/qna`).then(({ data }) => {
-      if (data.flag === "success") {
-        this.questions = data.data;
-      } else {
-        // 추후
+    getQnaList(
+      ({ data }) => {
+        if (data.flag === "success") this.questions = data.data;
+      },
+      (error) => {
+        console.log("QnA 리스트 가져오기 오류 : " + error);
       }
-    });
+    );
+
+    // http.get(`/qna`).then(({ data }) => {
+    //   if (data.flag === "success") {
+    //     this.questions = data.data;
+    //   }
+    // });
   },
 };
 </script>

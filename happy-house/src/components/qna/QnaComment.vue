@@ -25,7 +25,8 @@
 </template>
 
 <script type="module">
-import http from "@/api/http.js";
+// import http from "@/api/index.js";
+import { modifyQnaComment, deleteQnaComment } from "@/api/qna";
 
 export default {
   name: "QnaComment",
@@ -52,23 +53,49 @@ export default {
         return;
       }
       if (this.comment.content !== this.changedComment) {
-        http.put(`/qnacomment/${this.comment.id}`, this.changedComment).then(({ data }) => {
-          if (data.flag === "success") {
-            alert("답글을 수정하였습니다.");
-            this.$emit("changData", this.idx, this.changedComment);
-            this.isModifyStatus = false;
+        modifyQnaComment(
+          this.comment.id,
+          this.changedComment,
+          ({ data }) => {
+            if (data.flag === "success") {
+              alert("답글을 수정하였습니다.");
+              this.$emit("changData", this.idx, this.changedComment);
+              this.isModifyStatus = false;
+            }
+          },
+          (error) => {
+            console.log("QnA 댓글 수정 오류 : " + error);
           }
-        });
+        );
+        // http.put(`/qnacomment/${this.comment.id}`, this.changedComment).then(({ data }) => {
+        //   if (data.flag === "success") {
+        //     alert("답글을 수정하였습니다.");
+        //     this.$emit("changData", this.idx, this.changedComment);
+        //     this.isModifyStatus = false;
+        //   }
+        // });
       }
     },
     deleteComment() {
       if (confirm("정말 삭제하시겠습니까?")) {
-        http.delete(`/qnacomment/${this.comment.id}`).then(({ data }) => {
-          if (data.flag === "success") {
-            alert("답글을 삭제하였습니다.");
-            this.$router.go();
+        deleteQnaComment(
+          this.comment.id,
+          ({ data }) => {
+            if (data.flag === "success") {
+              alert("답글을 삭제하였습니다.");
+              this.$router.go();
+            }
+          },
+          (error) => {
+            console.log("QnA 댓글 삭제 오류 : " + error);
           }
-        });
+        );
+        // http.delete(`/qnacomment/${this.comment.id}`).then(({ data }) => {
+        //   if (data.flag === "success") {
+        //     alert("답글을 삭제하였습니다.");
+        //     this.$router.go();
+        //   }
+        // });
       }
     },
   },
