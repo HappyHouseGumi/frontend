@@ -3,7 +3,7 @@
     <div class="user-join-types">
       <div>
         <span>회원가입</span>
-        <button>네이버로 회원가입</button>
+        <button @click="joinUserOauth">네이버로 회원가입</button>
         <div class="divide-line"></div>
         <div class="user-join-personal-wrapper">
           <input
@@ -56,6 +56,10 @@ export default {
     };
   },
   methods: {
+    joinUserOauth() {
+      window.location.href =
+        "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=sTS2XWnrv1VAaHN25n9w&state=jsg&redirect_uri=http://119.202.194.94/happy/naver/auth";
+    },
     joinUser() {
       if (this.user.nickName === "" || this.user.password === "" || this.user.email === "") {
         alert("빈칸을 모두 채워주세요.");
@@ -148,6 +152,10 @@ export default {
 </script>
 
 <style scoped>
+button {
+  cursor: pointer;
+}
+
 .user-join-wrapper {
   height: 100%;
   background: #ddd;
@@ -194,7 +202,7 @@ export default {
   color: white;
   font-weight: bold;
   border-radius: 10px;
-  background: #19ce60;
+  background: #02c759;
   margin-bottom: 30px;
 }
 
