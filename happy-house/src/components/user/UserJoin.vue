@@ -6,15 +6,19 @@
         <button>네이버로 회원가입</button>
         <div class="divide-line"></div>
         <div class="user-join-personal-wrapper">
-          <input placeholder="* ID를 입력해주세요" type="text" v-model="user.account" @keyup="checkAvailableID" />
-          <span v-if="user.account && isAvailableID" class="check-id-span" style="color: #0069d9"
-            ><i>사용할 수 있는 ID입니다.</i></span
+          <input
+            placeholder="* 닉네임을 입력해주세요"
+            type="text"
+            v-model="user.nickName"
+            @keyup="checkAvailableNickName"
+          />
+          <span v-if="user.nickName && isAvailableNickName" class="check-nickname-span" style="color: #0069d9"
+            ><i>사용할 수 있는 닉네임입니다.</i></span
           >
-          <span v-else-if="user.account && !isAvailableID" class="check-id-span" style="color: #ff0000"
-            ><i>사용할 수 없는 ID입니다.</i></span
+          <span v-else-if="user.nickName && !isAvailableNickName" class="check-nickname-span" style="color: #ff0000"
+            ><i>사용할 수 없는 닉네임입니다.</i></span
           >
           <input placeholder="* 비밀번호를 입력해주세요" type="password" v-model="user.password" />
-          <input placeholder="* 이름을 입력해주세요" type="text" v-model="user.name" />
           <div class="user-join-email-wrapper">
             <input placeholder="* Email을 입력해주세요" type="email" v-model="user.email" class="user-email-input" />
             <button @click="certifyEmail"><font-awesome-icon icon="fa-solid fa-check" /></button>
@@ -33,37 +37,40 @@
 </template>
 
 <script type="module">
-import { registUser, getCheckId, checkEmail } from "@/api/user";
+import { registUser, getCheckNickName, checkEmail } from "@/api/user";
 
 export default {
   name: "UserJoin",
   data() {
     return {
-      isAvailableID: false,
+      isAvailableNickName: false,
       isAvailableEmail: false,
       isSendEmailAuthor: false,
       inputCode: "",
       authorizedCode: "",
       user: {
-        account: "",
+        nickName: "",
         password: "",
-        name: "",
         email: "",
       },
     };
   },
   methods: {
     joinUser() {
-      if (this.user.account === "" || this.user.password === "" || this.user.name === "" || this.user.email === "") {
+      if (this.user.nickName === "" || this.user.password === "" || this.user.email === "") {
         alert("빈칸을 모두 채워주세요.");
         return;
       }
-      if (!this.isAvailableID) {
-        alert("ID를 다시 확인해주세요.");
+      if (!this.isAvailableNickName) {
+        alert("닉네임을 다시 확인해주세요.");
         return;
       }
       if (!this.isAvailableEmail) {
         alert("유효한 이메일을 입력해주세요.");
+        return;
+      }
+      if (this.user.nickName.length > 6) {
+        alert("닉네임은 최대 6자리 가능합니다.");
         return;
       }
 
@@ -80,17 +87,17 @@ export default {
         }
       );
     },
-    checkAvailableID() {
-      if (this.user.account !== "") {
-        getCheckId(
-          this.user.account,
+    checkAvailableNickName() {
+      if (this.user.nickName !== "") {
+        getCheckNickName(
+          this.user.nickName,
           ({ data }) => {
             if (data.flag === "success") {
-              this.isAvailableID = true;
-            } else this.isAvailableID = false;
+              this.isAvailableNickName = true;
+            } else this.isAvailableNickName = false;
           },
           (error) => {
-            console.log("아이디 중복 검사 오류 : " + error);
+            console.log("닉네임 중복 검사 오류 : " + error);
           }
         );
       }
@@ -159,8 +166,8 @@ export default {
 }
 
 .user-join-types > div {
+  /* padding: 30px 20px; */
   height: 100%;
-  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -213,7 +220,7 @@ export default {
 }
 
 .user-join-email-wrapper > input {
-  width: 320px;
+  width: 315px;
   height: 40px;
   padding: 0 10px;
   margin-top: 30px;

@@ -6,7 +6,7 @@
         <button>네이버로 로그인</button>
         <div class="divide-line"></div>
         <div class="user-login-personal-wrapper">
-          <input placeholder="ID" type="text" v-model="user.account" />
+          <input placeholder="Email" type="email" v-model="user.email" />
           <input placeholder="Password" type="password" v-model="user.password" />
           <button @click="loginUser">로그인</button>
         </div>
@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       user: {
-        account: "",
+        email: "",
         password: "",
       },
     };
@@ -36,8 +36,17 @@ export default {
   methods: {
     ...mapActions(userStore, ["userLoginAction"]),
     loginUser() {
-      if (this.user.account === "" || this.user.password === "") {
+      if (this.user.email === "" || this.user.password === "") {
         alert("빈칸을 모두 입력해주세요.");
+        return;
+      }
+
+      const regex =
+        // eslint-disable-next-line
+        /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+      if (this.user.email === "" || !regex.test(this.user.email)) {
+        alert("이메일 형식으로 입력해주세요.");
         return;
       }
 
@@ -67,7 +76,6 @@ export default {
 
 .user-login-types > div {
   height: 100%;
-  padding: 30px 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
