@@ -3,7 +3,7 @@
     <div class="user-join-types">
       <div>
         <span>회원가입</span>
-        <button>네이버로 회원가입</button>
+        <button @click="joinUserOauth">네이버로 회원가입</button>
         <div class="divide-line"></div>
         <div class="user-join-personal-wrapper">
           <input
@@ -87,6 +87,9 @@ export default {
         }
       );
     },
+    joinUserOauth() {
+      this.$router.push({ path: "/user/login" });
+    },
     checkAvailableNickName() {
       if (this.user.nickName !== "") {
         getCheckNickName(
@@ -148,6 +151,10 @@ export default {
 </script>
 
 <style scoped>
+button {
+  cursor: pointer;
+}
+
 .user-join-wrapper {
   height: 100%;
   background: #ddd;
@@ -188,13 +195,13 @@ export default {
 }
 
 .user-join-types > div > button {
-  width: 350px;
+  width: 250px;
   height: 50px;
   border: none;
   color: white;
   font-weight: bold;
   border-radius: 10px;
-  background: #19ce60;
+  background: #02c759;
   margin-bottom: 30px;
 }
 
@@ -243,7 +250,7 @@ export default {
 }
 
 .user-join-personal-wrapper > button {
-  width: 350px;
+  width: 250px;
   height: 50px;
   border: none;
   color: white;
@@ -251,5 +258,9 @@ export default {
   border-radius: 10px;
   background: #3c90e2;
   margin-top: 30px;
+}
+
+#naver_id_login {
+  margin-bottom: 20px;
 }
 </style>
