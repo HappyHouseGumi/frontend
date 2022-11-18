@@ -4,8 +4,8 @@ const api = apiInstance();
 
 // GET
 
-function getCheckId(id, success, fail) {
-  api.get(`/user/idcheck/${id}`).then(success).catch(fail);
+function getCheckNickName(nickname, success, fail) {
+  api.get(`/user/checknick/${nickname}`).then(success).catch(fail);
 }
 
 // POST
@@ -22,4 +22,4 @@ function login(user, success, fail) {
   api.post(`/user/login`, user).then(success).catch(fail);
 }
 
-export { registUser, getCheckId, checkEmail, login };
+export { registUser, getCheckNickName, checkEmail, login };
