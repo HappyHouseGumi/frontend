@@ -52,7 +52,6 @@
 </template>
 
 <script type="module">
-// import http from "@/api/index.js";
 import { registQna } from "@/api/qna";
 
 export default {
@@ -94,15 +93,6 @@ export default {
           console.log("QnA 등록 오류 : " + error);
         }
       );
-
-      // http.post("/qna", this.question).then(({ data }) => {
-      //   if (data.flag === "success") {
-      //     alert("글 등록 성공!!");
-      //   } else {
-      //     // 추후
-      //   }
-      //   this.$router.push({ path: "/qna/list" });
-      // });
     },
     cancelBtn() {
       this.$router.push({ path: "/qna/list" });

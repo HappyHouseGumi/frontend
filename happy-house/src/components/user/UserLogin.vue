@@ -16,8 +16,9 @@
 </template>
 
 <script type="module">
-// import http from "@/api/index.js";
-import login from "@/api/user";
+import { mapState, mapActions } from "vuex";
+
+const userStore = "userStore";
 
 export default {
   name: "UserLogin",
@@ -29,59 +30,18 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(userStore, ["isLoginStatus"]),
+  },
   methods: {
+    ...mapActions(userStore, ["userLoginAction"]),
     loginUser() {
       if (this.user.account === "" || this.user.password === "") {
         alert("빈칸을 모두 입력해주세요.");
         return;
       }
 
-      login(
-        this.user,
-        ({ data }) => {
-          if (data.flag === "success") {
-            const accessToken = data.data[0]["access-token"];
-            const base64Payload = atob(accessToken.split(".")[1]);
-            const payload = JSON.parse(base64Payload.toString());
-            const userId = payload.userId;
-
-            const loginUser = {
-              userId,
-              accessToken,
-            };
-
-            localStorage.setItem("loginUser", JSON.stringify(loginUser));
-
-            this.$router.push("/");
-          } else {
-            alert("일치하는 회원 정보가 없습니다.");
-            return;
-          }
-        },
-        (error) => {
-          console.log("로그인 오류 : " + error);
-        }
-      );
-      // http.post("/user/login", this.user).then(({ data }) => {
-      //   if (data.flag === "success") {
-      //     const accessToken = data.data[0]["access-token"];
-      //     const base64Payload = atob(accessToken.split(".")[1]);
-      //     const payload = JSON.parse(base64Payload.toString());
-      //     const userId = payload.userId;
-
-      //     const loginUser = {
-      //       userId,
-      //       accessToken,
-      //     };
-
-      //     localStorage.setItem("loginUser", JSON.stringify(loginUser));
-
-      //     this.$router.push("/");
-      //   } else {
-      //     alert("일치하는 회원 정보가 없습니다.");
-      //     return;
-      //   }
-      // });
+      this.userLoginAction(this.user);
     },
   },
 };

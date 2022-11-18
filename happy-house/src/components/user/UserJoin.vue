@@ -33,7 +33,6 @@
 </template>
 
 <script type="module">
-// import http from "@/api/index.js";
 import { registUser, getCheckId, checkEmail } from "@/api/user";
 
 export default {
@@ -80,14 +79,6 @@ export default {
           console.log("회원가입 오류 : " + error);
         }
       );
-      // http.post("/user", this.user).then(({ data }) => {
-      //   if (data.flag === "success") {
-      //     alert("회원가입이 완료되었습니다!!");
-      //     this.$router.push({ path: "/" });
-      //   } else {
-      //     // 추후
-      //   }
-      // });
     },
     checkAvailableID() {
       if (this.user.account !== "") {
@@ -103,12 +94,6 @@ export default {
           }
         );
       }
-
-      // http.get(`/user/idcheck/${this.user.account}`).then(({ data }) => {
-      //   if (data.flag === "success") {
-      //     this.isAvailableID = true;
-      //   } else this.isAvailableID = false;
-      // });
     },
     certifyEmail() {
       const regex =
@@ -139,15 +124,6 @@ export default {
           console.log("이메일 유효 검사 오류 : " + error);
         }
       );
-      // http.post("/email", this.user).then(({ data }) => {
-      //   if (data.flag === "success") {
-      //     this.authorizedCode = data.data[0].code;
-      //   } else {
-      //     this.isAvailableEmail = false;
-      //     alert("유효하지 않은 이메일입니다!");
-      //     return;
-      //   }
-      // });
     },
     certifyEmailCode() {
       if (this.inputCode === "") {

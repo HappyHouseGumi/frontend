@@ -13,7 +13,6 @@
 <script type="module">
 import QnaSearch from "@/components/qna/QnaSearch.vue";
 import QnaListItem from "@/components/qna/QnaListItem.vue";
-// import http from "@/api";
 import { getQnaList, getQnaSearchList } from "@/api/qna";
 
 export default {
@@ -43,14 +42,6 @@ export default {
           console.log("QnA 검색결과 리스트 가져오기 오류 : " + error);
         }
       );
-
-      // http.get(`/qna/search/${"title"}/${searchInput}`).then(({ data }) => {
-      //   if (data.flag === "success") {
-      //     this.questions = data.data;
-      //   } else {
-      //     alert("검색어와 일치하는 항목이 없습니다.");
-      //   }
-      // });
     },
   },
   created() {
@@ -62,12 +53,6 @@ export default {
         console.log("QnA 리스트 가져오기 오류 : " + error);
       }
     );
-
-    // http.get(`/qna`).then(({ data }) => {
-    //   if (data.flag === "success") {
-    //     this.questions = data.data;
-    //   }
-    // });
   },
 };
 </script>

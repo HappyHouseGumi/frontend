@@ -47,7 +47,6 @@
 
 <script type="module">
 import QnaComment from "@/components/qna/QnaComment.vue";
-// import http from "@/api/index.js";
 import { deleteQna, registQnaComment, getQnaDetail, getQnaComment } from "@/api/qna";
 
 export default {
@@ -96,14 +95,6 @@ export default {
             console.log("QnA 삭제 오류 : " + error);
           }
         );
-        // http.delete(`/qna/${this.question.id}`).then(({ data }) => {
-        //   if (data.flag === "success") {
-        //     alert("글 삭제 완료!!");
-        //     this.$router.push({ path: "/qna/list" });
-        //   } else {
-        //     // 추후
-        //   }
-        // });
       } else return;
     },
     registComment() {
@@ -118,13 +109,6 @@ export default {
         },
         (error) => console.log("QnA comment 등록 오류 : " + error)
       );
-      // http.post("/qnacomment", this.comment).then(({ data }) => {
-      //   if (data.flag === "success") {
-      //     alert("댓글 작성 완료!!");
-      //     this.originComments = data.data;
-      //     this.comment.content = "";
-      //   }
-      // });
     },
     changData(idx, content) {
       this.originComments[idx].content = content.content;
@@ -142,13 +126,6 @@ export default {
         console.log("QnA 상세보기 오류 : " + error);
       }
     );
-    // http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
-    //   if (data.flag === "success") {
-    //     this.question = data.data[0];
-    //   } else {
-    //     // 추후
-    //   }
-    // });
 
     getQnaComment(
       this.$route.params.id,
@@ -161,11 +138,6 @@ export default {
         console.log("QnA comment 불러오기 오류 : " + error);
       }
     );
-    // http.get(`/qnacomment/${this.$route.params.id}`).then(({ data }) => {
-    //   if (data.flag === "success") {
-    //     this.originComments = data.data;
-    //   }
-    // });
   },
 };
 </script>
