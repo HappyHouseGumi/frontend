@@ -8,6 +8,10 @@ function getCheckNickName(nickname, success, fail) {
   api.get(`/user/checknick/${nickname}`).then(success).catch(fail);
 }
 
+function getUserDetail(id, success, fail) {
+  api.get(`/user/detail/${id}`).then(success).catch(fail);
+}
+
 // POST
 
 function registUser(user, success, fail) {
@@ -38,4 +42,4 @@ function deleteUser(id, success, fail) {
   api.delete(`/user/${id}`).then(success).catch(fail);
 }
 
-export { registUser, getCheckNickName, checkEmail, login, loginOauth, modifyUser, deleteUser };
+export { registUser, getCheckNickName, checkEmail, login, loginOauth, modifyUser, deleteUser, getUserDetail };
