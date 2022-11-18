@@ -8,6 +8,10 @@ function getCheckNickName(nickname, success, fail) {
   api.get(`/user/checknick/${nickname}`).then(success).catch(fail);
 }
 
+function getUserDetail(id, success, fail) {
+  api.get(`/user/detail/${id}`).then(success).catch(fail);
+}
+
 // POST
 
 function registUser(user, success, fail) {
@@ -26,4 +30,16 @@ function loginOauth(token, success, fail) {
   api.post(`/naver`, token).then(success).catch(fail);
 }
 
-export { registUser, getCheckNickName, checkEmail, login, loginOauth };
+// PUT
+
+function modifyUser(id, user, success, fail) {
+  api.put(`/user/${id}`, user).then(success).catch(fail);
+}
+
+// DELETE
+
+function deleteUser(id, success, fail) {
+  api.delete(`/user/${id}`).then(success).catch(fail);
+}
+
+export { registUser, getCheckNickName, checkEmail, login, loginOauth, modifyUser, deleteUser, getUserDetail };
