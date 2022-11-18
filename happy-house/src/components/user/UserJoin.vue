@@ -56,10 +56,6 @@ export default {
     };
   },
   methods: {
-    joinUserOauth() {
-      window.location.href =
-        "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=sTS2XWnrv1VAaHN25n9w&state=jsg&redirect_uri=http://119.202.194.94/happy/naver/auth";
-    },
     joinUser() {
       if (this.user.nickName === "" || this.user.password === "" || this.user.email === "") {
         alert("빈칸을 모두 채워주세요.");
@@ -90,6 +86,9 @@ export default {
           console.log("회원가입 오류 : " + error);
         }
       );
+    },
+    joinUserOauth() {
+      this.$router.push({ path: "/user/login" });
     },
     checkAvailableNickName() {
       if (this.user.nickName !== "") {
@@ -196,7 +195,7 @@ button {
 }
 
 .user-join-types > div > button {
-  width: 350px;
+  width: 250px;
   height: 50px;
   border: none;
   color: white;
@@ -251,7 +250,7 @@ button {
 }
 
 .user-join-personal-wrapper > button {
-  width: 350px;
+  width: 250px;
   height: 50px;
   border: none;
   color: white;
@@ -259,5 +258,9 @@ button {
   border-radius: 10px;
   background: #3c90e2;
   margin-top: 30px;
+}
+
+#naver_id_login {
+  margin-bottom: 20px;
 }
 </style>
