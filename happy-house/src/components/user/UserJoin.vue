@@ -19,9 +19,9 @@
             <input placeholder="* Email을 입력해주세요" type="email" v-model="user.email" class="user-email-input" />
             <button @click="certifyEmail"><font-awesome-icon icon="fa-solid fa-check" /></button>
           </div>
-          <div class="user-join-email-wrapper">
-            <input v-if="isSendEmailAuthor" placeholder="인증 코드를 입력해주세요." v-model="inputCode" />
-            <button v-if="isSendEmailAuthor" @click="certifyEmailCode">
+          <div v-if="isAvailableEmail && isSendEmailAuthor" class="user-join-email-wrapper">
+            <input placeholder="인증 코드를 입력해주세요." v-model="inputCode" />
+            <button @click="certifyEmailCode">
               <font-awesome-icon icon="fa-solid fa-check" />
             </button>
           </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script type="module">
-import http from "@/api/http.js";
+import { registUser, getCheckId, checkEmail } from "@/api/user";
 
 export default {
   name: "UserJoin",
@@ -67,21 +67,33 @@ export default {
         return;
       }
 
-      http.post("/user", this.user).then(({ data }) => {
-        if (data.flag === "success") {
-          alert("회원가입이 완료되었습니다!!");
-          this.$router.push({ path: "/" });
-        } else {
-          // 추후
+      registUser(
+        this.user,
+        ({ data }) => {
+          if (data.flag === "success") {
+            alert("회원가입이 완료되었습니다!!");
+            this.$router.push({ path: "/" });
+          }
+        },
+        (error) => {
+          console.log("회원가입 오류 : " + error);
         }
-      });
+      );
     },
     checkAvailableID() {
-      http.get(`/user/idcheck/${this.user.account}`).then(({ data }) => {
-        if (data.flag === "success") {
-          this.isAvailableID = true;
-        } else this.isAvailableID = false;
-      });
+      if (this.user.account !== "") {
+        getCheckId(
+          this.user.account,
+          ({ data }) => {
+            if (data.flag === "success") {
+              this.isAvailableID = true;
+            } else this.isAvailableID = false;
+          },
+          (error) => {
+            console.log("아이디 중복 검사 오류 : " + error);
+          }
+        );
+      }
     },
     certifyEmail() {
       const regex =
@@ -95,15 +107,23 @@ export default {
 
       this.isSendEmailAuthor = true;
 
-      http.post("/email", this.user).then(({ data }) => {
-        if (data.flag === "success") {
-          this.authorizedCode = data.data[0].code;
-        } else {
-          this.isAvailableEmail = false;
-          alert("유효하지 않은 이메일입니다!");
-          return;
+      checkEmail(
+        this.user,
+        ({ data }) => {
+          if (data.flag === "success") {
+            alert("입력된 이메일로 전송된 코드를 입력해주세요.");
+            this.isAvailableEmail = true;
+            this.authorizedCode = data.data[0].code;
+          } else {
+            this.isAvailableEmail = false;
+            alert("이미 가입된 이메일입니다.");
+            return;
+          }
+        },
+        (error) => {
+          console.log("이메일 유효 검사 오류 : " + error);
         }
-      });
+      );
     },
     certifyEmailCode() {
       if (this.inputCode === "") {
@@ -112,7 +132,7 @@ export default {
       }
       console.log();
       if (this.inputCode === this.authorizedCode) {
-        alert("유효한 이메일입니다!");
+        alert("이메일 인증에 성공하였습니다!");
         this.isAvailableEmail = true;
       }
     },

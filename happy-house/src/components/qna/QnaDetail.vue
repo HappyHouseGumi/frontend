@@ -28,12 +28,18 @@
     <div class="qna-comments-wrapper">
       <!-- 답글 쓰는 영역 : 관리자만 보이게 하기 -->
       <div class="qna-comments-write-wrapper">
-        <textarea placeholder="답글을 입력하세요." v-model="comments.content" />
+        <textarea placeholder="답글을 입력하세요." v-model="comment.content" />
         <div><button @click="registComment">답글 등록</button></div>
       </div>
       <!-- 답글 보여주는 영역 -->
       <div class="qna-comments-show-wrapper">
-        <QnaComment v-for="(comment, index) in originComments" :key="index" :idx="index" :comment="comment"  @changData = "changData"/>
+        <QnaComment
+          v-for="(comment, index) in originComments"
+          :key="index"
+          :idx="index"
+          :comment="comment"
+          @changData="changData"
+        />
       </div>
     </div>
   </div>
@@ -41,7 +47,7 @@
 
 <script type="module">
 import QnaComment from "@/components/qna/QnaComment.vue";
-import http from "@/api/http.js";
+import { deleteQna, registQnaComment, getQnaDetail, getQnaComment } from "@/api/qna";
 
 export default {
   name: "QnaDetail",
@@ -53,7 +59,7 @@ export default {
       password: "",
       isWriter: false,
       question: {},
-      comments: {
+      comment: {
         content: "",
         qnaId: this.$route.params.id,
         userId: 4, // 임시 데이터
@@ -77,43 +83,61 @@ export default {
     },
     deleteQna() {
       if (confirm("정말 삭제하시겠습니까?")) {
-        http.delete(`/qna/${this.question.id}`).then(({ data }) => {
-          if (data.flag === "success") {
-            alert("글 삭제 완료!!");
-            this.$router.push({ path: "/qna/list" });
-          } else {
-            // 추후
+        deleteQna(
+          this.question.id,
+          ({ data }) => {
+            if (data.flag === "success") {
+              alert("글 삭제 완료!!");
+              this.$router.push({ path: "/qna/list" });
+            }
+          },
+          (error) => {
+            console.log("QnA 삭제 오류 : " + error);
           }
-        });
+        );
       } else return;
     },
     registComment() {
-      http.post("/qnacomment", this.comments).then(({ data }) => {
-        if (data.flag === "success") {
-          alert("댓글 작성 완료!!");
-          this.originComments = data.data;
-          this.comments.content = "";
-        }
-      });
+      registQnaComment(
+        this.comment,
+        ({ data }) => {
+          if (data.flag === "success") {
+            alert("댓글 작성 완료!!");
+            this.originComments = data.data;
+            this.comment.content = "";
+          }
+        },
+        (error) => console.log("QnA comment 등록 오류 : " + error)
+      );
     },
     changData(idx, content) {
       this.originComments[idx].content = content.content;
-    }
+    },
   },
   created() {
-    http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
-      if (data.flag === "success") {
-        this.question = data.data[0];
-      } else {
-        // 추후
+    getQnaDetail(
+      this.$route.params.id,
+      ({ data }) => {
+        if (data.flag === "success") {
+          this.question = data.data[0];
+        }
+      },
+      (error) => {
+        console.log("QnA 상세보기 오류 : " + error);
       }
-    });
+    );
 
-    http.get(`/qnacomment/${this.$route.params.id}`).then(({ data }) => {
-      if (data.flag === "success") {
-        this.originComments = data.data;
+    getQnaComment(
+      this.$route.params.id,
+      ({ data }) => {
+        if (data.flag === "success") {
+          this.originComments = data.data;
+        }
+      },
+      (error) => {
+        console.log("QnA comment 불러오기 오류 : " + error);
       }
-    });
+    );
   },
 };
 </script>

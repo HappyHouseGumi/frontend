@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import http from "@/api/http";
+import { getQnaDetail, modifyQna } from "@/api/qna";
 
 export default {
   name: "QnaModify",
@@ -61,15 +61,19 @@ export default {
     };
   },
   created() {
-    http.get(`/qna/${this.$route.params.id}`).then(({ data }) => {
-      if (data.flag === "success") {
-        this.question = data.data[0];
-        this.origin.title = this.question.title;
-        this.origin.content = this.question.content;
-      } else {
-        // 추후
+    getQnaDetail(
+      this.$route.params.id,
+      ({ data }) => {
+        if (data.flag === "success") {
+          this.question = data.data[0];
+          this.origin.title = this.question.title;
+          this.origin.content = this.question.content;
+        }
+      },
+      (error) => {
+        console.log("QnaModify의 QnA 상세보기 오류 : " + error);
       }
-    });
+    );
   },
   methods: {
     modifyQna() {
@@ -80,14 +84,17 @@ export default {
         this.sendingData.content = this.question.content;
       }
 
-      http.put(`/qna/${this.question.id}`, this.sendingData).then(({ data }) => {
-        if (data.flag === "success") {
-          alert("글 수정 완료!!");
-          this.$router.push({ name: "qnadetail", params: { id: this.question.id } });
-        } else {
-          // 추후
-        }
-      });
+      modifyQna(
+        this.question.id,
+        this.sendingData,
+        ({ data }) => {
+          if (data.flag === "success") {
+            alert("글 수정 완료!!");
+            this.$router.push({ name: "qnadetail", params: { id: this.question.id } });
+          }
+        },
+        (error) => console.log("QnA 수정 오류 : " + error)
+      );
     },
     cancelModifyBtn() {
       this.$router.push({ name: "qnadetail", params: { id: this.question.id } });

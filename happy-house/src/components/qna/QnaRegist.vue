@@ -52,7 +52,7 @@
 </template>
 
 <script type="module">
-import http from "@/api/http.js";
+import { registQna } from "@/api/qna";
 
 export default {
   name: "QnaRegist",
@@ -81,14 +81,18 @@ export default {
         alert("이름은 최대 6글자까지 가능합니다.");
         return;
       }
-      http.post("/qna", this.question).then(({ data }) => {
-        if (data.flag === "success") {
-          alert("글 등록 성공!!");
-        } else {
-          // 추후
+
+      registQna(
+        this.question,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.$router.push({ path: "/qna/list" });
+          }
+        },
+        (error) => {
+          console.log("QnA 등록 오류 : " + error);
         }
-        this.$router.push({ path: "/qna/list" });
-      });
+      );
     },
     cancelBtn() {
       this.$router.push({ path: "/qna/list" });
