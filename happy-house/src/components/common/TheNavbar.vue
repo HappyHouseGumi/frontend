@@ -16,7 +16,7 @@
     </div>
     <div v-else>
       <a class="navbar-menus" @click="logout">로그아웃</a>
-      <a class="navbar-menus">마이페이지</a>
+      <router-link to="/user/mypage" class="navbar-menus">마이페이지</router-link>
     </div>
   </header>
 </template>

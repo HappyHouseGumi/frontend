@@ -9,6 +9,7 @@ import QnaModify from "@/components/qna/QnaModify.vue";
 import AppUser from "@/views/AppUser.vue";
 import UserJoin from "@/components/user/UserJoin.vue";
 import UserLogin from "@/components/user/UserLogin.vue";
+import UserMyPage from "@/components/user/UserMyPage.vue";
 import UserOauthJoin from "@/components/user/UserOauthJoin.vue";
 
 Vue.use(VueRouter);
@@ -66,6 +67,11 @@ const routes = [
         path: "login",
         name: "userlogin",
         component: UserLogin,
+      },
+      {
+        path: "mypage",
+        name: "usermypage",
+        component: UserMyPage,
       },
     ],
   },
