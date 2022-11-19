@@ -11,7 +11,7 @@
         <td>
           <router-link :to="{ name: 'boarddetail', params: { id: board.id } }">{{ board.title }}</router-link>
         </td>
-        <td>{{ board.userId }}</td>
+        <td>{{ board.nickName }}</td>
         <td>{{ board.regDate }}</td>
       </tr>
     </tbody>

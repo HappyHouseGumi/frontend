@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       board: {
-        userId: "1",
+        userId: null,
         subject: "",
         title: "",
         content: "",
@@ -40,10 +40,18 @@ export default {
       subject2: [],
       selected1: 0,
       selected2: "",
+      loginId: null,
     };
   },
 
   created() {
+    if (localStorage.getItem("loginUser") != null) {
+      const id = JSON.parse(localStorage.getItem("loginUser")).userId;
+      this.loginId = id;
+    } else {
+      this.$router.push({ name: "boardlist" });
+    }
+
     getBoardSubject(
       "sido",
       0,
@@ -62,6 +70,7 @@ export default {
 
   methods: {
     writeBoard() {
+      this.board.userId = this.loginId;
       this.board.subject = "".concat(this.subject2[0].sidoName, " ", this.selected2);
       // console.log(this.board);
 
