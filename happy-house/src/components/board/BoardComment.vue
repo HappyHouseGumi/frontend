@@ -1,12 +1,15 @@
 <template>
   <div>
-    댓글 작성자 ------ {{ changeComment.userId }} <br />
+    댓글 작성자 ------ {{ changeComment.nickName }} <br />
     댓글 작성일 ------ {{ changeComment.regDate }} <br />
     <div v-if="isModifyC">댓글 내용 ------ {{ changeComment.content }}</div>
     <div v-else>댓글 내용 ------ <input type="text" v-model="changeComment.content" /></div>
-    <button v-if="isModifyB" @click="changeToggle">수정</button>
-    <button v-else @click="modifyComment">수정하기</button>
-    <button @click="deleteComment">삭제하기</button>
+
+    <div v-if="loginId != null && loginId === changeComment.userId">
+      <button v-if="isModifyB" @click="changeToggle">수정</button>
+      <button v-else @click="modifyComment">수정하기</button>
+      <button @click="deleteComment">삭제하기</button>
+    </div>
     <br />
   </div>
 </template>
@@ -26,14 +29,21 @@ export default {
       isModifyC: true,
       changeComment: {
         id: 0,
-        userId: 0,
+        userId: "",
+        nickName: "",
         content: "",
       },
+      loginId: null,
     };
   },
 
   created() {
     this.changeComment = this.comment;
+
+    if (localStorage.getItem("loginUser") != null) {
+      const id = JSON.parse(localStorage.getItem("loginUser")).userId;
+      this.loginId = id;
+    }
   },
 
   mounted() {},

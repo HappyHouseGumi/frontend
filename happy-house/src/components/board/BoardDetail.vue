@@ -4,17 +4,20 @@
     게시글 분류 ------ {{ board.subject }}, <br />
     게시글 제목 ------ {{ board.title }}, <br />
     게시글 내용 ------ {{ board.content }}, <br />
-    사용자 아이디 ------ {{ board.userId }}, <br />
+    사용자 닉네임 ------ {{ board.nickName }}, <br />
     게시글 등록일 ------ {{ board.regDate }}, <br />
     게시글 조회수 ------ {{ board.hit }}, <br />
-    <button @click="moveModifyBoard">수정</button>
-    <button @click="deleteBoard">삭제</button>
-
+    <div v-if="loginId != null && loginId === board.userId">
+      <button @click="moveModifyBoard">수정</button>
+      <button @click="deleteBoard">삭제</button>
+    </div>
     <button @click="moveListBoard">목록</button>
 
     <br />--------------------------------------------<br />
-    <textarea name="" id="" cols="30" rows="10" v-model="reply.content"></textarea>
-    <button @click="registReply">댓글 등록</button>
+    <div v-if="loginId != null">
+      <textarea name="" id="" cols="30" rows="10" v-model="reply.content"></textarea>
+      <button @click="registReply">댓글 등록</button>
+    </div>
 
     <br />--------------------------------------------
     <board-comment v-for="(comment, index) in comments" :key="index" :comment="comment"></board-comment>
@@ -36,14 +39,20 @@ export default {
       board: {},
       comments: [],
       reply: {
-        boardId: 1,
-        userId: 1,
+        boardId: null,
+        userId: null,
         content: "",
       },
+      loginId: null,
     };
   },
 
   created() {
+    if (localStorage.getItem("loginUser") != null) {
+      const id = JSON.parse(localStorage.getItem("loginUser")).userId;
+      this.loginId = id;
+    }
+
     getBoardDetail(
       this.$route.params.id,
       ({ data }) => {
@@ -104,7 +113,7 @@ export default {
     registReply() {
       if (confirm("댓글을 등록하시겠습니까?")) {
         this.reply.boardId = this.board.id;
-        this.reply.userId = this.board.userId;
+        this.reply.userId = this.loginId;
         writeComment(
           this.reply,
           ({ data }) => {

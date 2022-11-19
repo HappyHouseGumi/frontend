@@ -1,6 +1,8 @@
 <template>
   <div>
-    <router-link :to="{ name: 'boardregist' }">글 등록</router-link>
+    <div v-if="loginId != null">
+      <router-link :to="{ name: 'boardregist' }">글 등록</router-link>
+    </div>
     <table>
       <thead>
         <tr>
@@ -32,10 +34,16 @@ export default {
       params: {
         pgno: "1",
       },
+      loginId: null,
     };
   },
 
   created() {
+    if (localStorage.getItem("loginUser") != null) {
+      const id = JSON.parse(localStorage.getItem("loginUser")).userId;
+      this.loginId = id;
+    }
+
     getBoardList(
       this.params,
       ({ data }) => {
