@@ -72,10 +72,9 @@ export default {
 }
 
 table {
-  margin-bottom: 100px;
+  margin-bottom: 150px;
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
-  border-bottom: 1px solid #222;
 }
 </style>

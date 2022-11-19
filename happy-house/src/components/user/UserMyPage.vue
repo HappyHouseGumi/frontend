@@ -1,45 +1,47 @@
 <template>
-  <div>
-    <div class="mypage-wrapper">
-      <span>회원 정보</span>
-      <div><font-awesome-icon icon="fa-solid fa-user" class="fa-5x" /></div>
-      <div class="mypage-contents-wrapper">
-        <div class="mypage-content">
-          <label>이메일</label>
-          <input readonly :placeholder="`${user.email}`" />
+  <div class="user-mypage-wrapper">
+    <div>
+      <div class="mypage-wrapper">
+        <span>회원 정보</span>
+        <div><font-awesome-icon icon="fa-solid fa-user" class="fa-5x" /></div>
+        <div class="mypage-contents-wrapper">
+          <div class="mypage-content">
+            <label>이메일</label>
+            <input readonly :placeholder="`${user.email}`" />
+          </div>
+          <div v-if="!isModifyStatus" class="mypage-content">
+            <label>닉네임</label>
+            <input readonly type="text" :placeholder="`${user.nickName}`" />
+          </div>
+          <div v-if="isModifyStatus" class="mypage-content mypage-nickname">
+            <label>닉네임</label>
+            <input v-if="isModifyStatus" type="text" :placeholder="`${user.nickName}`" v-model="changedInfo.nickName" />
+            <button @click="checkAvailableNickName">중복 체크</button>
+          </div>
+          <div class="mypage-content">
+            <label>비밀번호</label>
+            <input
+              v-if="isModifyStatus"
+              type="password"
+              :placeholder="`${user.password}`"
+              v-model="changedInfo.password"
+            />
+            <input v-else readonly type="password" :placeholder="`${user.password}`" />
+          </div>
+          <div class="mypage-content">
+            <label>거주지</label>
+            <input v-if="isModifyStatus" type="text" :placeholder="`${user.location}`" v-model="changedInfo.location" />
+            <input v-else readonly type="text" :placeholder="`${user.location}`" />
+          </div>
         </div>
-        <div v-if="!isModifyStatus" class="mypage-content">
-          <label>닉네임</label>
-          <input readonly type="text" :placeholder="`${user.nickName}`" />
+        <div v-if="!isModifyStatus" class="mypage-buttons-wrapper">
+          <button style="background: #61affe" @click="moveModifyUser">수정</button>
+          <button style="background: #f93e3e" @click="moveDeleteUser">탈퇴</button>
         </div>
-        <div v-if="isModifyStatus" class="mypage-content mypage-nickname">
-          <label>닉네임</label>
-          <input v-if="isModifyStatus" type="text" :placeholder="`${user.nickName}`" v-model="changedInfo.nickName" />
-          <button @click="checkAvailableNickName">중복 체크</button>
+        <div v-else class="mypage-buttons-wrapper">
+          <button style="background: #49cc90" @click="modifyUserInfo">완료</button>
+          <button style="background: #dddddd" @click="cancelModifyUser">취소</button>
         </div>
-        <div class="mypage-content">
-          <label>비밀번호</label>
-          <input
-            v-if="isModifyStatus"
-            type="password"
-            :placeholder="`${user.password}`"
-            v-model="changedInfo.password"
-          />
-          <input v-else readonly type="password" :placeholder="`${user.password}`" />
-        </div>
-        <div class="mypage-content">
-          <label>거주지</label>
-          <input v-if="isModifyStatus" type="text" :placeholder="`${user.location}`" v-model="changedInfo.location" />
-          <input v-else readonly type="text" :placeholder="`${user.location}`" />
-        </div>
-      </div>
-      <div v-if="!isModifyStatus" class="mypage-buttons-wrapper">
-        <button style="background: #61affe" @click="moveModifyUser">수정</button>
-        <button style="background: #f93e3e" @click="moveDeleteUser">탈퇴</button>
-      </div>
-      <div v-else class="mypage-buttons-wrapper">
-        <button style="background: #49cc90" @click="modifyUserInfo">완료</button>
-        <button style="background: #dddddd" @click="cancelModifyUser">취소</button>
       </div>
     </div>
   </div>
@@ -160,13 +162,25 @@ export default {
 </script>
 
 <style scoped>
-button {
-  cursor: pointer;
+.user-mypage-wrapper {
+  display: flex;
+  align-items: center;
+  background: white;
+}
+
+.user-mypage-wrapper > div {
+  margin: 0 auto;
 }
 
 .mypage-wrapper {
-  padding: 40px 0;
-  background: #fafafa;
+  margin-top: 50px;
+  margin-bottom: 130px;
+  border: 1px solid white;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  height: 700px;
+  width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -35,6 +35,7 @@ export default {
     logout() {
       localStorage.removeItem("loginUser");
       this.isLoginStatus = false;
+      this.$router.push("/");
     },
   },
   created() {
@@ -56,6 +57,7 @@ header {
   width: 100%;
   /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5); */
   border-bottom: 1px solid #eee;
+  background: white;
 }
 
 header > div {

@@ -205,10 +205,11 @@ export default {
 
 .qna-modify-delete-wrapper > div > input {
   margin-right: 10px;
-  border: 1px solid #666;
+  border: 1px solid darkgray;
   padding: 5px;
   outline: none;
   border-radius: 5px;
+  font-size: 0.9rem;
 }
 
 .qna-modify-btn {
@@ -227,6 +228,7 @@ export default {
 .qna-comments-wrapper {
   width: 100%;
   margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 .qna-comments-write-wrapper {
