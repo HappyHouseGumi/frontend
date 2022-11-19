@@ -3,21 +3,13 @@
     <div class="user-join-types">
       <div>
         <span>회원가입</span>
-        <button>네이버로 회원가입</button>
+        <button @click="joinUserOauth">네이버로 회원가입</button>
         <div class="divide-line"></div>
         <div class="user-join-personal-wrapper">
-          <input
-            placeholder="* 닉네임을 입력해주세요"
-            type="text"
-            v-model="user.nickName"
-            @keyup="checkAvailableNickName"
-          />
-          <span v-if="user.nickName && isAvailableNickName" class="check-nickname-span" style="color: #0069d9"
-            ><i>사용할 수 있는 닉네임입니다.</i></span
-          >
-          <span v-else-if="user.nickName && !isAvailableNickName" class="check-nickname-span" style="color: #ff0000"
-            ><i>사용할 수 없는 닉네임입니다.</i></span
-          >
+          <div class="user-join-nickname-wrapper">
+            <input placeholder="* 닉네임을 입력해주세요" type="text" v-model="user.nickName" />
+            <button @click="checkAvailableNickName">중복 체크</button>
+          </div>
           <input placeholder="* 비밀번호를 입력해주세요" type="password" v-model="user.password" />
           <div class="user-join-email-wrapper">
             <input placeholder="* Email을 입력해주세요" type="email" v-model="user.email" class="user-email-input" />
@@ -69,10 +61,6 @@ export default {
         alert("유효한 이메일을 입력해주세요.");
         return;
       }
-      if (this.user.nickName.length > 6) {
-        alert("닉네임은 최대 6자리 가능합니다.");
-        return;
-      }
 
       registUser(
         this.user,
@@ -87,19 +75,34 @@ export default {
         }
       );
     },
+    joinUserOauth() {
+      this.$router.push({ path: "/user/login" });
+    },
     checkAvailableNickName() {
+      if (this.user.nickName.length > 6) {
+        alert("닉네임은 최대 6자리 가능합니다.");
+        return;
+      }
+
       if (this.user.nickName !== "") {
         getCheckNickName(
           this.user.nickName,
           ({ data }) => {
             if (data.flag === "success") {
               this.isAvailableNickName = true;
-            } else this.isAvailableNickName = false;
+              alert("사용할 수 있는 닉네임입니다.");
+            } else {
+              this.isAvailableNickName = false;
+              alert("사용할 수 없는 닉네임입니다.");
+            }
           },
           (error) => {
             console.log("닉네임 중복 검사 오류 : " + error);
           }
         );
+      } else {
+        alert("닉네임을 입력해주세요.");
+        return;
       }
     },
     certifyEmail() {
@@ -148,6 +151,10 @@ export default {
 </script>
 
 <style scoped>
+button {
+  cursor: pointer;
+}
+
 .user-join-wrapper {
   height: 100%;
   background: #ddd;
@@ -180,22 +187,22 @@ export default {
   margin-bottom: 20px;
 }
 
-.divide-line {
-  width: 400px;
-  height: 2px;
-  background: #999999;
-  margin-bottom: 40px;
-}
-
 .user-join-types > div > button {
-  width: 350px;
+  width: 250px;
   height: 50px;
   border: none;
   color: white;
   font-weight: bold;
   border-radius: 10px;
-  background: #19ce60;
+  background: #02c759;
   margin-bottom: 30px;
+}
+
+.divide-line {
+  width: 400px;
+  height: 2px;
+  background: #999999;
+  margin-bottom: 40px;
 }
 
 .user-join-personal-wrapper {
@@ -205,7 +212,8 @@ export default {
   align-items: center;
 }
 
-.user-join-personal-wrapper > input {
+.user-join-personal-wrapper > input,
+.user-join-nickname-wrapper > input {
   width: 350px;
   height: 40px;
   padding: 0 10px;
@@ -215,8 +223,23 @@ export default {
   outline: none;
 }
 
-.user-join-personal-wrapper > input:nth-child(1) {
+.user-join-nickname-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.user-join-nickname-wrapper > input {
+  width: 250px;
   margin-top: 0;
+  margin-right: 10px;
+}
+
+.user-join-nickname-wrapper > button {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 10px;
+  background: #5a6268;
+  color: white;
 }
 
 .user-join-email-wrapper > input {
@@ -243,7 +266,7 @@ export default {
 }
 
 .user-join-personal-wrapper > button {
-  width: 350px;
+  width: 250px;
   height: 50px;
   border: none;
   color: white;
@@ -251,5 +274,9 @@ export default {
   border-radius: 10px;
   background: #3c90e2;
   margin-top: 30px;
+}
+
+#naver_id_login {
+  margin-bottom: 20px;
 }
 </style>

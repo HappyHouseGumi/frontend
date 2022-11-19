@@ -14,6 +14,8 @@ import BoardList from "@/components/board/BoardList.vue";
 import BoardRegist from "@/components/board/BoardRegist.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import BoardModify from "@/components/board/BoardModify.vue";
+import UserMyPage from "@/components/user/UserMyPage.vue";
+import UserOauthJoin from "@/components/user/UserOauthJoin.vue";
 
 Vue.use(VueRouter);
 
@@ -61,15 +63,20 @@ const routes = [
         name: "userjoin",
         component: UserJoin,
       },
-      // {
-      //   path: "oauthjoin",
-      //   name: "useroauthjoin",
-      //   component: UserOauthJoin,
-      // },
+      {
+        path: "oauthjoin",
+        name: "useroauthjoin",
+        component: UserOauthJoin,
+      },
       {
         path: "login",
         name: "userlogin",
         component: UserLogin,
+      },
+      {
+        path: "mypage",
+        name: "usermypage",
+        component: UserMyPage,
       },
     ],
   },
