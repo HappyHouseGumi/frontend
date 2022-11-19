@@ -6,18 +6,10 @@
         <button @click="joinUserOauth">네이버로 회원가입</button>
         <div class="divide-line"></div>
         <div class="user-join-personal-wrapper">
-          <input
-            placeholder="* 닉네임을 입력해주세요"
-            type="text"
-            v-model="user.nickName"
-            @keyup="checkAvailableNickName"
-          />
-          <span v-if="user.nickName && isAvailableNickName" class="check-nickname-span" style="color: #0069d9"
-            ><i>사용할 수 있는 닉네임입니다.</i></span
-          >
-          <span v-else-if="user.nickName && !isAvailableNickName" class="check-nickname-span" style="color: #ff0000"
-            ><i>사용할 수 없는 닉네임입니다.</i></span
-          >
+          <div class="user-join-nickname-wrapper">
+            <input placeholder="* 닉네임을 입력해주세요" type="text" v-model="user.nickName" />
+            <button @click="checkAvailableNickName">중복 체크</button>
+          </div>
           <input placeholder="* 비밀번호를 입력해주세요" type="password" v-model="user.password" />
           <div class="user-join-email-wrapper">
             <input placeholder="* Email을 입력해주세요" type="email" v-model="user.email" class="user-email-input" />
@@ -69,10 +61,6 @@ export default {
         alert("유효한 이메일을 입력해주세요.");
         return;
       }
-      if (this.user.nickName.length > 6) {
-        alert("닉네임은 최대 6자리 가능합니다.");
-        return;
-      }
 
       registUser(
         this.user,
@@ -91,18 +79,30 @@ export default {
       this.$router.push({ path: "/user/login" });
     },
     checkAvailableNickName() {
+      if (this.user.nickName.length > 6) {
+        alert("닉네임은 최대 6자리 가능합니다.");
+        return;
+      }
+
       if (this.user.nickName !== "") {
         getCheckNickName(
           this.user.nickName,
           ({ data }) => {
             if (data.flag === "success") {
               this.isAvailableNickName = true;
-            } else this.isAvailableNickName = false;
+              alert("사용할 수 있는 닉네임입니다.");
+            } else {
+              this.isAvailableNickName = false;
+              alert("사용할 수 없는 닉네임입니다.");
+            }
           },
           (error) => {
             console.log("닉네임 중복 검사 오류 : " + error);
           }
         );
+      } else {
+        alert("닉네임을 입력해주세요.");
+        return;
       }
     },
     certifyEmail() {
@@ -187,13 +187,6 @@ button {
   margin-bottom: 20px;
 }
 
-.divide-line {
-  width: 400px;
-  height: 2px;
-  background: #999999;
-  margin-bottom: 40px;
-}
-
 .user-join-types > div > button {
   width: 250px;
   height: 50px;
@@ -205,6 +198,13 @@ button {
   margin-bottom: 30px;
 }
 
+.divide-line {
+  width: 400px;
+  height: 2px;
+  background: #999999;
+  margin-bottom: 40px;
+}
+
 .user-join-personal-wrapper {
   display: flex;
   flex-direction: column;
@@ -212,7 +212,8 @@ button {
   align-items: center;
 }
 
-.user-join-personal-wrapper > input {
+.user-join-personal-wrapper > input,
+.user-join-nickname-wrapper > input {
   width: 350px;
   height: 40px;
   padding: 0 10px;
@@ -222,8 +223,23 @@ button {
   outline: none;
 }
 
-.user-join-personal-wrapper > input:nth-child(1) {
+.user-join-nickname-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.user-join-nickname-wrapper > input {
+  width: 250px;
   margin-top: 0;
+  margin-right: 10px;
+}
+
+.user-join-nickname-wrapper > button {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 10px;
+  background: #5a6268;
+  color: white;
 }
 
 .user-join-email-wrapper > input {
