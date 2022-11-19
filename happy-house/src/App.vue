@@ -32,4 +32,8 @@ button,
 a {
   cursor: pointer;
 }
+
+html {
+  height: 100%;
+}
 </style>

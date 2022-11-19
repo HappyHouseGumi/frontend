@@ -1,14 +1,12 @@
 <template>
   <header>
-    <!-- a -> router-link -->
     <div>
       <router-link to="/" class="logo navbar-menus">HappyHouse</router-link>
     </div>
     <div>
-      <a class="navbar-menus">실거래가조회</a>
+      <router-link to="/apt" class="navbar-menus">실거래가조회</router-link>
       <a class="navbar-menus">관심지역</a>
       <a class="navbar-menus">공지사항</a>
-      <!-- <a class="navbar-menus">자유게시판</a> -->
       <router-link to="/board" class="navbar-menus">자유게시판</router-link>
     </div>
     <div v-if="!isLoginStatus">
@@ -55,7 +53,6 @@ header {
   justify-content: space-between;
   padding: 20px;
   width: 100%;
-  /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5); */
   border-bottom: 1px solid #eee;
   background: white;
 }
