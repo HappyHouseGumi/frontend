@@ -9,6 +9,11 @@ import QnaModify from "@/components/qna/QnaModify.vue";
 import AppUser from "@/views/AppUser.vue";
 import UserJoin from "@/components/user/UserJoin.vue";
 import UserLogin from "@/components/user/UserLogin.vue";
+import AppBoard from "@/views/AppBoard.vue";
+import BoardList from "@/components/board/BoardList.vue";
+import BoardRegist from "@/components/board/BoardRegist.vue";
+import BoardDetail from "@/components/board/BoardDetail.vue";
+import BoardModify from "@/components/board/BoardModify.vue";
 
 Vue.use(VueRouter);
 
@@ -65,6 +70,34 @@ const routes = [
         path: "login",
         name: "userlogin",
         component: UserLogin,
+      },
+    ],
+  },
+  {
+    path: "/board",
+    name: "board",
+    component: AppBoard,
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "boardlist",
+        component: BoardList,
+      },
+      {
+        path: "regist",
+        name: "boardregist",
+        component: BoardRegist,
+      },
+      {
+        path: "detail/:id",
+        name: "boarddetail",
+        component: BoardDetail,
+      },
+      {
+        path: "modify/:id",
+        name: "boardmodify",
+        component: BoardModify,
       },
     ],
   },
