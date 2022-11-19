@@ -8,26 +8,15 @@
           <label>이메일</label>
           <input readonly :placeholder="`${user.email}`" />
         </div>
-        <div class="mypage-content">
+        <div v-if="!isModifyStatus" class="mypage-content">
           <label>닉네임</label>
-          <input
-            v-if="isModifyStatus"
-            type="text"
-            :placeholder="`${user.nickName}`"
-            v-model="changedInfo.nickName"
-            @keydown="checkAvailableNickName"
-          />
-          <input v-else readonly type="text" :placeholder="`${user.nickName}`" />
+          <input readonly type="text" :placeholder="`${user.nickName}`" />
         </div>
-        <span v-if="changedInfo.nickName && isAvailableNickName" class="check-nickname-span" style="color: #0069d9"
-          ><i>사용할 수 있는 닉네임입니다.</i></span
-        >
-        <span
-          v-else-if="changedInfo.nickName && !isAvailableNickName"
-          class="check-nickname-span"
-          style="color: #ff0000"
-          ><i>사용할 수 없는 닉네임입니다.</i></span
-        >
+        <div v-if="isModifyStatus" class="mypage-content mypage-nickname">
+          <label>닉네임</label>
+          <input v-if="isModifyStatus" type="text" :placeholder="`${user.nickName}`" v-model="changedInfo.nickName" />
+          <button @click="checkAvailableNickName">중복 체크</button>
+        </div>
         <div class="mypage-content">
           <label>비밀번호</label>
           <input
@@ -90,11 +79,6 @@ export default {
       if (this.changedInfo.password === "") this.changedInfo.password = this.user.password;
       if (this.changedInfo.location === "") this.changedInfo.location = this.user.location;
 
-      if (this.changedInfo.nickName > 6) {
-        alert("닉네임은 최대 6자리 가능합니다.");
-        return;
-      }
-
       modifyUser(
         this.user.id,
         this.changedInfo,
@@ -127,18 +111,30 @@ export default {
       } else return;
     },
     checkAvailableNickName() {
+      if (this.changedInfo.nickName.length > 6) {
+        alert("닉네임은 최대 6자리 가능합니다.");
+        return;
+      }
+
       if (this.changedInfo.nickName !== "") {
         getCheckNickName(
           this.changedInfo.nickName,
           ({ data }) => {
             if (data.flag === "success") {
               this.isAvailableNickName = true;
-            } else this.isAvailableNickName = false;
+              alert("사용할 수 있는 닉네임입니다.");
+            } else {
+              this.isAvailableNickName = false;
+              alert("사용할 수 없는 닉네임입니다.");
+            }
           },
           (error) => {
             console.log("닉네임 중복 검사 오류 : " + error);
           }
         );
+      } else {
+        alert("닉네임을 입력해주세요.");
+        return;
       }
     },
   },
@@ -212,6 +208,18 @@ button {
   padding: 0 10px;
   outline: none;
   font-size: 0.9rem;
+}
+
+.mypage-nickname > input {
+  width: 45%;
+}
+
+.mypage-nickname > button {
+  border: none;
+  padding: 8px 15px;
+  border-radius: 10px;
+  background: #5a6268;
+  color: white;
 }
 
 .mypage-buttons-wrapper {
