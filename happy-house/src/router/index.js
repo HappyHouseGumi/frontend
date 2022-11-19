@@ -16,6 +16,8 @@ import BoardDetail from "@/components/board/BoardDetail.vue";
 import BoardModify from "@/components/board/BoardModify.vue";
 import UserMyPage from "@/components/user/UserMyPage.vue";
 import UserOauthJoin from "@/components/user/UserOauthJoin.vue";
+import AppApt from "@/views/AppApt.vue";
+import AptMap from "@/components/apt/AptMap.vue";
 
 Vue.use(VueRouter);
 
@@ -105,6 +107,19 @@ const routes = [
         path: "modify/:id",
         name: "boardmodify",
         component: BoardModify,
+      },
+    ],
+  },
+  {
+    path: "/apt",
+    name: "apt",
+    component: AppApt,
+    redirect: "/apt/map",
+    children: [
+      {
+        path: "map",
+        name: "aptmap",
+        component: AptMap,
       },
     ],
   },
