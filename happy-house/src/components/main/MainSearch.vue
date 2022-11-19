@@ -12,7 +12,7 @@
           </div>
           <input placeholder="지역명, 건물명을 검색해주세요." />
           <!-- 검색 아이콘으로 변경 필요 -->
-          <button>검색</button>
+          <button><font-awesome-icon icon="fa-solid fa-magnifying-glass" class="fa-2x" /></button>
         </div>
       </div>
       <div class="bg"></div>
