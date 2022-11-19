@@ -28,10 +28,24 @@
             />
             <input v-else readonly type="password" :placeholder="`${user.password}`" />
           </div>
-          <div class="mypage-content">
+          <div class="mypage-content" v-if="isModifyStatus">
             <label>거주지</label>
-            <input v-if="isModifyStatus" type="text" :placeholder="`${user.location}`" v-model="changedInfo.location" />
-            <input v-else readonly type="text" :placeholder="`${user.location}`" />
+            <div class="mypage-location-wrapper">
+              <select v-model="selectedSido" @change="changeSido">
+                <option v-for="(list, index) in optionSido" :key="index" :value="list.dongCode">
+                  {{ list.sidoName }}
+                </option>
+              </select>
+              <select v-if="isSidoSelected" v-model="selectedGugun">
+                <option v-for="(list, index) in optionGugun" :key="index" :value="list.dongCode">
+                  {{ list.gugunName }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="mypage-content" v-else>
+            <label>거주지</label>
+            <input readonly type="text" :placeholder="`${user.location}`" />
           </div>
         </div>
         <div v-if="!isModifyStatus" class="mypage-buttons-wrapper">
@@ -49,6 +63,7 @@
 
 <script type="module">
 import { getUserDetail, modifyUser, deleteUser, getCheckNickName } from "@/api/user";
+import { getDongCode } from "@/api/apt";
 
 export default {
   name: "UserMyPage",
@@ -56,6 +71,12 @@ export default {
     return {
       isAvailableNickName: false,
       isModifyStatus: false,
+      hasUserLocation: false,
+      selectedSido: 0,
+      selectedGugun: 0,
+      optionSido: [],
+      optionGugun: [],
+      isSidoSelected: false,
       changedInfo: {
         nickName: "",
         password: "",
@@ -75,6 +96,13 @@ export default {
       if (!this.isAvailableNickName && this.changedInfo.nickName !== "") {
         alert("닉네임 중복 검사를 해주세요.");
         return;
+      }
+
+      if (this.selectedGugun === 0) {
+        alert("거주지를 다시 확인해주세요.");
+        return;
+      } else {
+        this.changedInfo.location = this.selectedGugun;
       }
 
       if (this.changedInfo.nickName === "") this.changedInfo.nickName = this.user.nickName;
@@ -139,6 +167,22 @@ export default {
         return;
       }
     },
+    changeSido() {
+      this.isSidoSelected = true;
+
+      getDongCode(
+        "gugun",
+        this.selectedSido,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.optionGugun = data.data;
+          }
+        },
+        (error) => {
+          console.log("말머리 불러오기 오류 : " + error);
+        }
+      );
+    },
   },
   created() {
     const id = JSON.parse(localStorage.getItem("loginUser")).userId;
@@ -148,6 +192,9 @@ export default {
       ({ data }) => {
         if (data.flag === "success") {
           this.user = data.data[0];
+
+          if (this.user.location === null) this.user.location = "지역을 설정해주세요";
+          else this.hasUserLocation = true;
         } else {
           alert("일치하는 회원이 없습니다.");
           this.$router.push("/user/login");
@@ -155,6 +202,19 @@ export default {
       },
       (error) => {
         console.log("회원 상세 불러오기 중 에러 : " + error);
+      }
+    );
+
+    getDongCode(
+      "sido",
+      0,
+      ({ data }) => {
+        if (data.flag === "success") {
+          this.optionSido = data.data;
+        }
+      },
+      (error) => {
+        console.log("시도 옵션 불러오기 오류 : " + error);
       }
     );
   },
@@ -180,7 +240,7 @@ export default {
   background: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   height: 700px;
-  width: 500px;
+  width: 550px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -215,7 +275,7 @@ export default {
 }
 
 .mypage-content > input {
-  width: 70%;
+  width: 240px;
   height: 35px;
   border-radius: 10px;
   border: 1px solid darkgray;
@@ -225,7 +285,7 @@ export default {
 }
 
 .mypage-nickname > input {
-  width: 45%;
+  width: 90px;
 }
 
 .mypage-nickname > button {
@@ -256,5 +316,23 @@ export default {
   font-size: 0.9rem;
   margin-bottom: 20px;
   font-weight: bold;
+}
+
+select {
+  height: 35px;
+  border-radius: 10px;
+  border: 1px solid darkgray;
+  padding: 0 5px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.mypage-location-wrapper {
+  display: flex;
+  width: 240px;
+}
+
+.mypage-location-wrapper > select:nth-child(1) {
+  margin-right: 10px;
 }
 </style>
