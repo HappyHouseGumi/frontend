@@ -2,22 +2,20 @@
   <div class="content">
     <div class="main">
       <div class="notice">
-        <p>공지사항</p>
+        <span>공지사항</span>
         <div class="divide-line"></div>
         <!-- 공지사항 최신 5가지 -->
         <div></div>
       </div>
       <div class="guide">
-        <p>이용안내</p>
+        <span>이용안내</span>
         <div class="divide-line"></div>
         <a><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
       </div>
       <div class="ask">
-        <p>QnA</p>
+        <span>QnA</span>
         <div class="divide-line"></div>
-        <router-link to="/qna"
-          ><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x"
-        /></router-link>
+        <router-link to="/qna"><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></router-link>
       </div>
     </div>
   </div>
@@ -30,6 +28,11 @@ export default {
 </script>
 
 <style scoped>
+a {
+  color: black;
+  cursor: pointer;
+}
+
 .content {
   width: 100%;
   height: 500px;
@@ -43,20 +46,16 @@ export default {
   height: 80%;
 }
 
-.main > div > p {
+span {
   font-size: 1.2rem;
   font-weight: bold;
 }
 
-.main > div > a {
-  cursor: pointer;
-}
-
 .divide-line {
-  width: 35px;
+  width: 40px;
   height: 1px;
   background: #999999;
-  margin-bottom: 1rem;
+  margin: 20px 0;
 }
 
 .notice {

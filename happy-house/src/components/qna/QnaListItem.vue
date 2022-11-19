@@ -31,28 +31,14 @@ export default {
 </script>
 
 <style scoped>
-colgroup {
-  display: table-column-group;
-}
-
-tbody {
-  display: table-row-group;
-  vertical-align: middle;
-}
-
-tr {
-  display: table-row;
-}
-
 th {
   height: 55px;
   text-align: left;
   padding-left: 15px;
   font-weight: bold;
-  color: #222;
+  color: black;
   border-bottom: 1px solid #d8d8d8;
   background: #f9f9f9;
-  line-height: 18px;
 }
 
 th > label:nth-child(2) {
@@ -65,9 +51,7 @@ td {
   width: 80%;
   height: 55px;
   padding: 10px 15px;
-  color: #222;
   border-bottom: 1px solid #d8d8d8;
-  border-left: 1px solid #d8d8d8;
   font-size: 0.9rem;
 }
 

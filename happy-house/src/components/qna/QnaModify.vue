@@ -108,7 +108,6 @@ table {
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
-  border-bottom: 1px solid #222;
 }
 
 colgroup {

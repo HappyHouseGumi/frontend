@@ -151,30 +151,25 @@ export default {
 </script>
 
 <style scoped>
-button {
-  cursor: pointer;
-}
-
 .user-join-wrapper {
-  height: 100%;
-  background: #ddd;
   display: flex;
   align-items: center;
+  background: white;
 }
 
 .user-join-types {
   margin: 0 auto;
-  width: 500px;
-  height: 700px;
+}
+
+.user-join-types > div {
+  margin-top: 50px;
+  margin-bottom: 130px;
   border: 1px solid white;
   border-radius: 10px;
   background: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-.user-join-types > div {
-  /* padding: 30px 20px; */
-  height: 100%;
+  height: 700px;
+  width: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
