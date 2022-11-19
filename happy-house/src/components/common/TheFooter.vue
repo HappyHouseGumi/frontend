@@ -22,7 +22,7 @@ export default {
 footer {
   width: 100%;
   height: 80px;
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
+  /* box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5); */
   border-top: 1px solid #eee;
   position: fixed;
   left: 0;

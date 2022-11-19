@@ -27,4 +27,9 @@ export default {
   font-size: 100%;
   box-sizing: border-box;
 }
+
+button,
+a {
+  cursor: pointer;
+}
 </style>

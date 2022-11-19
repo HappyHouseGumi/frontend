@@ -74,7 +74,7 @@ export default {
         this.question.title === "" ||
         this.question.content === ""
       ) {
-        alert("필수 항목을 채워주세요.");
+        alert("빈칸을 모두 채워주세요.");
         return;
       }
       if (this.question.userName.length > 6) {
@@ -106,7 +106,6 @@ table {
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
-  border-bottom: 1px solid #222;
 }
 
 colgroup {

@@ -65,24 +65,24 @@ export default {
 
 <style scoped>
 .user-login-wrapper {
-  height: 100%;
-  background: #ddd;
+  background: white;
   display: flex;
   align-items: center;
 }
 
 .user-login-types {
   margin: 0 auto;
+}
+
+.user-login-types > div {
+  margin-top: 100px;
+  margin-bottom: 150px;
   width: 500px;
   height: 500px;
   border: 1px solid white;
   border-radius: 10px;
   background: white;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-.user-login-types > div {
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -109,7 +109,7 @@ export default {
   color: white;
   font-weight: bold;
   border-radius: 10px;
-  background: #19ce60;
+  background: #1ec800;
   margin-bottom: 30px;
 }
 
