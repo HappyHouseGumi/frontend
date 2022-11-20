@@ -1,6 +1,8 @@
 <template>
   <div class="search-result-wrapper">
-    <span><font-awesome-icon icon="fa-solid fa-location-dot" class="fa-lg" /></span>
+    <span
+      ><font-awesome-icon icon="fa-solid fa-location-dot" class="fa-lg"
+    /></span>
     <span @click="moveLocationMap">{{ loc.address_name }}</span>
   </div>
 </template>
@@ -23,13 +25,15 @@ export default {
 
     moveLocationMap() {
       const location = {
-        x: this.loc.x,
-        y: this.loc.y,
+        x: this.loc.y,
+        y: this.loc.x,
+        level: 6,
       };
-
       this.SET_SEARCHED_LOCATION(location);
 
-      this.$router.push("/apt/map");
+      this.$router.push({
+        name: "apt",
+      });
     },
   },
 };

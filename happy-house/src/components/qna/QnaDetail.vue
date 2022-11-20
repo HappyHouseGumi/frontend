@@ -38,8 +38,7 @@
           :key="index"
           :idx="index"
           :comment="comment"
-          @changData="changData"
-        />
+          @changData="changData" />
       </div>
     </div>
   </div>
@@ -47,7 +46,12 @@
 
 <script type="module">
 import QnaComment from "@/components/qna/QnaComment.vue";
-import { deleteQna, registQnaComment, getQnaDetail, getQnaComment } from "@/api/qna";
+import {
+  deleteQna,
+  registQnaComment,
+  getQnaDetail,
+  getQnaComment,
+} from "@/api/qna";
 
 export default {
   name: "QnaDetail",
@@ -62,7 +66,7 @@ export default {
       comment: {
         content: "",
         qnaId: this.$route.params.id,
-        userId: 4, // 임시 데이터
+        userId: 23, // 임시 데이터
       },
       originComments: [], // 서버로부터 받는 댓글 리스트
     };
