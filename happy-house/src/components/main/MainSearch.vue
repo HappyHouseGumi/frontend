@@ -3,11 +3,13 @@
     <div class="main">
       <div class="search-area">
         <div class="search">
-          <input placeholder="지역명을 검색해주세요." />
-          <button><font-awesome-icon icon="fa-solid fa-magnifying-glass" class="fa-2x" /></button>
+          <input placeholder="주소를 검색해주세요." v-model="inputLocation" />
+          <button @click="searchLocation">
+            <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="fa-2x" />
+          </button>
         </div>
-        <div class="search-result">
-          <MainSearchResultItem v-for="(t, index) in test" :key="index" :loc="t" />
+        <div v-if="isResultOpen" class="search-result">
+          <MainSearchResultItem v-for="(loc, index) in resultLocations" :key="index" :loc="loc.address_name" />
         </div>
       </div>
       <div class="bg"></div>
@@ -17,6 +19,7 @@
 
 <script type="module">
 import MainSearchResultItem from "@/components/main/MainSearchResultItem.vue";
+import { getKakaoLocation } from "@/api/kakao";
 
 export default {
   name: "MainSearch",
@@ -25,17 +28,30 @@ export default {
   },
   data() {
     return {
-      test: [
-        "달서구 진천동",
-        "달서구 상인동",
-        "달성구 송현동",
-        "달서구 용산동",
-        "달서구 진천동",
-        "달서구 상인동",
-        "달성구 송현동",
-        "달서구 용산동",
-      ],
+      isResultOpen: false,
+      inputLocation: "",
+      resultLocations: [],
     };
+  },
+  methods: {
+    searchLocation() {
+      if (this.inputLocation !== "") {
+        getKakaoLocation(
+          this.inputLocation,
+          ({ data }) => {
+            if (data.documents.length) {
+              this.resultLocations = data.documents;
+              this.isResultOpen = true;
+            } else {
+              this.isResultOpen = false;
+            }
+          },
+          (error) => {
+            console.log("kakao api 불러오기 오류 : " + error);
+          }
+        );
+      }
+    },
   },
 };
 </script>

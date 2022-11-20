@@ -1,6 +1,6 @@
 <template>
   <div class="search-result-wrapper">
-    <span><font-awesome-icon icon="fa-solid fa-house" /></span>
+    <span><font-awesome-icon icon="fa-solid fa-location-dot" class="fa-lg" /></span>
     <span>{{ loc }}</span>
   </div>
 </template>

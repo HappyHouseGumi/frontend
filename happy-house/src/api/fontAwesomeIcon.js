@@ -12,11 +12,11 @@ import {
   faCheck,
   faUser,
   faMagnifyingGlass,
-  faHouse,
+  faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
-library.add(faCircleArrowRight, faBook, faGithub, faPen, faTrashCan, faCheck, faUser, faMagnifyingGlass, faHouse);
+library.add(faCircleArrowRight, faBook, faGithub, faPen, faTrashCan, faCheck, faUser, faMagnifyingGlass, faLocationDot);
 
 // font awesome 컴포넌트를 전역으로 등록
 Vue.component("font-awesome-icon", FontAwesomeIcon);
