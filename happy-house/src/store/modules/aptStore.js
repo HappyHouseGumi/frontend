@@ -8,7 +8,7 @@ const aptStore = {
     },
   },
   getters: {
-    getLocation(state) {
+    GET_LOC(state) {
       return state.searchedLocation;
     },
   },
@@ -17,6 +17,11 @@ const aptStore = {
       state.searchedLocation.x = searchedLocation.x;
       state.searchedLocation.y = searchedLocation.y;
       state.searchedLocation.level = searchedLocation.level;
+    },
+    RESET_SEARCHED_LOCATION(state) {
+      state.searchedLocation.x = 36.2683;
+      state.searchedLocation.y = 127.6358;
+      state.searchedLocation.level = 12;
     },
   },
   actions: {},
