@@ -1,32 +1,56 @@
 <template>
-  <div>
-    게시글 아이디 ------ {{ board.id }}, <br />
-    게시글 분류 ------ {{ board.subject }}, <br />
-    게시글 제목 ------ {{ board.title }}, <br />
-    게시글 내용 ------ {{ board.content }}, <br />
-    사용자 닉네임 ------ {{ board.nickName }}, <br />
-    게시글 등록일 ------ {{ board.regDate }}, <br />
-    게시글 조회수 ------ {{ board.hit }}, <br />
-    <div v-if="loginId != null && loginId === board.userId">
-      <button @click="moveModifyBoard">수정</button>
-      <button @click="deleteBoard">삭제</button>
+  <div class="board-detail-wrapper">
+    <!-- 게시글 상세 영역 -->
+    <div class="detail-wrapper">
+      <!-- 게시글 제목 작성자 작성일시 -->
+      <div class="detail-header-wrapper">
+        <span>{{ board.title }}</span>
+        <div>
+          <span>{{ board.nickName }}</span> | <span>{{ board.regDate }}</span> |
+          <span>{{ board.hit }}</span>
+        </div>
+        <button @click="registLike" class="board-delete-btn">좋아요</button>
+      </div>
+      <!-- 게시글 내용 -->
+      <div class="detail-content-wrapper">{{ board.content }}</div>
     </div>
-    <button @click="moveListBoard">목록</button>
-
-    <br />--------------------------------------------<br />
-    <div v-if="loginId != null">
-      <textarea name="" id="" cols="30" rows="10" v-model="reply.content"></textarea>
-      <button @click="registReply">댓글 등록</button>
+    <!-- 수정 삭제 영역 -->
+    <div class="board-modify-delete-wrapper">
+      <div v-if="loginId != null && loginId === board.userId">
+        <!-- <div v-if="isWriter"> -->
+        <button class="board-modify-btn" @click="moveModifyBoard">수정</button>
+        <button class="board-delete-btn" @click="deleteBoard">삭제</button>
+        <button class="board-list-btn" @click="moveListBoard">목록</button>
+      </div>
+      <div v-else>
+        <button class="board-list-btn" @click="moveListBoard">목록</button>
+      </div>
     </div>
-
-    <br />--------------------------------------------
-    <board-comment v-for="(comment, index) in comments" :key="index" :comment="comment"></board-comment>
+    <!-- 댓글 영역 -->
+    <div class="board-comments-wrapper">
+      <!-- 댓글 쓰는 영역 : 로그인한 사용자에게만 보이게 하기 -->
+      <div class="board-comments-write-wrapper" v-if="loginId != null">
+        <textarea placeholder="댓글을 입력하세요." v-model="reply.content"></textarea>
+        <div><button @click="registReply">댓글 등록</button></div>
+      </div>
+      <!-- 댓글 보여주는 영역 -->
+      <div class="board-comments-show-wrapper">
+        <board-comment
+          v-for="(comment, index) in comments"
+          :key="index"
+          :idx="index"
+          :comment="comment"
+          @changData="changData"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
+<script type="module">
 import BoardComment from "./BoardComment.vue";
 import { getBoardDetail, deleteBoard, getComment, writeComment } from "@/api/board";
+import { registLike } from "@/api/like";
 
 export default {
   name: "BoardDetail",
@@ -131,8 +155,154 @@ export default {
         //
       }
     },
+    changData(idx, content) {
+      this.comments[idx].content = content.content;
+    },
+    registLike() {
+      let sendinglike = {};
+      sendinglike.boardId = this.board.id;
+      sendinglike.userId = this.loginId;
+      registLike(
+        sendinglike,
+        ({ data }) => {
+          if (data.flag === "success") {
+            alert("like board 등록 성공");
+          }
+        },
+        (error) => {
+          console.log("like board 등록 오류 : " + error);
+        }
+      );
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.board-detail-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.detail-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.detail-header-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 30px;
+  border-top: 2px solid #222222;
+  border-bottom: 1px solid #e5e5e5;
+  background: #fafafa;
+}
+
+.detail-header-wrapper > span {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.detail-header-wrapper > div > span {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.detail-content-wrapper {
+  width: 100%;
+  padding: 25px 40px;
+  color: #4f5a66;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #e3e7eb;
+}
+
+.board-modify-delete-wrapper {
+  width: 100%;
+  margin-top: 30px;
+  text-align: right;
+}
+
+.board-modify-delete-wrapper > div > button {
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+.board-modify-delete-wrapper > div > input {
+  margin-right: 10px;
+  border: 1px solid darkgray;
+  padding: 5px;
+  outline: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.board-modify-btn {
+  background: #3c90e2;
+  margin-right: 10px;
+}
+
+.board-delete-btn {
+  background: #c82333;
+  margin-right: 10px;
+}
+
+.board-list-btn {
+  background: #218838;
+}
+
+.board-comments-wrapper {
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.board-comments-write-wrapper {
+  width: 100%;
+  padding: 20px;
+  background: #fafafa;
+  border: 1px solid #e3e7eb;
+}
+
+.board-comments-write-wrapper > textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px solid #e3e7eb;
+  padding: 15px;
+  background: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  resize: none;
+}
+
+.board-comments-write-wrapper > div {
+  text-align: right;
+}
+
+.board-comments-write-wrapper > div > button {
+  background: #3c90e2;
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.board-comments-show-wrapper {
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+</style>

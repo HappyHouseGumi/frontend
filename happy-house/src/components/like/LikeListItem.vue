@@ -2,21 +2,20 @@
   <tr>
     <!-- <td>{{ pgno }}</td>
       <td>{{ index + 1 }}</td> -->
-    <td>{{ board.id }}</td>
-    <td>{{ board.subject }}</td>
+    <td>{{ like.boardId }}</td>
+    <td>{{ like.subject }}</td>
     <td style="font-weight: bold">
-      <router-link :to="{ name: 'boarddetail', params: { id: board.id } }">{{ board.title }}</router-link>
+      <router-link :to="{ name: 'boarddetail', params: { id: like.boardId } }">{{ like.title }}</router-link>
     </td>
-    <td>{{ board.nickName }}</td>
-    <td>{{ board.regDate }}</td>
+    <td>{{ like.nickName }}</td>
   </tr>
 </template>
 
 <script type="module">
 export default {
-  name: "BoardListItem",
+  name: "LikeListItem",
   props: {
-    board: Object,
+    like: Object,
     // pgno: Number,
     // index: Number,
   },

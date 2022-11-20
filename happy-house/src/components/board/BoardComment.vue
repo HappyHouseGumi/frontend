@@ -1,20 +1,30 @@
 <template>
-  <div>
-    댓글 작성자 ------ {{ changeComment.nickName }} <br />
-    댓글 작성일 ------ {{ changeComment.regDate }} <br />
-    <div v-if="isModifyC">댓글 내용 ------ {{ changeComment.content }}</div>
-    <div v-else>댓글 내용 ------ <input type="text" v-model="changeComment.content" /></div>
-
-    <div v-if="loginId != null && loginId === changeComment.userId">
-      <button v-if="isModifyB" @click="changeToggle">수정</button>
-      <button v-else @click="modifyComment">수정하기</button>
-      <button @click="deleteComment">삭제하기</button>
+  <div class="comment-wrapper">
+    <div>
+      <div class="comment-header-wrapper">
+        <span>{{ changeComment.nickName }}</span> |
+        <span>{{ changeComment.regDate }}</span>
+      </div>
+      <div v-if="!isModifyStatus" class="comment-content-wrapper"><b>A.</b> {{ changeComment.content }}</div>
+      <div v-else class="comment-content-wrapper">
+        <input class="comment-modify-input" :placeholder="`${changeComment.content}`" v-model="changeComment.content" />
+      </div>
     </div>
-    <br />
+    <div v-if="loginId != null && loginId === changeComment.userId" class="comment-right-wrapper">
+      <button v-if="!isModifyStatus" class="comment-modify-btn" @click="moveModifyComment">
+        <font-awesome-icon icon="fa-solid fa-pen" />
+      </button>
+      <button v-else class="comment-modify-btn" @click="modifyComment">
+        <font-awesome-icon icon="fa-solid fa-check" />
+      </button>
+      <button @click="deleteComment">
+        <font-awesome-icon icon="fa-solid fa-trash-can" />
+      </button>
+    </div>
   </div>
 </template>
 
-<script>
+<script type="module">
 import { modifyComment, deleteComment } from "@/api/board";
 
 export default {
@@ -25,8 +35,7 @@ export default {
 
   data() {
     return {
-      isModifyB: true,
-      isModifyC: true,
+      isModifyStatus: false,
       changeComment: {
         id: 0,
         userId: "",
@@ -49,43 +58,86 @@ export default {
   mounted() {},
 
   methods: {
-    changeToggle() {
-      this.isModifyC = false;
-      this.isModifyB = false;
+    moveModifyComment() {
+      this.isModifyStatus = !this.isModifyStatus;
     },
     modifyComment() {
-      this.isModifyC = true;
-      this.isModifyB = true;
-      console.log(this.changeComment);
-      modifyComment(
-        this.changeComment,
-        ({ data }) => {
-          if (data.flag === "success") {
-            alert("댓글 수정 성공");
-            this.$router.go();
+      if (this.changeComment === "") {
+        alert("답글을 작성해주세요.");
+        return;
+      }
+      if (this.comment.content !== this.changedComment) {
+        modifyComment(
+          this.changeComment,
+          ({ data }) => {
+            if (data.flag === "success") {
+              alert("댓글 수정 성공");
+              this.$emit("changData", this.idx, this.changeComment);
+              this.isModifyStatus = false;
+            }
+          },
+          (error) => {
+            console.log("댓글 수정 오류 : " + error);
           }
-        },
-        (error) => {
-          console.log("댓글 수정 오류 : " + error);
-        }
-      );
+        );
+      }
     },
     deleteComment() {
-      deleteComment(
-        this.changeComment.id,
-        ({ data }) => {
-          if (data.flag === "success") {
-            alert("댓글 삭제 성공");
-            this.$router.go();
+      if (confirm("정말 삭제하시겠습니까?")) {
+        deleteComment(
+          this.changeComment.id,
+          ({ data }) => {
+            if (data.flag === "success") {
+              alert("댓글 삭제 성공");
+              this.$router.go();
+            }
+          },
+          (error) => {
+            console.log("댓글 삭제 오류 : " + error);
           }
-        },
-        (error) => {
-          console.log("댓글 삭제 오류 : " + error);
-        }
-      );
+        );
+      }
     },
   },
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.comment-wrapper {
+  width: 100%;
+  border-top: 1px solid #e3e7eb;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-header-wrapper > span {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.comment-content-wrapper {
+  margin-top: 5px;
+}
+
+.comment-modify-input {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  font-size: 0.9rem;
+  width: 400px;
+}
+
+.comment-right-wrapper > button {
+  border: none;
+  background: none;
+}
+
+.comment-modify-btn {
+  margin-right: 10px;
+}
+</style>

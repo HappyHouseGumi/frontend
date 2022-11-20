@@ -1,5 +1,5 @@
 <template>
-  <div class="board-modify-wrapper">
+  <div class="notice-modify-wrapper">
     <table>
       <colgroup>
         <col style="width: 185px" />
@@ -8,15 +8,9 @@
       <tbody>
         <tr>
           <th>
-            <label>닉네임</label>
+            <label>운영자</label>
           </th>
-          <td>{{ board.nickName }}</td>
-        </tr>
-        <tr>
-          <th>
-            <label>분류</label>
-          </th>
-          <td>{{ board.subject }}</td>
+          <td>{{ notice.id }}</td>
         </tr>
         <tr>
           <th>
@@ -24,7 +18,7 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <input type="text" v-model="board.title" />
+            <input type="text" v-model="notice.title" />
           </td>
         </tr>
         <tr>
@@ -33,27 +27,27 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <textarea v-model="board.content"></textarea>
+            <textarea v-model="notice.content"></textarea>
           </td>
         </tr>
       </tbody>
     </table>
     <div>
-      <button class="board-modify-done-btn" @click="modifyBoard">수정</button>
-      <button class="board-modify-cancel-btn" @click="moveDetailBoard">취소</button>
+      <button class="notice-modify-done-btn" @click="modifyNotice">수정</button>
+      <button class="notice-modify-cancel-btn" @click="moveDetailNotice">취소</button>
     </div>
   </div>
 </template>
 
 <script type="module">
-import { getBoardDetail, modifyBoard } from "@/api/board";
+import { getNoticeDetail, modifyNotice } from "@/api/notice";
 
 export default {
-  name: "BoardModify",
+  name: "NoticeModify",
 
   data() {
     return {
-      board: {},
+      notice: {},
       origin: {
         title: "",
         content: "",
@@ -63,18 +57,18 @@ export default {
   },
 
   created() {
-    getBoardDetail(
+    getNoticeDetail(
       this.$route.params.id,
       ({ data }) => {
         if (data.flag === "success") {
-          this.board = data.data[0];
+          this.notice = data.data[0];
           // console.log(data.data[0]);
-          this.origin.title = this.board.title;
-          this.origin.content = this.board.content;
+          this.origin.title = this.notice.title;
+          this.origin.content = this.notice.content;
         }
       },
       (error) => {
-        console.log("Board Modify 불러오기 오류 : " + error);
+        console.log("notice Modify 불러오기 오류 : " + error);
       }
     );
   },
@@ -82,34 +76,39 @@ export default {
   mounted() {},
 
   methods: {
-    modifyBoard() {
-      if (this.origin.title !== this.board.title) {
-        this.sendingData.title = this.board.title;
+    modifyNotice() {
+      if (this.notice.title === "" || this.notice.content === "") {
+        alert("빈칸을 모두 채워주세요.");
+        return;
       }
-      if (this.origin.content !== this.board.content) {
-        this.sendingData.content = this.board.content;
+      if (this.origin.title !== this.notice.title) {
+        this.sendingData.title = this.notice.title;
+      }
+      if (this.origin.content !== this.notice.content) {
+        this.sendingData.content = this.notice.content;
       }
 
       if (confirm("정말 수정하시겠습니까?")) {
-        modifyBoard(
-          this.board.id,
+        modifyNotice(
+          this.notice.id,
           this.sendingData,
           ({ data }) => {
             if (data.flag === "success") {
               alert("글 수정 완료!!");
-              this.moveDetailBoard();
+              this.moveDetailNotice();
             }
           },
           (error) => {
-            console.log("Board 게시글 삭제 오류 : " + error);
+            console.log("notice 게시글 삭제 오류 : " + error);
           }
         );
       } else {
         // 수정 취소 시
+        return;
       }
     },
-    moveDetailBoard() {
-      this.$router.push({ name: "boarddetail", params: { id: this.board.id } });
+    moveDetailNotice() {
+      this.$router.push({ name: "noticedetail", params: { id: this.notice.id } });
     },
   },
 };
@@ -180,7 +179,7 @@ td > textarea {
   font-weight: bold;
 }
 
-.board-modify-wrapper > div {
+.notice-modify-wrapper > div {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -198,12 +197,12 @@ button {
   border-radius: 5px;
 }
 
-.board-modify-done-btn {
+.notice-modify-done-btn {
   background: #3c90e2;
   margin-right: 20px;
 }
 
-.board-modify-cancel-btn {
+.notice-modify-cancel-btn {
   background: rgb(138, 137, 137);
 }
 </style>
