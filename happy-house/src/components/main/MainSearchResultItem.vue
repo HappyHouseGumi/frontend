@@ -1,15 +1,36 @@
 <template>
   <div class="search-result-wrapper">
     <span><font-awesome-icon icon="fa-solid fa-location-dot" class="fa-lg" /></span>
-    <span>{{ loc }}</span>
+    <span @click="moveLocationMap">{{ loc.address_name }}</span>
   </div>
 </template>
 
-<script>
+<script type="module">
+import { mapState, mapMutations } from "vuex";
+
+const aptStore = "aptStore";
+
 export default {
   name: "MainSearchResultItem",
   props: {
-    loc: String,
+    loc: Object,
+  },
+  computed: {
+    ...mapState(aptStore, ["searchedLocation"]),
+  },
+  methods: {
+    ...mapMutations(aptStore, ["SET_SEARCHED_LOCATION"]),
+
+    moveLocationMap() {
+      const location = {
+        x: this.loc.x,
+        y: this.loc.y,
+      };
+
+      this.SET_SEARCHED_LOCATION(location);
+
+      this.$router.push("/apt/map");
+    },
   },
 };
 </script>

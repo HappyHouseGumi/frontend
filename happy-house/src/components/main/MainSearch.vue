@@ -8,8 +8,11 @@
             <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="fa-2x" />
           </button>
         </div>
-        <div v-if="isResultOpen" class="search-result">
-          <MainSearchResultItem v-for="(loc, index) in resultLocations" :key="index" :loc="loc.address_name" />
+        <div v-if="isResultOpen && hasResult" class="search-result">
+          <MainSearchResultItem v-for="(loc, index) in resultLocations" :key="index" :loc="loc" />
+        </div>
+        <div v-else-if="isResultOpen && !hasResult" class="search-no-result">
+          <span>일치하는 검색 결과가 없습니다.</span>
         </div>
       </div>
       <div class="bg"></div>
@@ -29,6 +32,7 @@ export default {
   data() {
     return {
       isResultOpen: false,
+      hasResult: false,
       inputLocation: "",
       resultLocations: [],
     };
@@ -42,15 +46,17 @@ export default {
             if (data.documents.length) {
               this.resultLocations = data.documents;
               this.isResultOpen = true;
+              this.hasResult = true;
             } else {
-              this.isResultOpen = false;
+              this.isResultOpen = true;
+              this.hasResult = false;
             }
           },
           (error) => {
             console.log("kakao api 불러오기 오류 : " + error);
           }
         );
-      }
+      } else this.isResultOpen = false;
     },
   },
 };
@@ -137,6 +143,22 @@ export default {
   border-radius: 20px;
   background: #2e363e;
   overflow-y: scroll;
+}
+
+.search-no-result {
+  margin-top: 10px;
+  width: 600px;
+  height: 50px;
+  border-radius: 20px;
+  background: #2e363e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-no-result > span {
+  color: white;
+  font-weight: bold;
 }
 
 .search-result::-webkit-scrollbar {

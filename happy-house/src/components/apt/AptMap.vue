@@ -4,13 +4,22 @@
   </div>
 </template>
 
-<script>
+<script type="module">
+import { mapState } from "vuex";
+
+const aptStore = "aptStore";
+
 export default {
   name: "AptMap",
   data() {
     return {
       map: null,
     };
+  },
+  created: {
+    ...mapState(aptStore, ["searchedLocation"]),
+
+    // vuex 에서 x, y값이 담겨있는지 확인하고 있으면 해당 좌표로 중심좌표 만들기
   },
   mounted() {
     if (!window.kakao || !window.kakao.maps) {
@@ -31,57 +40,10 @@ export default {
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
+        center: new kakao.maps.LatLng(36.2683, 127.6358),
+        level: 12,
       };
       this.map = new kakao.maps.Map(container, options);
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-          const lat = position.coords.latitude; // 위도
-          const lon = position.coords.longitude; // 경도
-
-          const locPosition = new kakao.maps.LatLng(lat, lon);
-          const message = '<div style="padding: 5px;">현위치</div>';
-
-          const marker = new kakao.maps.Marker({
-            map: this.map,
-            position: locPosition,
-          });
-
-          let iwContent = message;
-          let iwRemoveable = true;
-
-          const infowindow = new kakao.maps.InfoWindow({
-            content: iwContent,
-            removable: iwRemoveable,
-          });
-
-          infowindow.open(this.map, marker);
-
-          this.map.setCenter(locPosition);
-        });
-      } else {
-        const locPosition = new kakao.maps.LatLng(36.10713409712998, 128.41613463250704);
-        const message = '<div style="padding: 5px;">현위치 로드불가</div>';
-
-        const marker = new kakao.maps.Marker({
-          map: this.map,
-          position: locPosition,
-        });
-
-        let iwContent = message;
-        let iwRemoveable = true;
-
-        const infowindow = new kakao.maps.InfoWindow({
-          content: iwContent,
-          removable: iwRemoveable,
-        });
-
-        infowindow.open(this.map, marker);
-
-        this.map.setCenter(locPosition);
-      }
     },
   },
 };
