@@ -10,8 +10,8 @@ import {
   getClusterSido,
   getClusterGugun,
 } from "@/api/apt";
-import { mapState, aptStore } from "vuex";
-
+import { mapState } from "vuex";
+const aptStore = "aptStore";
 export default {
   name: "AptMap",
   data() {
