@@ -26,7 +26,7 @@ export default {
       geocoder: null,
     };
   },
-  created: {
+  computed: {
     ...mapState(aptStore, ["searchedLocation"]),
 
     // vuex 에서 x, y값이 담겨있는지 확인하고 있으면 해당 좌표로 중심좌표 만들기
@@ -42,7 +42,7 @@ export default {
       });
       document.head.appendChild(script);
     } else {
-      console.log("이미 로딩됨: ", window.kakao);
+      //console.log("이미 로딩됨: ", window.kakao);
 
       this.initMap();
     }
