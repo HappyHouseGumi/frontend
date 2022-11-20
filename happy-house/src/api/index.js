@@ -11,4 +11,15 @@ function apiInstance() {
   return instance;
 }
 
-export { apiInstance };
+function kakaoInstance() {
+  const instance = axios.create({
+    baseURL: process.env.VUE_APP_KAKAO_BASE_URL,
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+  });
+
+  return instance;
+}
+
+export { apiInstance, kakaoInstance };
