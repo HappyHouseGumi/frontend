@@ -12,4 +12,22 @@ function getAptInfo(code, success, fail) {
   api.get(`/apt/list/${code}`).then(success).catch(fail);
 }
 
-export { getDongCode, getAptInfo };
+function getAptInfoBySidoGugun(sido, gugun, success, fail) {
+  api.get(`/apt/lists/${sido}/${gugun}`).then(success).catch(fail);
+}
+
+function getClusterSido(success, fail) {
+  api.get(`/apt/cluster/sido`).then(success).catch(fail);
+}
+
+function getClusterGugun(success, fail) {
+  api.get(`/apt/cluster/gugun`).then(success).catch(fail);
+}
+
+export {
+  getDongCode,
+  getAptInfo,
+  getAptInfoBySidoGugun,
+  getClusterSido,
+  getClusterGugun,
+};
