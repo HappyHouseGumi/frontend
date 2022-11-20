@@ -25,11 +25,16 @@ export default {
       geocoder: null,
     };
   },
+  created: {
+    ...mapState(aptStore, ["searchedLocation"]),
+
+    // vuex 에서 x, y값이 담겨있는지 확인하고 있으면 해당 좌표로 중심좌표 만들기
+  },
   mounted() {
     // script 태그 객체 생성
     if (!window.kakao || !window.kakao.maps) {
       const script = document.createElement("script");
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=46de3ebf411489fae866fea9cbb791b9&libraries=services,clusterer,drawing`;
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAOMAP_KEY}&libraries=services,clusterer,drawing`;
       /* global kakao */
       script.addEventListener("load", () => {
         kakao.maps.load(this.initMap);
@@ -84,7 +89,7 @@ export default {
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(36.2683, 127.6358, 16),
+        center: new kakao.maps.LatLng(36.2683, 127.6358),
         level: 12,
       };
       this.map = new kakao.maps.Map(container, options);
