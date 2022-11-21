@@ -4,8 +4,7 @@
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
         :clickedMarker="clickedMarker"
-        @closeAptDealInfo="closeAptDealInfo"
-      />
+        @closeAptDealInfo="closeAptDealInfo" />
     </div>
   </div>
 </template>

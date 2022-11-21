@@ -1,11 +1,12 @@
 <template>
   <div>
     <QnaSearch @searchBtn="searchBtn" />
-    <button class="qna-regist-btn" @click="moveRegistQna">질문 등록하기</button>
-    <div>
-      <table>
-        <QnaListItem v-for="(question, index) in questions" :key="index" :question="question" />
-      </table>
+    <div class="qna-list-button-wrapper">
+      <button v-if="isSearchedList" class="qna-list-btn" @click="moveQnaList">목록</button>
+      <button class="qna-regist-btn" @click="moveRegistQna">1:1 문의</button>
+    </div>
+    <div class="qna-list-item-wrapper">
+      <QnaListItem :questions="questions" />
     </div>
   </div>
 </template>
@@ -24,19 +25,28 @@ export default {
   data() {
     return {
       questions: [],
+      isSearchedList: false,
     };
   },
   methods: {
     moveRegistQna() {
       this.$router.push({ path: "/qna/regist" });
     },
-
-    searchBtn(searchInput) {
+    moveQnaList() {
+      this.$router.go();
+    },
+    searchBtn(searchInput, selectedCategory) {
       getQnaSearchList(
+        selectedCategory,
         searchInput,
         ({ data }) => {
-          if (data.flag === "success") this.questions = data.data;
-          else alert("검색어와 일치하는 항목이 없습니다.");
+          if (data.flag === "success") {
+            this.questions = data.data;
+            this.isSearchedList = true;
+          } else {
+            alert("검색어와 일치하는 항목이 없습니다.");
+            this.isSearchedList = false;
+          }
         },
         (error) => {
           console.log("QnA 검색결과 리스트 가져오기 오류 : " + error);
@@ -58,23 +68,40 @@ export default {
 </script>
 
 <style scoped>
-.qna-regist-btn {
-  margin: 30px 0;
+.qna-list-button-wrapper {
   float: right;
-  width: 120px;
-  height: 40px;
-  font-weight: bold;
-  color: white;
-  border: 0;
-  outline: 0;
-  background: #3c90e2;
-  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  margin: 30px 0;
 }
 
-table {
-  margin-bottom: 150px;
+.qna-regist-btn,
+.qna-list-btn {
+  width: 110px;
+  height: 40px;
+  font-weight: bold;
+  color: #007bff;
+  border: 0;
+  outline: 0;
+  background: white;
+  border: 1px solid #007bff;
+  border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.qna-regist-btn:hover,
+.qna-list-btn:hover {
+  color: white;
+  background: #007bff;
+}
+.qna-list-btn {
+  margin-right: 20px;
+}
+
+.qna-list-item-wrapper {
+  margin-top: 50px;
+  margin-bottom: 130px;
   width: 100%;
-  table-layout: fixed;
-  border-top: 2px solid #222;
 }
 </style>
