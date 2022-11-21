@@ -85,7 +85,6 @@ export default {
         interest,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("관심지역 등록 성공!");
             this.$router.go();
           }
         },
@@ -104,9 +103,11 @@ export default {
   height: 120px;
   padding: 30px 120px;
   border: 1px solid #ddd;
+  border-radius: 10px;
   background: #f8f8f8;
   display: flex;
   justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 }
 
 .interest-regist {

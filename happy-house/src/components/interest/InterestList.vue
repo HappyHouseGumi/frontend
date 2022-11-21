@@ -10,10 +10,14 @@
       </thead>
       <tbody>
         <tr v-for="(interest, index) in interests" :key="index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ interest.sidoName }} {{ interest.gugunName }}</td>
           <td>
-            <button class="delete-interest-btn" @click="(index) => deleteInterestFunc(index)">
+            <b>{{ index + 1 }}</b>
+          </td>
+          <td>
+            <a @click="moveInterestLocationMap">{{ interest.sidoName }} {{ interest.gugunName }}</a>
+          </td>
+          <td>
+            <button class="delete-interest-btn" @click="(id) => deleteInterestFunc(interest.id)">
               <font-awesome-icon icon="fa-solid fa-ban" class="fa-lg" />
             </button>
           </td>
@@ -25,6 +29,9 @@
 
 <script type="module">
 import { getInterestList, deleteInterest } from "@/api/interest";
+import { mapState, mapMutations } from "vuex";
+
+const aptStore = "aptStore";
 
 export default {
   name: "InterestList",
@@ -33,6 +40,7 @@ export default {
       interests: [],
     };
   },
+
   created() {
     const id = JSON.parse(localStorage.getItem("loginUser")).userId;
 
@@ -48,15 +56,17 @@ export default {
       }
     );
   },
+  computed: {
+    ...mapState(aptStore, ["searchedLocation"]),
+  },
   methods: {
-    deleteInterestFunc(index) {
-      const id = this.interests[index - 1].id;
+    ...mapMutations(aptStore, ["SET_SEARCHED_LOCATION"]),
 
+    deleteInterestFunc(id) {
       deleteInterest(
         id,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("관심지역 삭제 성공!");
             this.$router.go();
           }
         },
@@ -64,6 +74,19 @@ export default {
           console.log("관심지역 삭제 오류 : " + error);
         }
       );
+    },
+
+    moveInterestLocationMap() {
+      const location = {
+        x: this.loc.y,
+        y: this.loc.x,
+        level: 6,
+      };
+      this.SET_SEARCHED_LOCATION(location);
+
+      this.$router.push({
+        name: "apt",
+      });
     },
   },
 };
@@ -77,7 +100,6 @@ export default {
 }
 
 table {
-  border: 1px #0069d9 solid;
   font-size: 0.9em;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   width: 100%;
@@ -88,6 +110,7 @@ table {
 
 th {
   text-align: left;
+  font-size: 1rem;
 }
 
 thead {
@@ -98,7 +121,7 @@ thead {
 
 td,
 th {
-  padding: 1em 0.5em;
+  padding: 15px 30px;
   vertical-align: middle;
 }
 
@@ -161,5 +184,6 @@ a {
 .delete-interest-btn {
   border: none;
   background: none;
+  color: #c82333;
 }
 </style>
