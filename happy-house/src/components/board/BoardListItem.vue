@@ -17,6 +17,7 @@ export default {
   name: "BoardListItem",
   props: {
     board: Object,
+    paramsDetail: Object,
     // pgno: Number,
     // index: Number,
   },

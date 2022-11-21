@@ -1,27 +1,40 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <select v-model="searchClass" class="selectSubject">
+      <select v-model="boardListData.key" class="selectSubject">
         <option value="subject">지역</option>
         <option value="title">제목</option>
       </select>
-      <input placeholder="검색할 내용을 입력해주세요." v-model="searchInput" />
+      <input placeholder="검색할 내용을 입력해주세요." v-model="boardListData.word" />
       <button @click="searchBtn">검색</button>
     </div>
   </div>
 </template>
 
 <script type="module">
+import { mapState } from "vuex";
+
+const boardStore = "boardStore";
+
 export default {
   name: "BoardSearch",
+
   data() {
     return {
       searchClass: "subject",
       searchInput: "",
     };
   },
+
+  computed: {
+    ...mapState(boardStore, ["boardListData"]),
+  },
+
   methods: {
     searchBtn() {
+      this.searchClass = this.boardListData.key;
+      this.searchInput = this.boardListData.word;
+
       if (this.searchClass === "") {
         alert("검색할 지역을 선택해주세요!");
         return;
