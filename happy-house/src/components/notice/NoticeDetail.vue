@@ -52,6 +52,8 @@ export default {
         if (data.flag === "success") {
           this.notice = data.data[0];
           // console.log(data.data[0]);
+        } else {
+          console.log("notice 상세보기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -78,6 +80,8 @@ export default {
             if (data.flag === "success") {
               alert("글 삭제 성공");
               this.moveListNotice();
+            } else {
+              console.log("notice 공지사항 삭제 오류: ", data.data[0].msg);
             }
           },
           (error) => {

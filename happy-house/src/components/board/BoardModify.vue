@@ -71,6 +71,8 @@ export default {
           // console.log(data.data[0]);
           this.origin.title = this.board.title;
           this.origin.content = this.board.content;
+        } else {
+          console.log("Board Modify 불러오기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -98,6 +100,8 @@ export default {
             if (data.flag === "success") {
               alert("글 수정 완료!!");
               this.moveDetailBoard();
+            } else {
+              console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
             }
           },
           (error) => {
