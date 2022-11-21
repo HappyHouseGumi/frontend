@@ -16,6 +16,7 @@ import {
   faXmark,
   faHouse,
   faCaretDown,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
@@ -31,7 +32,8 @@ library.add(
   faLocationDot,
   faXmark,
   faHouse,
-  faCaretDown
+  faCaretDown,
+  faBan
 );
 
 // font awesome 컴포넌트를 전역으로 등록
