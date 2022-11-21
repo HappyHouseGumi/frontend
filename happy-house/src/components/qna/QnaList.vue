@@ -1,7 +1,7 @@
 <template>
   <div>
     <QnaSearch @searchBtn="searchBtn" />
-    <button class="qna-regist-btn" @click="moveRegistQna">질문 등록하기</button>
+    <button class="qna-regist-btn" @click="moveRegistQna">1:1 문의</button>
     <div>
       <table>
         <QnaListItem v-for="(question, index) in questions" :key="index" :question="question" />
@@ -61,14 +61,14 @@ export default {
 .qna-regist-btn {
   margin: 30px 0;
   float: right;
-  width: 120px;
+  width: 110px;
   height: 40px;
   font-weight: bold;
   color: white;
   border: 0;
   outline: 0;
-  background: #3c90e2;
-  border-radius: 5px;
+  background: #0069d9;
+  border-radius: 10px;
 }
 
 table {
