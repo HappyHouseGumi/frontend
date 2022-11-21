@@ -8,8 +8,8 @@ function getQnaList(success, fail) {
   api.get(`/qna`).then(success).catch(fail);
 }
 
-function getQnaSearchList(searchinput, success, fail) {
-  api.get(`/qna/search/${"title"}/${searchinput}`).then(success).catch(fail);
+function getQnaSearchList(category, searchinput, success, fail) {
+  api.get(`/qna/search/${category}/${searchinput}`).then(success).catch(fail);
 }
 
 function getQnaDetail(id, success, fail) {
