@@ -25,6 +25,7 @@ import AppLike from "@/views/AppLike.vue";
 import LikeList from "@/components/like/LikeList.vue";
 import AppApt from "@/views/AppApt.vue";
 import AptMap from "@/components/apt/AptMap.vue";
+import AppInterest from "@/views/AppInterest.vue";
 
 Vue.use(VueRouter);
 
@@ -170,6 +171,11 @@ const routes = [
         component: AptMap,
       },
     ],
+  },
+  {
+    path: "/interest",
+    name: "interest",
+    component: AppInterest,
   },
 ];
 
