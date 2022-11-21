@@ -1,6 +1,7 @@
 <template>
   <div>
     <BoardSearch @searchParam="searchList" />
+
     <div v-if="loginId != null">
       <button class="board-regist-btn" @click="moveRegistBoard">글 등록하기</button>
     </div>
@@ -19,13 +20,30 @@
         <!-- :index="index" :pgno="pgno" -->
       </tbody>
     </table>
+
+    <div class="page">
+      <ul class="pagination modal">
+        <li><a href="#" class="first">첫 페이지</a></li>
+        <li><a href="#" class="arrow-left">&lt;&lt;</a></li>
+        <li v-for="index in 10" :key="index" class="num">
+          <a>{{ index }}</a>
+        </li>
+        <!-- <li><a href="#" class="active-num">1</a></li>
+        <li><a href="#" class="num">2</a></li>
+        <li><a href="#" class="num">3</a></li>
+        <li><a href="#" class="num">4</a></li>
+        <li><a href="#" class="num">5</a></li> -->
+        <li><a href="#" class="arrow-right">&gt;&gt;</a></li>
+        <li><a href="#" class="last">끝 페이지</a></li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script type="module">
 import BoardListItem from "@/components/board/BoardListItem.vue";
 import BoardSearch from "@/components/board/BoardSearch.vue";
-import { getBoardList } from "@/api/board";
+import { getBoardList, getBoardListCount } from "@/api/board";
 
 export default {
   name: "BoardList",
@@ -43,6 +61,7 @@ export default {
         key: null,
         word: null,
       },
+      totalpgno: null,
       pgno: 1,
     };
   },
@@ -52,6 +71,21 @@ export default {
       const id = JSON.parse(localStorage.getItem("loginUser")).userId;
       this.loginId = id;
     }
+
+    getBoardListCount(
+      this.params,
+      ({ data }) => {
+        if (data.flag === "success") {
+          // console.log(data.data);
+          this.totalpgno = data.data[0];
+        } else {
+          console.log("Board 리스트 개수 가져오기 오류: ", data.data[0].msg);
+        }
+      },
+      (error) => {
+        console.log("Board 리스트 개수 가져오기 오류 : " + error);
+      }
+    );
 
     getBoardList(
       this.params,
@@ -84,7 +118,7 @@ export default {
         ({ data }) => {
           if (data.flag === "success") {
             this.boards = data.data;
-            console.log("board List 출력 :\n", this.boards);
+            //console.log("board List 출력 :\n", this.boards);
           } else {
             console.log("Board 리스트 검색으로 가져오기 오류: ", data.data[0].msg);
           }
@@ -135,4 +169,85 @@ th > label:nth-child(1) {
   font-size: 0.8rem;
   margin-left: 5px;
 }
+
+.page {
+  text-align: center; /* div 사이즈 영역 안에서의 center */
+  /* width: 70%; */
+}
+
+.pagination {
+  list-style: none;
+  display: inline-block;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.pagination li {
+  display: inline;
+  text-align: center;
+}
+
+/* 숫자들에 대한 스타일 지정 */
+.pagination a {
+  float: left;
+  display: block;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 5px 12px;
+  color: #96a0ad;
+  line-height: 1.5;
+}
+
+.first {
+  margin-right: 15px;
+}
+
+.last {
+  margin-left: 15px;
+}
+
+.first:hover,
+.last:hover,
+.left:hover,
+.right:hover {
+  color: #2e9cdf;
+}
+
+.pagination a.active {
+  cursor: default;
+  color: #ffffff;
+}
+
+.pagination a:active {
+  outline: none;
+}
+
+.modal .num {
+  margin-left: 3px;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  -moz-border-radius: 100%;
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+}
+
+.modal .num:hover {
+  background-color: #2e9cdf;
+  color: #ffffff;
+}
+
+.modal .num.active,
+.modal .num:active {
+  background-color: #2e9cdf;
+  cursor: pointer;
+}
+
+/* .arrow-left {
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+} */
 </style>

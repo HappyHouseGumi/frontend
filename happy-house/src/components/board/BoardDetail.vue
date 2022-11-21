@@ -9,7 +9,12 @@
           <span>{{ board.nickName }}</span> | <span>{{ board.regDate }}</span> |
           <span>{{ board.hit }}</span>
         </div>
-        <button @click="registLike" class="board-delete-btn">좋아요</button>
+        <div v-if="!checkingLike && loginId != null">
+          <button @click="registLike" class="board-delete-btn">좋아하기</button>
+        </div>
+        <div v-if="checkingLike && loginId != null">
+          <button @click="deleteLike" class="board-delete-btn">좋아하기 취소</button>
+        </div>
       </div>
       <!-- 게시글 내용 -->
       <div class="detail-content-wrapper">{{ board.content }}</div>
@@ -50,7 +55,7 @@
 <script type="module">
 import BoardComment from "./BoardComment.vue";
 import { getBoardDetail, deleteBoard, getComment, writeComment } from "@/api/board";
-import { registLike } from "@/api/like";
+import { checkLike, registLike, deleteLike } from "@/api/like";
 
 export default {
   name: "BoardDetail",
@@ -68,6 +73,8 @@ export default {
         content: "",
       },
       loginId: null,
+      sendinglike: {},
+      checkingLike: null,
     };
   },
 
@@ -75,6 +82,8 @@ export default {
     if (localStorage.getItem("loginUser") != null) {
       const id = JSON.parse(localStorage.getItem("loginUser")).userId;
       this.loginId = id;
+      this.sendinglike.userId = this.loginId;
+      this.sendinglike.boardId = this.$route.params.id;
     }
 
     getBoardDetail(
@@ -91,6 +100,7 @@ export default {
         console.log("Board 상세보기 오류 : " + error);
       }
     );
+
     getComment(
       this.$route.params.id,
       ({ data }) => {
@@ -103,6 +113,27 @@ export default {
       },
       (error) => {
         console.log("Comment 리스트 불러오기 오류 : " + error);
+      }
+    );
+
+    checkLike(
+      this.sendinglike,
+      ({ data }) => {
+        if (data.flag === "success") {
+          // console.log("like board 존재 여부 확인 성공:", data.data[0]);
+          if (data.data[0] === 0) {
+            // 좋아요 표시를 하지 않은 게시글
+            this.checkingLike = false;
+          } else {
+            // 좋아요 표시를 한 게시글
+            this.checkingLike = true;
+          }
+        } else {
+          console.log("like board 존재 여부 확인 오류: ", data.data[0].msg);
+        }
+      },
+      (error) => {
+        console.log("like board 존재 여부 확인 오류 : " + error);
       }
     );
   },
@@ -167,20 +198,36 @@ export default {
       this.comments[idx].content = content.content;
     },
     registLike() {
-      let sendinglike = {};
-      sendinglike.boardId = this.board.id;
-      sendinglike.userId = this.loginId;
       registLike(
-        sendinglike,
+        this.sendinglike,
         ({ data }) => {
           if (data.flag === "success") {
             alert("like board 등록 성공");
+            this.$router.push({ name: "likelist" });
           } else {
             console.log("like board 등록 오류: ", data.data[0].msg);
           }
         },
         (error) => {
           console.log("like board 등록 오류 : " + error);
+        }
+      );
+    },
+
+    deleteLike() {
+      deleteLike(
+        this.sendinglike.boardId,
+        this.sendinglike.userId,
+        ({ data }) => {
+          if (data.flag === "success") {
+            alert("like board 해제 성공");
+            this.$router.push({ name: "likelist" });
+          } else {
+            console.log("like board 해제 오류: ", data.data[0].msg);
+          }
+        },
+        (error) => {
+          console.log("like board 해제 오류 : " + error);
         }
       );
     },

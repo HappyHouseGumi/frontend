@@ -7,6 +7,11 @@ function getBoardList(param, success, fail) {
   api.post(`/board/list`, param).then(success).catch(fail);
 }
 
+// 게시글 리스트 갯수 불러오기
+function getBoardListCount(param, success, fail) {
+  api.post(`/board/count`, param).then(success).catch(fail);
+}
+
 // 게시글 상세 보기
 function getBoardDetail(id, success, fail) {
   api.get(`/board/${id}`).then(success).catch(fail);
@@ -54,6 +59,7 @@ function deleteComment(id, success, fail) {
 
 export {
   getBoardList,
+  getBoardListCount,
   getBoardDetail,
   writeBoard,
   modifyBoard,

@@ -54,7 +54,7 @@ export default {
       ({ data }) => {
         if (data.flag === "success") {
           this.likes = data.data;
-          console.log("Like List 출력 :\n", this.likes);
+          // console.log("Like List 출력 :\n", this.likes);
         } else {
           console.log("Like 리스트 가져오기 오류: ", data.data[0].msg);
         }
