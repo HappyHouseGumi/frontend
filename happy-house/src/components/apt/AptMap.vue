@@ -19,7 +19,7 @@ import {
 import { getFindLocation } from "@/api/kakao";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import AptDealInfo from "@/components/apt/AptDealInfo.vue";
-
+import { getCoordsToAddress } from "@/api/kakao";
 const aptStore = "aptStore";
 
 export default {
