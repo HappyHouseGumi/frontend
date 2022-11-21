@@ -1,20 +1,24 @@
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
+    <div v-if="!isMarkerClicked" class="apt-deal-wrapper">
+      <AptDealInfo :clickedMarker="clickedMarker" />
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  getAptInfoBySidoGugun,
-  getClusterSido,
-  getClusterGugun,
-} from "@/api/apt";
-//import { getFindLocation } from "@/api/kakao";
+import { getAptInfoBySidoGugun, getClusterSido, getClusterGugun } from "@/api/apt";
 import { mapState, mapGetters, mapMutations } from "vuex";
+import AptDealInfo from "@/components/apt/AptDealInfo.vue";
+
 const aptStore = "aptStore";
+
 export default {
   name: "AptMap",
+  components: {
+    AptDealInfo,
+  },
   data() {
     return {
       map: null,
@@ -30,13 +34,17 @@ export default {
       level: 12,
       marker: null,
       circle: null,
+      isMarkerClicked: false,
+      clickedMarker: {
+        addressName: "",
+        code: "",
+      },
     };
   },
   computed: {
     ...mapMutations(aptStore, ["RESET_SEARCHED_LOCATION"]),
     ...mapState(aptStore, ["searchedLocation"]),
     ...mapGetters(aptStore, ["GET_LOC"]),
-    // vuex 에서 x, y값이 담겨있는지 확인하고 있으면 해당 좌표로 중심좌표 만들기
   },
   mounted() {
     // script 태그 객체 생성
@@ -65,10 +73,8 @@ export default {
           //console.log(data.data);
           data.data.forEach((element) => {
             var content = null;
-            if (this.level == 6)
-              content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
-            else
-              content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
+            if (this.level == 6) content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
+            else content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
             var position = new kakao.maps.LatLng(element.lat, element.lng);
             var customOverlay = new kakao.maps.CustomOverlay({
               position: position,
@@ -88,10 +94,8 @@ export default {
         ({ data }) => {
           data.data.forEach((element) => {
             var content = null;
-            if (this.level == 6)
-              content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
-            else
-              content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
+            if (this.level == 6) content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
+            else content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
             var position = new kakao.maps.LatLng(element.lat, element.lng);
             var customOverlay = new kakao.maps.CustomOverlay({
               position: position,
@@ -189,11 +193,7 @@ export default {
     },
     searchAddrFromCoords(coords, callback) {
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoder.coord2RegionCode(
-        coords.getLng(),
-        coords.getLat(),
-        callback
-      );
+      this.geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
     },
     searchDetailAddrFromCoords(coords, callback) {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
@@ -215,10 +215,7 @@ export default {
 
         if (sidoName == "세종특별자치시") gugunName = "세종특별자치시";
 
-        if (
-          this.map.getLevel() <= 5 &&
-          (this.cur_sido != sidoName || this.cur_gugun != gugunName)
-        ) {
+        if (this.map.getLevel() <= 5 && (this.cur_sido != sidoName || this.cur_gugun != gugunName)) {
           // 시도 클러스터 삭제
           for (let i = 0; i < this.sidos.length; i++) {
             this.sidos[i].style.display = "none";
@@ -244,8 +241,14 @@ export default {
                 var marker = new kakao.maps.Marker({
                   position: position,
                 });
+
                 kakao.maps.event.addListener(marker, "click", () => {
+                  this.isMarkerClicked = true;
+                  // this.clickedMarker.addressName = element.apartmentName;
+                  this.clickedMarker.code = element.aptcode;
+
                   var pos = marker.getPosition();
+
                   if (this.circle) {
                     this.circle.setMap(null);
                   }
@@ -284,10 +287,21 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 #map {
   width: 100%;
   height: 92%;
+  z-index: 1;
+}
+
+.apt-deal-wrapper {
+  width: 450px;
+  height: 92%;
+  background: white;
+  z-index: 10;
+  border-left: 1px solid #eee;
 }
 </style>
