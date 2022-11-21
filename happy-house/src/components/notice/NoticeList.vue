@@ -38,7 +38,7 @@ export default {
       notices: [],
       loginId: null,
       params: {
-        pgno: "1",
+        pgno: 1,
         word: null,
       },
       pgno: 1,
