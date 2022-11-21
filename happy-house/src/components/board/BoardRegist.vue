@@ -91,6 +91,8 @@ export default {
       ({ data }) => {
         if (data.flag === "success") {
           this.subject1 = data.data;
+        } else {
+          console.log("말머리 불러오기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -118,6 +120,8 @@ export default {
           if (data.flag === "success") {
             alert("게시글 등록 성공");
             this.moveListBoard();
+          } else {
+            console.log("게시글 등록 오류: ", data.data[0].msg);
           }
         },
         (error) => {
@@ -135,6 +139,8 @@ export default {
         ({ data }) => {
           if (data.flag === "success") {
             this.subject2 = data.data;
+          } else {
+            console.log("말머리 불러오기 오류: ", data.data[0].msg);
           }
         },
         (error) => {

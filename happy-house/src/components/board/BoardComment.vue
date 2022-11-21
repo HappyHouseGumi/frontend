@@ -74,6 +74,8 @@ export default {
               alert("댓글 수정 성공");
               this.$emit("changData", this.idx, this.changeComment);
               this.isModifyStatus = false;
+            } else {
+              console.log("댓글 수정 오류: ", data.data[0].msg);
             }
           },
           (error) => {
@@ -90,6 +92,8 @@ export default {
             if (data.flag === "success") {
               alert("댓글 삭제 성공");
               this.$router.go();
+            } else {
+              console.log("댓글 삭제 오류: ", data.data[0].msg);
             }
           },
           (error) => {

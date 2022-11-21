@@ -65,6 +65,8 @@ export default {
           // console.log(data.data[0]);
           this.origin.title = this.notice.title;
           this.origin.content = this.notice.content;
+        } else {
+          console.log("notice Modify 불러오기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -96,10 +98,12 @@ export default {
             if (data.flag === "success") {
               alert("글 수정 완료!!");
               this.moveDetailNotice();
+            } else {
+              console.log("notice 게시글 수정 오류: ", data.data[0].msg);
             }
           },
           (error) => {
-            console.log("notice 게시글 삭제 오류 : " + error);
+            console.log("notice 게시글 수정 오류 : " + error);
           }
         );
       } else {
