@@ -14,10 +14,12 @@
             <b>{{ index + 1 }}</b>
           </td>
           <td>
-            <a @click="moveInterestLocationMap">{{ interest.sidoName }} {{ interest.gugunName }}</a>
+            <a @click="(dongcode) => moveInterestLocationMap(interest.dongCode)"
+              >{{ interest.sidoName }} {{ interest.gugunName }}</a
+            >
           </td>
           <td>
-            <button class="delete-interest-btn" @click="(id) => deleteInterestFunc(interest.id)">
+            <button class="delete-interest-btn" @click="(dongcode) => deleteInterestFunc(interest.dongCode)">
               <font-awesome-icon icon="fa-solid fa-ban" class="fa-lg" />
             </button>
           </td>
@@ -29,6 +31,7 @@
 
 <script type="module">
 import { getInterestList, deleteInterest } from "@/api/interest";
+import { getLatLngFromDongcode } from "@/api/apt";
 import { mapState, mapMutations } from "vuex";
 
 const aptStore = "aptStore";
@@ -37,18 +40,33 @@ export default {
   name: "InterestList",
   data() {
     return {
+      importedInterests: [],
       interests: [],
     };
   },
 
   created() {
-    const id = JSON.parse(localStorage.getItem("loginUser")).userId;
+    const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
 
     getInterestList(
-      id,
+      userId,
       ({ data }) => {
         if (data.flag === "success") {
-          this.interests = data.data;
+          this.importedInterests = data.data;
+
+          this.importedInterests.map((interest) =>
+            getLatLngFromDongcode(
+              interest.dongCode,
+              ({ data }) => {
+                if (data.flag === "success") {
+                  this.interests.push(data.data[0]);
+                }
+              },
+              (error) => {
+                console.log("동코드로 좌표 얻기 오류 : " + error);
+              }
+            )
+          );
         }
       },
       (error) => {
@@ -62,9 +80,11 @@ export default {
   methods: {
     ...mapMutations(aptStore, ["SET_SEARCHED_LOCATION"]),
 
-    deleteInterestFunc(id) {
+    deleteInterestFunc(dongcode) {
+      const [filtered] = this.importedInterests.filter((interest) => interest.dongCode === dongcode);
+
       deleteInterest(
-        id,
+        filtered.id,
         ({ data }) => {
           if (data.flag === "success") {
             this.$router.go();
@@ -76,10 +96,14 @@ export default {
       );
     },
 
-    moveInterestLocationMap() {
+    moveInterestLocationMap(dongcode) {
+      const [filtered] = this.interests.filter((interest) => interest.dongCode === dongcode);
+      const x = filtered.lat;
+      const y = filtered.lng;
+
       const location = {
-        x: this.loc.y,
-        y: this.loc.x,
+        x,
+        y,
         level: 6,
       };
       this.SET_SEARCHED_LOCATION(location);
