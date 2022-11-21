@@ -6,7 +6,7 @@
         <option>이름</option>
       </select>
       <input placeholder="제목을 검색해주세요." v-model="searchInput" />
-      <button @click="searchBtn">검색</button>
+      <button class="qna-search-btn" @click="searchBtn">검색</button>
     </div>
   </div>
 </template>
@@ -60,15 +60,23 @@ export default {
   border-radius: 10px;
 }
 
-.search > button {
+.qna-search-btn {
   width: 115px;
   height: 40px;
   font-weight: bold;
-  color: white;
+  color: #007bff;
   border: 0;
   outline: 0;
-  background: #0069d9;
+  background: white;
+  border: 1px solid #007bff;
   border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.qna-search-btn:hover {
+  color: white;
+  background: #007bff;
 }
 
 .search > select {

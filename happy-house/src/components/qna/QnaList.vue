@@ -2,10 +2,8 @@
   <div>
     <QnaSearch @searchBtn="searchBtn" />
     <button class="qna-regist-btn" @click="moveRegistQna">1:1 문의</button>
-    <div>
-      <table>
-        <QnaListItem v-for="(question, index) in questions" :key="index" :question="question" />
-      </table>
+    <div class="qna-list-item-wrapper">
+      <QnaListItem :questions="questions" />
     </div>
   </div>
 </template>
@@ -64,17 +62,24 @@ export default {
   width: 110px;
   height: 40px;
   font-weight: bold;
-  color: white;
+  color: #007bff;
   border: 0;
   outline: 0;
-  background: #0069d9;
+  background: white;
+  border: 1px solid #007bff;
   border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
-table {
-  margin-bottom: 150px;
+.qna-regist-btn:hover {
+  color: white;
+  background: #007bff;
+}
+
+.qna-list-item-wrapper {
+  margin-top: 50px;
+  margin-bottom: 130px;
   width: 100%;
-  table-layout: fixed;
-  border-top: 2px solid #222;
 }
 </style>

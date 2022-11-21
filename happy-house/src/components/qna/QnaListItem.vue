@@ -1,15 +1,20 @@
 <template>
-  <div>
-    <colgroup>
-      <col style="width: 250px" />
-      <col style="width: auto" />
-    </colgroup>
-    <tbody>
+  <table>
+    <thead>
       <tr>
-        <th>
-          <label>{{ question.userName }}</label>
-          <label>님의 질문</label>
-        </th>
+        <th>No.</th>
+        <th>글쓴이</th>
+        <th>제목</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(question, index) in questions" :key="index">
+        <td>
+          <b>{{ index + 1 }}</b>
+        </td>
+        <td>
+          {{ question.userName }}
+        </td>
         <td>
           <router-link :to="{ name: 'qnadetail', params: { id: question.id } }"
             ><b>Q.</b> {{ question.title }}</router-link
@@ -17,46 +22,106 @@
         </td>
       </tr>
     </tbody>
-  </div>
+  </table>
 </template>
 
 <script>
 export default {
   name: "QnaListItem",
   props: {
-    question: Object,
+    questions: [],
   },
   methods: {},
 };
 </script>
 
 <style scoped>
-th {
-  height: 55px;
-  text-align: left;
-  padding-left: 15px;
-  font-weight: bold;
-  color: black;
-  border-bottom: 1px solid #d8d8d8;
-  background: #f9f9f9;
+.qna-list-item-wrapper {
+  margin-top: 50px;
+  margin-bottom: 130px;
+  width: 100%;
 }
 
-th > label:nth-child(2) {
-  font-weight: normal;
-  font-size: 0.8rem;
-  margin-left: 5px;
+table {
+  font-size: 0.9em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+th {
+  text-align: left;
+  font-size: 1rem;
+}
+
+thead {
+  font-weight: bold;
+  color: #fff;
+  background: #0069d9;
+}
+
+td,
+th {
+  padding: 15px 30px;
+  vertical-align: middle;
 }
 
 td {
-  width: 80%;
-  height: 55px;
-  padding: 10px 15px;
-  border-bottom: 1px solid #d8d8d8;
-  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
 }
 
 a {
+  color: #73685d;
   text-decoration: none;
-  color: #666;
+}
+
+@media all and (max-width: 768px) {
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  th {
+    text-align: right;
+  }
+
+  table {
+    position: relative;
+    padding-bottom: 0;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  thead {
+    float: left;
+    white-space: nowrap;
+  }
+
+  tbody {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  tr {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  th {
+    border-bottom: 1px solid #a39485;
+  }
+
+  td {
+    border-bottom: 1px solid #e5e5e5;
+  }
 }
 </style>
