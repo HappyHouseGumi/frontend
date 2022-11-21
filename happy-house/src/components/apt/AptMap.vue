@@ -1,6 +1,12 @@
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
+    <div v-if="isMarkerClicked" class="apt-deal-wrapper">
+      <AptDealInfo
+        :clickedMarker="clickedMarker"
+        @closeAptDealInfo="closeAptDealInfo"
+      />
+    </div>
   </div>
 </template>
 
@@ -12,9 +18,15 @@ import {
 } from "@/api/apt";
 import { getFindLocation } from "@/api/kakao";
 import { mapState, mapGetters, mapMutations } from "vuex";
+import AptDealInfo from "@/components/apt/AptDealInfo.vue";
+
 const aptStore = "aptStore";
+
 export default {
   name: "AptMap",
+  components: {
+    AptDealInfo,
+  },
   data() {
     return {
       map: null,
@@ -32,13 +44,17 @@ export default {
       select_marker: null,
       marker: null,
       circle: null,
+      isMarkerClicked: false,
+      clickedMarker: {
+        addressName: "",
+        code: "",
+      },
     };
   },
   computed: {
     ...mapMutations(aptStore, ["RESET_SEARCHED_LOCATION"]),
     ...mapState(aptStore, ["searchedLocation"]),
     ...mapGetters(aptStore, ["GET_LOC"]),
-    // vuex 에서 x, y값이 담겨있는지 확인하고 있으면 해당 좌표로 중심좌표 만들기
   },
   mounted() {
     // script 태그 객체 생성
@@ -59,8 +75,58 @@ export default {
     } else {
       this.initMap();
     }
+    if (!this.sidos) {
+      getClusterSido(
+        ({ data }) => {
+          //console.log(data.data);
+          data.data.forEach((element) => {
+            var content = null;
+            if (this.level == 6)
+              content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
+            else
+              content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
+            var position = new kakao.maps.LatLng(element.lat, element.lng);
+            var customOverlay = new kakao.maps.CustomOverlay({
+              position: position,
+              content: content,
+            });
+            customOverlay.setMap(this.map);
+            this.sidos = document.getElementsByClassName("sido");
+          });
+        },
+        (error) => {
+          console.log("오류 : " + error);
+        }
+      );
+    }
+    if (!this.guguns) {
+      getClusterGugun(
+        ({ data }) => {
+          data.data.forEach((element) => {
+            var content = null;
+            if (this.level == 6)
+              content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
+            else
+              content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
+            var position = new kakao.maps.LatLng(element.lat, element.lng);
+            var customOverlay = new kakao.maps.CustomOverlay({
+              position: position,
+              content: content,
+            });
+            customOverlay.setMap(this.map);
+            this.guguns = document.getElementsByClassName("gugun");
+          });
+        },
+        (error) => {
+          console.log("오류 : " + error);
+        }
+      );
+    }
   },
   methods: {
+    closeAptDealInfo() {
+      this.isMarkerClicked = false;
+    },
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -70,7 +136,7 @@ export default {
       console.log("이미 로딩됨: ", this.sidos, this.guguns);
       this.map = new kakao.maps.Map(container, options);
       this.geocoder = new kakao.maps.services.Geocoder();
-      console.log(this.geocoder);
+      // console.log(this.geocoder);
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
       if (!this.sidos) {
@@ -288,9 +354,23 @@ export default {
                   position: position,
                   image: markerImage,
                 });
-
                 kakao.maps.event.addListener(marker, "click", () => {
                   var pos = marker.getPosition();
+
+                  getCoordsToAddress(
+                    pos.La,
+                    pos.Ma,
+                    ({ data }) => {
+                      this.clickedMarker.addressName =
+                        data.documents[0].road_address.address_name;
+                    },
+                    (error) => {
+                      console.log("kakao api 좌표로 주소얻기 오류 : " + error);
+                    }
+                  );
+                  this.isMarkerClicked = true;
+                  this.clickedMarker.code = element.aptcode;
+
                   var imageSrc = require("@/assets/images/marker_point.png"), // 마커이미지의 주소입니다
                     imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
                     imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -444,9 +524,35 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: row;
 }
 #map {
   width: 100%;
   height: 92%;
+  z-index: 1;
+}
+
+.apt-deal-wrapper {
+  width: 560px;
+  height: 92%;
+  background: white;
+  z-index: 10;
+  border-left: 1px solid #eee;
+  overflow-y: scroll;
+}
+
+.apt-deal-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.apt-deal-wrapper::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: #696c73;
+  border-radius: 10px;
+}
+
+.apt-deal-wrapper::-webkit-scrollbar-track {
+  background: none;
 }
 </style>

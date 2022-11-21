@@ -55,6 +55,8 @@ export default {
         if (data.flag === "success") {
           this.likes = data.data;
           console.log("Like List 출력 :\n", this.likes);
+        } else {
+          console.log("Like 리스트 가져오기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -76,6 +78,8 @@ export default {
           if (data.flag === "success") {
             this.likes = data.data;
             // console.log("like List 출력 :\n", this.likes);
+          } else {
+            console.log("like 리스트 검색으로 가져오기 오류: ", data.data[0].msg);
           }
         },
         (error) => {

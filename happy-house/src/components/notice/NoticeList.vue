@@ -57,6 +57,8 @@ export default {
         if (data.flag === "success") {
           this.notices = data.data;
           // console.log("notice List 출력 :\n", this.notices);
+        } else {
+          console.log("Notice 리스트 가져오기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -81,6 +83,8 @@ export default {
           if (data.flag === "success") {
             this.notices = data.data;
             console.log("notice List 출력 :\n", this.notices);
+          } else {
+            console.log("Notice 리스트 검색으로 가져오기 오류: ", data.data[0].msg);
           }
         },
         (error) => {

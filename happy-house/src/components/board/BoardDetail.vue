@@ -83,6 +83,8 @@ export default {
         if (data.flag === "success") {
           this.board = data.data[0];
           // console.log(data.data[0]);
+        } else {
+          console.log("Board 상세보기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -95,6 +97,8 @@ export default {
         if (data.flag === "success") {
           this.comments = data.data;
           // console.log(data.data);
+        } else {
+          console.log("Comment 리스트 불러오기 오류: ", data.data[0].msg);
         }
       },
       (error) => {
@@ -121,6 +125,8 @@ export default {
             if (data.flag === "success") {
               alert("글 삭제 성공");
               this.moveListBoard();
+            } else {
+              console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
             }
           },
           (error) => {
@@ -145,6 +151,8 @@ export default {
               alert("댓글 등록 성공");
               this.reply.content = "";
               this.$router.go();
+            } else {
+              console.log("댓글 등록 오류: ", data.data[0].msg);
             }
           },
           (error) => {
@@ -167,6 +175,8 @@ export default {
         ({ data }) => {
           if (data.flag === "success") {
             alert("like board 등록 성공");
+          } else {
+            console.log("like board 등록 오류: ", data.data[0].msg);
           }
         },
         (error) => {
