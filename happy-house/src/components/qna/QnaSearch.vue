@@ -1,11 +1,11 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <select>
-        <option>제목</option>
-        <option>이름</option>
+      <select v-model="selectedCategory">
+        <option value="title">제목</option>
+        <option value="userName">글쓴이</option>
       </select>
-      <input placeholder="제목을 검색해주세요." v-model="searchInput" />
+      <input v-model="searchInput" placeholder="검색어를 입력해주세요." />
       <button class="qna-search-btn" @click="searchBtn">검색</button>
     </div>
   </div>
@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       searchInput: "",
+      selectedCategory: "",
     };
   },
   methods: {
@@ -25,7 +26,12 @@ export default {
         alert("검색어를 입력해주세요!");
         return;
       }
-      this.$emit("searchBtn", this.searchInput);
+      if (this.selectedCategory === "") {
+        alert("분류를 선택해주세요!");
+        return;
+      }
+
+      this.$emit("searchBtn", this.searchInput, this.selectedCategory);
     },
   },
 };

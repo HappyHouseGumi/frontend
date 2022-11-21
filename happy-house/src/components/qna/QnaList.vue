@@ -1,7 +1,10 @@
 <template>
   <div>
     <QnaSearch @searchBtn="searchBtn" />
-    <button class="qna-regist-btn" @click="moveRegistQna">1:1 문의</button>
+    <div class="qna-list-button-wrapper">
+      <button v-if="isSearchedList" class="qna-list-btn" @click="moveQnaList">목록</button>
+      <button class="qna-regist-btn" @click="moveRegistQna">1:1 문의</button>
+    </div>
     <div class="qna-list-item-wrapper">
       <QnaListItem :questions="questions" />
     </div>
@@ -22,19 +25,28 @@ export default {
   data() {
     return {
       questions: [],
+      isSearchedList: false,
     };
   },
   methods: {
     moveRegistQna() {
       this.$router.push({ path: "/qna/regist" });
     },
-
-    searchBtn(searchInput) {
+    moveQnaList() {
+      this.$router.go();
+    },
+    searchBtn(searchInput, selectedCategory) {
       getQnaSearchList(
+        selectedCategory,
         searchInput,
         ({ data }) => {
-          if (data.flag === "success") this.questions = data.data;
-          else alert("검색어와 일치하는 항목이 없습니다.");
+          if (data.flag === "success") {
+            this.questions = data.data;
+            this.isSearchedList = true;
+          } else {
+            alert("검색어와 일치하는 항목이 없습니다.");
+            this.isSearchedList = false;
+          }
         },
         (error) => {
           console.log("QnA 검색결과 리스트 가져오기 오류 : " + error);
@@ -56,9 +68,15 @@ export default {
 </script>
 
 <style scoped>
-.qna-regist-btn {
-  margin: 30px 0;
+.qna-list-button-wrapper {
   float: right;
+  display: flex;
+  flex-direction: row;
+  margin: 30px 0;
+}
+
+.qna-regist-btn,
+.qna-list-btn {
   width: 110px;
   height: 40px;
   font-weight: bold;
@@ -72,9 +90,13 @@ export default {
     box-shadow 0.15s ease-in-out;
 }
 
-.qna-regist-btn:hover {
+.qna-regist-btn:hover,
+.qna-list-btn:hover {
   color: white;
   background: #007bff;
+}
+.qna-list-btn {
+  margin-right: 20px;
 }
 
 .qna-list-item-wrapper {

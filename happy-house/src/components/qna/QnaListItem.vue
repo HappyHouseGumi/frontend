@@ -31,7 +31,6 @@ export default {
   props: {
     questions: [],
   },
-  methods: {},
 };
 </script>
 
