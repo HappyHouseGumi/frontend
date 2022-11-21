@@ -6,10 +6,14 @@ const aptStore = {
       y: "",
       level: "",
     },
+    dealList: [],
   },
   getters: {
     GET_LOC(state) {
       return state.searchedLocation;
+    },
+    GET_DEAL(state) {
+      return state.dealList;
     },
   },
   mutations: {
@@ -22,6 +26,10 @@ const aptStore = {
       state.searchedLocation.x = 36.2683;
       state.searchedLocation.y = 127.6358;
       state.searchedLocation.level = 12;
+    },
+
+    SET_DEAL_LIST(state, dealList) {
+      state.dealList = dealList;
     },
   },
   actions: {},

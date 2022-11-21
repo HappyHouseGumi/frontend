@@ -2,17 +2,28 @@
   <div class="apt-info-wrapper">
     <div class="apt-info-header-wrapper">
       <span>{{ clickedMarker.addressName }}</span>
-      <button @click="closeAptDealInfo"><font-awesome-icon icon="fa-solid fa-xmark" class="fa-2x" /></button>
+      <button @click="closeAptDealInfo">
+        <font-awesome-icon icon="fa-solid fa-xmark" class="fa-2x" />
+      </button>
     </div>
     <div class="divide-line"></div>
     <div class="apt-info-contents-wrapper">
-      <font-awesome-icon icon="fa-solid fa-house" class="fa-3x" />
-      <div v-for="(info, index) in aptDealInfo" :key="index" class="apt-info-content">
+      <!-- <font-awesome-icon icon="fa-solid fa-house" class="fa-3x" /> -->
+      <div id="roadview" style="width: 100%; height: 300px"></div>
+      <div
+        v-for="(info, index) in this.GET_DEAL"
+        :key="index"
+        class="apt-info-content"
+      >
         <div class="apt-info-drop-down">
-          <div class="apt-info-drop-down-selected" @click="(e) => showInfoDetail(e)">
+          <div
+            class="apt-info-drop-down-selected"
+            @click="(e) => showInfoDetail(e)"
+          >
             <span
-              ><font-awesome-icon icon="fa-solid fa-caret-down" /> {{ info.dealYear }}년 {{ info.dealMonth }}월
-              {{ info.dealDay }}일 거래내역</span
+              ><font-awesome-icon icon="fa-solid fa-caret-down" />
+              {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
+              거래내역</span
             >
           </div>
           <div class="apt-info-drop-down-options">
@@ -32,16 +43,34 @@
 </template>
 
 <script type="module">
-import { getAptDealInfo } from "@/api/apt";
-
+// import { getAptDealInfo } from "@/api/apt";
+import { mapState, mapGetters } from "vuex";
+const aptStore = "aptStore";
 export default {
   name: "AptDealInfo",
   props: {
     clickedMarker: {},
   },
+  computed: {
+    ...mapState(aptStore, ["dealList"]),
+    ...mapGetters(aptStore, ["GET_DEAL"]),
+  },
+  created() {},
+  mounted() {
+    var roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
+    var roadview = new window.kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
+    var roadviewClient = new window.kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
+    var position = this.clickedMarker.pos;
+
+    // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
+    roadviewClient.getNearestPanoId(position, 50, function (panoId) {
+      roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
+    });
+  },
   data() {
     return {
       aptDealInfo: [],
+      roadview: null,
     };
   },
   methods: {
@@ -57,20 +86,6 @@ export default {
         e.path[2].childNodes[1].childNodes[0].classList.add("hidden");
       }
     },
-  },
-  created() {
-    // 서버에 clickedMarkerCode 넘겨서 아파트 정보 받아오기
-    getAptDealInfo(
-      this.clickedMarker.code,
-      ({ data }) => {
-        if (data.flag === "success") {
-          this.aptDealInfo = data.data;
-        }
-      },
-      (error) => {
-        console.log("아파트 거래정보 불러오기 오류 : " + error);
-      }
-    );
   },
 };
 </script>
