@@ -35,7 +35,7 @@ export default {
       likes: [],
       loginId: null,
       params: {
-        pgno: "1",
+        pgno: 1,
         key: null,
         word: null,
       },
