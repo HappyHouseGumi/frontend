@@ -1,21 +1,20 @@
 <template>
   <div>
-    <BoardSearch @searchParam="searchList" />
+    <NoticeSearch @searchParam="searchList" />
     <div v-if="loginId != null">
-      <button class="board-regist-btn" @click="moveRegistBoard">글 등록하기</button>
+      <button class="notice-regist-btn" @click="moveRegistNotice">글 등록하기</button>
     </div>
     <table>
       <thead>
         <tr>
           <th>글번호</th>
-          <th>지역</th>
           <th>제목</th>
           <th>작성자</th>
           <th>등록일</th>
         </tr>
       </thead>
       <tbody>
-        <board-list-item v-for="(board, index) in boards" :key="index" :board="board"></board-list-item>
+        <notice-list-item v-for="(notice, index) in notices" :key="index" :notice="notice"></notice-list-item>
         <!-- :index="index" :pgno="pgno" -->
       </tbody>
     </table>
@@ -23,24 +22,23 @@
 </template>
 
 <script type="module">
-import BoardListItem from "@/components/board/BoardListItem.vue";
-import BoardSearch from "@/components/board/BoardSearch.vue";
-import { getBoardList } from "@/api/board";
+import NoticeListItem from "@/components/notice/NoticeListItem.vue";
+import NoticeSearch from "@/components/notice/NoticeSearch.vue";
+import { getNoticeList } from "@/api/notice";
 
 export default {
-  name: "BoardList",
+  name: "NoticeList",
   components: {
-    BoardListItem,
-    BoardSearch,
+    NoticeListItem,
+    NoticeSearch,
   },
 
   data() {
     return {
-      boards: [],
+      notices: [],
       loginId: null,
       params: {
         pgno: "1",
-        key: null,
         word: null,
       },
       pgno: 1,
@@ -53,16 +51,16 @@ export default {
       this.loginId = id;
     }
 
-    getBoardList(
+    getNoticeList(
       this.params,
       ({ data }) => {
         if (data.flag === "success") {
-          this.boards = data.data;
-          // console.log("board List 출력 :\n", this.boards);
+          this.notices = data.data;
+          // console.log("notice List 출력 :\n", this.notices);
         }
       },
       (error) => {
-        console.log("Board 리스트 가져오기 오류 : " + error);
+        console.log("Notice 리스트 가져오기 오류 : " + error);
       }
     );
   },
@@ -70,23 +68,23 @@ export default {
   mounted() {},
 
   methods: {
-    moveRegistBoard() {
-      this.$router.push({ name: "boardregist" });
+    moveRegistNotice() {
+      this.$router.push({ name: "noticeregist" });
     },
     searchList(searchparam) {
       this.params.key = searchparam.searchClass;
       this.params.word = searchparam.searchInput;
 
-      getBoardList(
+      getNoticeList(
         this.params,
         ({ data }) => {
           if (data.flag === "success") {
-            this.boards = data.data;
-            console.log("board List 출력 :\n", this.boards);
+            this.notices = data.data;
+            console.log("notice List 출력 :\n", this.notices);
           }
         },
         (error) => {
-          console.log("Board 리스트 검색으로 가져오기 오류 : " + error);
+          console.log("Notice 리스트 검색으로 가져오기 오류 : " + error);
         }
       );
     },
@@ -95,7 +93,7 @@ export default {
 </script>
 
 <style scoped>
-.board-regist-btn {
+.notice-regist-btn {
   margin: 30px 0;
   float: right;
   width: 120px;

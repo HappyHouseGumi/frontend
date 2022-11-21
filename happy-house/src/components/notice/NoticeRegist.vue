@@ -1,5 +1,5 @@
 <template>
-  <div class="board-regist-wrapper">
+  <div class="notice-regist-wrapper">
     <table>
       <colgroup>
         <col style="width: 185px" />
@@ -8,30 +8,11 @@
       <tbody>
         <tr>
           <th>
-            <label>분류</label>
-            <span class="essentail-mark">*</span>
-          </th>
-          <td>
-            <select v-model="selected1" @change="getBoardSubject" class="selectSubject">
-              <option v-for="(list, index) in subject1" :key="index" :value="list.id">
-                {{ list.sidoName }}
-              </option>
-            </select>
-            <select v-model="selected2" class="selectSubject">
-              <option v-for="(list, index) in subject2" :key="index" :value="list.gugunName">
-                {{ list.gugunName }}
-              </option>
-            </select>
-          </td>
-        </tr>
-
-        <tr>
-          <th>
             <label>제목</label>
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <input type="text" v-model="board.title" />
+            <input type="text" v-model="notice.title" />
           </td>
         </tr>
         <tr>
@@ -40,39 +21,34 @@
             <span class="essentail-mark">*</span>
           </th>
           <td>
-            <textarea v-model="board.content" />
+            <textarea v-model="notice.content"></textarea>
           </td>
         </tr>
       </tbody>
     </table>
     <div>
-      <button class="regist-btn" @click="writeBoard">등록</button>
-      <button class="cancel-btn" @click="moveListBoard">취소</button>
+      <button class="regist-btn" @click="writeNotice">등록</button>
+      <button class="cancel-btn" @click="moveListNotice">취소</button>
     </div>
   </div>
 </template>
 
 <script type="module">
-import { writeBoard, getBoardSubject } from "@/api/board";
+import { writeNotice } from "@/api/notice";
 
 export default {
-  name: "BoardRegist",
+  name: "NoticeRegist",
 
   data() {
     return {
-      board: {
+      notice: {
         userId: null,
-        subject: "",
         title: "",
         content: "",
       },
       params: {
         pgno: "1",
       },
-      subject1: [],
-      subject2: [],
-      selected1: 0,
-      selected2: "",
       loginId: null,
     };
   },
@@ -82,65 +58,37 @@ export default {
       const id = JSON.parse(localStorage.getItem("loginUser")).userId;
       this.loginId = id;
     } else {
-      this.$router.push({ name: "boardlist" });
+      this.$router.push({ name: "noticelist" });
     }
-
-    getBoardSubject(
-      "sido",
-      0,
-      ({ data }) => {
-        if (data.flag === "success") {
-          this.subject1 = data.data;
-        }
-      },
-      (error) => {
-        console.log("말머리 불러오기 오류 : " + error);
-      }
-    );
   },
 
   mounted() {},
 
   methods: {
-    writeBoard() {
-      this.board.userId = this.loginId;
-      this.board.subject = "".concat(this.subject2[0].sidoName, " ", this.selected2);
-      // console.log(this.board);
+    writeNotice() {
+      this.notice.userId = this.loginId;
+      // console.log(this.notice);
 
-      if (this.board.subject === "" || this.board.title === "" || this.board.content === "") {
+      if (this.notice.title === "" || this.notice.content === "") {
         alert("빈칸을 모두 채워주세요.");
         return;
       }
 
-      writeBoard(
-        this.board,
+      writeNotice(
+        this.notice,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("게시글 등록 성공");
-            this.moveListBoard();
+            alert("공지사항 등록 성공");
+            this.moveListNotice();
           }
         },
         (error) => {
-          console.log("게시글 등록 오류 : " + error);
+          console.log("공지사항 등록 오류 : " + error);
         }
       );
     },
-    moveListBoard() {
-      this.$router.push({ name: "boardlist" });
-    },
-    getBoardSubject() {
-      getBoardSubject(
-        "gugun",
-        this.selected1,
-        ({ data }) => {
-          if (data.flag === "success") {
-            this.subject2 = data.data;
-          }
-        },
-        (error) => {
-          console.log("말머리 불러오기 오류 : " + error);
-        }
-      );
+    moveListNotice() {
+      this.$router.push({ name: "noticelist" });
     },
   },
 };
@@ -225,7 +173,7 @@ td > textarea {
   color: black;
   padding: 3px 0;
 }
-.board-regist-wrapper > div {
+.notice-regist-wrapper > div {
   display: flex;
   flex-direction: row;
   justify-content: center;

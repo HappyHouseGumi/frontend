@@ -1,9 +1,6 @@
 <template>
   <div>
-    <BoardSearch @searchParam="searchList" />
-    <div v-if="loginId != null">
-      <button class="board-regist-btn" @click="moveRegistBoard">글 등록하기</button>
-    </div>
+    <like-search @searchParam="searchList" />
     <table>
       <thead>
         <tr>
@@ -11,11 +8,10 @@
           <th>지역</th>
           <th>제목</th>
           <th>작성자</th>
-          <th>등록일</th>
         </tr>
       </thead>
       <tbody>
-        <board-list-item v-for="(board, index) in boards" :key="index" :board="board"></board-list-item>
+        <like-list-item v-for="(like, index) in likes" :key="index" :like="like"></like-list-item>
         <!-- :index="index" :pgno="pgno" -->
       </tbody>
     </table>
@@ -23,20 +19,20 @@
 </template>
 
 <script type="module">
-import BoardListItem from "@/components/board/BoardListItem.vue";
-import BoardSearch from "@/components/board/BoardSearch.vue";
-import { getBoardList } from "@/api/board";
+import LikeListItem from "@/components/like/LikeListItem.vue";
+import LikeSearch from "@/components/like/LikeSearch.vue";
+import { getLikeList } from "@/api/like";
 
 export default {
-  name: "BoardList",
+  name: "LikeList",
   components: {
-    BoardListItem,
-    BoardSearch,
+    LikeListItem,
+    LikeSearch,
   },
 
   data() {
     return {
-      boards: [],
+      likes: [],
       loginId: null,
       params: {
         pgno: "1",
@@ -53,16 +49,16 @@ export default {
       this.loginId = id;
     }
 
-    getBoardList(
+    getLikeList(
       this.params,
       ({ data }) => {
         if (data.flag === "success") {
-          this.boards = data.data;
-          // console.log("board List 출력 :\n", this.boards);
+          this.likes = data.data;
+          console.log("Like List 출력 :\n", this.likes);
         }
       },
       (error) => {
-        console.log("Board 리스트 가져오기 오류 : " + error);
+        console.log("Like 리스트 가져오기 오류 : " + error);
       }
     );
   },
@@ -70,23 +66,20 @@ export default {
   mounted() {},
 
   methods: {
-    moveRegistBoard() {
-      this.$router.push({ name: "boardregist" });
-    },
     searchList(searchparam) {
       this.params.key = searchparam.searchClass;
       this.params.word = searchparam.searchInput;
 
-      getBoardList(
+      getLikeList(
         this.params,
         ({ data }) => {
           if (data.flag === "success") {
-            this.boards = data.data;
-            console.log("board List 출력 :\n", this.boards);
+            this.likes = data.data;
+            // console.log("like List 출력 :\n", this.likes);
           }
         },
         (error) => {
-          console.log("Board 리스트 검색으로 가져오기 오류 : " + error);
+          console.log("like 리스트 검색으로 가져오기 오류 : " + error);
         }
       );
     },
@@ -95,7 +88,7 @@ export default {
 </script>
 
 <style scoped>
-.board-regist-btn {
+.like-regist-btn {
   margin: 30px 0;
   float: right;
   width: 120px;

@@ -18,8 +18,8 @@ function writeBoard(param, success, fail) {
 }
 
 // 게시글 수정
-function modifyBoard(param, success, fail) {
-  api.put(`/board`, param).then(success).catch(fail);
+function modifyBoard(id, param, success, fail) {
+  api.put(`/board/${id}`, param).then(success).catch(fail);
 }
 
 // 게시글 삭제
@@ -42,12 +42,12 @@ function writeComment(param, success, fail) {
   api.post(`/comment`, param).then(success).catch(fail);
 }
 
-// 게시글 수정 작성
+// 게시글 댓글 수정
 function modifyComment(param, success, fail) {
   api.put(`/comment`, param).then(success).catch(fail);
 }
 
-// 게시글 삭제 작성
+// 게시글 댓글 삭제
 function deleteComment(id, success, fail) {
   api.delete(`/comment/${id}`).then(success).catch(fail);
 }

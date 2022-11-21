@@ -2,21 +2,20 @@
   <tr>
     <!-- <td>{{ pgno }}</td>
       <td>{{ index + 1 }}</td> -->
-    <td>{{ board.id }}</td>
-    <td>{{ board.subject }}</td>
+    <td>{{ notice.id }}</td>
     <td style="font-weight: bold">
-      <router-link :to="{ name: 'boarddetail', params: { id: board.id } }">{{ board.title }}</router-link>
+      <router-link :to="{ name: 'noticedetail', params: { id: notice.id } }">{{ notice.title }}</router-link>
     </td>
-    <td>{{ board.nickName }}</td>
-    <td>{{ board.regDate }}</td>
+    <td>운영자</td>
+    <td>{{ notice.regDate }}</td>
   </tr>
 </template>
 
 <script type="module">
 export default {
-  name: "BoardListItem",
+  name: "NoticeListItem",
   props: {
-    board: Object,
+    notice: Object,
     // pgno: Number,
     // index: Number,
   },

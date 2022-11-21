@@ -6,8 +6,11 @@
     <div>
       <router-link to="/apt" class="navbar-menus">실거래가조회</router-link>
       <a class="navbar-menus">관심지역</a>
-      <a class="navbar-menus">공지사항</a>
+      <router-link to="/notice" class="navbar-menus">공지사항</router-link>
       <router-link to="/board" class="navbar-menus">자유게시판</router-link>
+      <span v-if="isLoginStatus">
+        <router-link to="/like" class="navbar-menus">관심글</router-link>
+      </span>
     </div>
     <div v-if="!isLoginStatus">
       <router-link to="/user/login" class="navbar-menus">로그인</router-link>
