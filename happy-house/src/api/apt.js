@@ -28,4 +28,16 @@ function getAptDealInfo(code, success, fail) {
   api.get(`/apt/detail/${code}`).then(success).catch(fail);
 }
 
-export { getDongCode, getAptInfo, getAptInfoBySidoGugun, getClusterSido, getClusterGugun, getAptDealInfo };
+function getLatLngFromDongcode(code, success, fail) {
+  api.get(`/apt/latlng/${code}`).then(success).catch(fail);
+}
+
+export {
+  getDongCode,
+  getAptInfo,
+  getAptInfoBySidoGugun,
+  getClusterSido,
+  getClusterGugun,
+  getAptDealInfo,
+  getLatLngFromDongcode,
+};

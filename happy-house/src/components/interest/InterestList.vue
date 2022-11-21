@@ -10,10 +10,16 @@
       </thead>
       <tbody>
         <tr v-for="(interest, index) in interests" :key="index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ interest.sidoName }} {{ interest.gugunName }}</td>
           <td>
-            <button class="delete-interest-btn" @click="(index) => deleteInterestFunc(index)">
+            <b>{{ index + 1 }}</b>
+          </td>
+          <td>
+            <a @click="(dongcode) => moveInterestLocationMap(interest.dongCode)"
+              >{{ interest.sidoName }} {{ interest.gugunName }}</a
+            >
+          </td>
+          <td>
+            <button class="delete-interest-btn" @click="(dongcode) => deleteInterestFunc(interest.dongCode)">
               <font-awesome-icon icon="fa-solid fa-ban" class="fa-lg" />
             </button>
           </td>
@@ -25,22 +31,42 @@
 
 <script type="module">
 import { getInterestList, deleteInterest } from "@/api/interest";
+import { getLatLngFromDongcode } from "@/api/apt";
+import { mapState, mapMutations } from "vuex";
+
+const aptStore = "aptStore";
 
 export default {
   name: "InterestList",
   data() {
     return {
+      importedInterests: [],
       interests: [],
     };
   },
+
   created() {
-    const id = JSON.parse(localStorage.getItem("loginUser")).userId;
+    const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
 
     getInterestList(
-      id,
+      userId,
       ({ data }) => {
         if (data.flag === "success") {
-          this.interests = data.data;
+          this.importedInterests = data.data;
+
+          this.importedInterests.map((interest) =>
+            getLatLngFromDongcode(
+              interest.dongCode,
+              ({ data }) => {
+                if (data.flag === "success") {
+                  this.interests.push(data.data[0]);
+                }
+              },
+              (error) => {
+                console.log("동코드로 좌표 얻기 오류 : " + error);
+              }
+            )
+          );
         }
       },
       (error) => {
@@ -48,15 +74,19 @@ export default {
       }
     );
   },
+  computed: {
+    ...mapState(aptStore, ["searchedLocation"]),
+  },
   methods: {
-    deleteInterestFunc(index) {
-      const id = this.interests[index - 1].id;
+    ...mapMutations(aptStore, ["SET_SEARCHED_LOCATION"]),
+
+    deleteInterestFunc(dongcode) {
+      const [filtered] = this.importedInterests.filter((interest) => interest.dongCode === dongcode);
 
       deleteInterest(
-        id,
+        filtered.id,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("관심지역 삭제 성공!");
             this.$router.go();
           }
         },
@@ -64,6 +94,23 @@ export default {
           console.log("관심지역 삭제 오류 : " + error);
         }
       );
+    },
+
+    moveInterestLocationMap(dongcode) {
+      const [filtered] = this.interests.filter((interest) => interest.dongCode === dongcode);
+      const x = filtered.lat;
+      const y = filtered.lng;
+
+      const location = {
+        x,
+        y,
+        level: 6,
+      };
+      this.SET_SEARCHED_LOCATION(location);
+
+      this.$router.push({
+        name: "apt",
+      });
     },
   },
 };
@@ -77,7 +124,6 @@ export default {
 }
 
 table {
-  border: 1px #0069d9 solid;
   font-size: 0.9em;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   width: 100%;
@@ -88,6 +134,7 @@ table {
 
 th {
   text-align: left;
+  font-size: 1rem;
 }
 
 thead {
@@ -98,7 +145,7 @@ thead {
 
 td,
 th {
-  padding: 1em 0.5em;
+  padding: 15px 30px;
   vertical-align: middle;
 }
 
@@ -161,5 +208,6 @@ a {
 .delete-interest-btn {
   border: none;
   background: none;
+  color: #c82333;
 }
 </style>
