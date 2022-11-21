@@ -6,25 +6,21 @@ const kakaoapi = kakaoInstance();
 
 function getKakaoLocation(location, success, fail) {
   kakaoapi
-    .get(
-      `/v2/local/search/address.json?query=${encodeURIComponent(location)}`,
-      {
-        headers: {
-          Authorization: `KakaoAK ${process.env.VUE_APP_KAKAO_REST_API_KEY}`,
-        },
-      }
-    )
+    .get(`/v2/local/search/address.json?query=${encodeURIComponent(location)}`, {
+      headers: {
+        Authorization: `KakaoAK ${process.env.VUE_APP_KAKAO_REST_API_KEY}`,
+      },
+    })
     .then(success)
     .catch(fail);
 }
+
 function getFindLocation(info, success, fail) {
   kakaoapi
     .get(
-      `/v2/local/search/category.json?category_group_code=${encodeURIComponent(
-        info.category
-      )}&x=${encodeURIComponent(info.lng)}&y=${encodeURIComponent(
-        info.lat
-      )}&radius=500`,
+      `/v2/local/search/category.json?category_group_code=${encodeURIComponent(info.category)}&x=${encodeURIComponent(
+        info.lng
+      )}&y=${encodeURIComponent(info.lat)}&radius=500`,
       {
         headers: {
           Authorization: `KakaoAK ${process.env.VUE_APP_KAKAO_REST_API_KEY}`,
@@ -34,4 +30,16 @@ function getFindLocation(info, success, fail) {
     .then(success)
     .catch(fail);
 }
-export { getKakaoLocation, getFindLocation };
+
+function getCoordsToAddress(x, y, success, fail) {
+  kakaoapi
+    .get(`/v2/local/geo/coord2address.json?x=${x}&y=${y}`, {
+      headers: {
+        Authorization: `KakaoAK ${process.env.VUE_APP_KAKAO_REST_API_KEY}`,
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
+export { getKakaoLocation, getFindLocation, getCoordsToAddress };

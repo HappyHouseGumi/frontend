@@ -1,14 +1,15 @@
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
-    <div v-if="!isMarkerClicked" class="apt-deal-wrapper">
-      <AptDealInfo :clickedMarker="clickedMarker" />
+    <div v-if="isMarkerClicked" class="apt-deal-wrapper">
+      <AptDealInfo :clickedMarker="clickedMarker" @closeAptDealInfo="closeAptDealInfo" />
     </div>
   </div>
 </template>
 
 <script>
 import { getAptInfoBySidoGugun, getClusterSido, getClusterGugun } from "@/api/apt";
+import { getCoordsToAddress } from "@/api/kakao";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import AptDealInfo from "@/components/apt/AptDealInfo.vue";
 
@@ -112,6 +113,9 @@ export default {
     }
   },
   methods: {
+    closeAptDealInfo() {
+      this.isMarkerClicked = false;
+    },
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -120,7 +124,7 @@ export default {
       };
       this.map = new kakao.maps.Map(container, options);
       this.geocoder = new kakao.maps.services.Geocoder();
-      console.log(this.geocoder);
+      // console.log(this.geocoder);
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
@@ -243,11 +247,20 @@ export default {
                 });
 
                 kakao.maps.event.addListener(marker, "click", () => {
-                  this.isMarkerClicked = true;
-                  // this.clickedMarker.addressName = element.apartmentName;
-                  this.clickedMarker.code = element.aptcode;
-
                   var pos = marker.getPosition();
+
+                  getCoordsToAddress(
+                    pos.La,
+                    pos.Ma,
+                    ({ data }) => {
+                      this.clickedMarker.addressName = data.documents[0].road_address.address_name;
+                    },
+                    (error) => {
+                      console.log("kakao api 좌표로 주소얻기 오류 : " + error);
+                    }
+                  );
+                  this.isMarkerClicked = true;
+                  this.clickedMarker.code = element.aptcode;
 
                   if (this.circle) {
                     this.circle.setMap(null);
@@ -298,10 +311,25 @@ export default {
 }
 
 .apt-deal-wrapper {
-  width: 450px;
+  width: 560px;
   height: 92%;
   background: white;
   z-index: 10;
   border-left: 1px solid #eee;
+  overflow-y: scroll;
+}
+
+.apt-deal-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.apt-deal-wrapper::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: #696c73;
+  border-radius: 10px;
+}
+
+.apt-deal-wrapper::-webkit-scrollbar-track {
+  background: none;
 }
 </style>

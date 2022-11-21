@@ -14,6 +14,8 @@ import {
   faMagnifyingGlass,
   faLocationDot,
   faXmark,
+  faHouse,
+  faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
@@ -27,7 +29,9 @@ library.add(
   faUser,
   faMagnifyingGlass,
   faLocationDot,
-  faXmark
+  faXmark,
+  faHouse,
+  faCaretDown
 );
 
 // font awesome 컴포넌트를 전역으로 등록

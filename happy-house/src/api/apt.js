@@ -24,10 +24,8 @@ function getClusterGugun(success, fail) {
   api.get(`/apt/cluster/gugun`).then(success).catch(fail);
 }
 
-export {
-  getDongCode,
-  getAptInfo,
-  getAptInfoBySidoGugun,
-  getClusterSido,
-  getClusterGugun,
-};
+function getAptDealInfo(code, success, fail) {
+  api.get(`/apt/detail/${code}`).then(success).catch(fail);
+}
+
+export { getDongCode, getAptInfo, getAptInfoBySidoGugun, getClusterSido, getClusterGugun, getAptDealInfo };
