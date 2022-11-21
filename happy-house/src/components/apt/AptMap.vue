@@ -2,14 +2,21 @@
   <div class="map-wrapper">
     <div id="map"></div>
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
-      <AptDealInfo :clickedMarker="clickedMarker" @closeAptDealInfo="closeAptDealInfo" />
+      <AptDealInfo
+        :clickedMarker="clickedMarker"
+        @closeAptDealInfo="closeAptDealInfo"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { getAptInfoBySidoGugun, getClusterSido, getClusterGugun } from "@/api/apt";
-import { getCoordsToAddress } from "@/api/kakao";
+import {
+  getAptInfoBySidoGugun,
+  getClusterSido,
+  getClusterGugun,
+} from "@/api/apt";
+import { getFindLocation } from "@/api/kakao";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import AptDealInfo from "@/components/apt/AptDealInfo.vue";
 
@@ -27,12 +34,14 @@ export default {
       sidos: null,
       guguns: null,
       makers: [],
+      commakers: [],
       cur_sido: "",
       cur_gugun: "",
       geocoder: null,
       lat: 36.2683,
       lng: 127.6358,
       level: 12,
+      select_marker: null,
       marker: null,
       circle: null,
       isMarkerClicked: false,
@@ -64,8 +73,6 @@ export default {
       });
       document.head.appendChild(script);
     } else {
-      //console.log("이미 로딩됨: ", window.kakao);
-
       this.initMap();
     }
     if (!this.sidos) {
@@ -74,8 +81,10 @@ export default {
           //console.log(data.data);
           data.data.forEach((element) => {
             var content = null;
-            if (this.level == 6) content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
-            else content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
+            if (this.level == 6)
+              content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
+            else
+              content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
             var position = new kakao.maps.LatLng(element.lat, element.lng);
             var customOverlay = new kakao.maps.CustomOverlay({
               position: position,
@@ -95,8 +104,10 @@ export default {
         ({ data }) => {
           data.data.forEach((element) => {
             var content = null;
-            if (this.level == 6) content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
-            else content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
+            if (this.level == 6)
+              content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
+            else
+              content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
             var position = new kakao.maps.LatLng(element.lat, element.lng);
             var customOverlay = new kakao.maps.CustomOverlay({
               position: position,
@@ -122,12 +133,60 @@ export default {
         center: new kakao.maps.LatLng(this.lat, this.lng),
         level: this.level,
       };
+      console.log("이미 로딩됨: ", this.sidos, this.guguns);
       this.map = new kakao.maps.Map(container, options);
       this.geocoder = new kakao.maps.services.Geocoder();
       // console.log(this.geocoder);
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+      if (!this.sidos) {
+        getClusterSido(
+          ({ data }) => {
+            //console.log(data.data);
+            data.data.forEach((element) => {
+              var content = null;
+              if (this.level == 6)
+                content = `<div class = "sido" style="display:none; font-size:30px; font-weight : bold;">${element.count}</div>`;
+              else
+                content = `<div class = "sido" style="display: ;font-size:30px; font-weight : bold;">${element.count}</div>`;
+              var position = new kakao.maps.LatLng(element.lat, element.lng);
+              var customOverlay = new kakao.maps.CustomOverlay({
+                position: position,
+                content: content,
+              });
+              customOverlay.setMap(this.map);
+              this.sidos = document.getElementsByClassName("sido");
+            });
+          },
+          (error) => {
+            console.log("오류 : " + error);
+          }
+        );
+      }
 
+      if (!this.guguns) {
+        getClusterGugun(
+          ({ data }) => {
+            data.data.forEach((element) => {
+              var content = null;
+              if (this.level == 6)
+                content = `<div class = "gugun" style = "display: ; font-size:25px; font-weight : bold;">${element.count}</div>`;
+              else
+                content = `<div class = "gugun" style = "display:none; font-size:25px; font-weight : bold;">${element.count}</div>`;
+              var position = new kakao.maps.LatLng(element.lat, element.lng);
+              var customOverlay = new kakao.maps.CustomOverlay({
+                position: position,
+                content: content,
+              });
+              customOverlay.setMap(this.map);
+              this.guguns = document.getElementsByClassName("gugun");
+            });
+          },
+          (error) => {
+            console.log("오류 : " + error);
+          }
+        );
+      }
       /* 줌 이벤트 시작 */
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
         // 지도의 현재 레벨을 얻어옵니다
@@ -139,6 +198,26 @@ export default {
             this.makers.forEach((element) => {
               element.setMap(null);
             });
+          }
+          if (this.commakers.length != 0) {
+            this.commakers.forEach((element) => {
+              element.setMap(null);
+            });
+            this.commakers = [];
+          }
+          if (this.select_marker) {
+            var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
+              imageSize = new kakao.maps.Size(7, 7), // 마커이미지의 크기입니다
+              imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+            // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+            var markerImage = new kakao.maps.MarkerImage(
+              imageSrc,
+              imageSize,
+              imageOption
+            );
+            this.select_marker.setImage(markerImage);
+            this.select_marker = null;
           }
         }
 
@@ -164,7 +243,6 @@ export default {
             }
           }
         } else if (level <= 8 && level > 5) {
-          //console.log(this.sidos);
           for (let i = 0; i < this.sidos.length; i++) {
             this.sidos[i].style.display = "none";
           }
@@ -172,6 +250,10 @@ export default {
             for (let i = 0; i < this.guguns.length; i++) {
               this.guguns[i].style.display = "";
             }
+          }
+          if (this.circle) {
+            this.circle.setMap(null);
+            this.circle = null;
           }
         } else {
           for (let i = 0; i < this.sidos.length; i++) {
@@ -197,7 +279,11 @@ export default {
     },
     searchAddrFromCoords(coords, callback) {
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+      this.geocoder.coord2RegionCode(
+        coords.getLng(),
+        coords.getLat(),
+        callback
+      );
     },
     searchDetailAddrFromCoords(coords, callback) {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
@@ -219,7 +305,10 @@ export default {
 
         if (sidoName == "세종특별자치시") gugunName = "세종특별자치시";
 
-        if (this.map.getLevel() <= 5 && (this.cur_sido != sidoName || this.cur_gugun != gugunName)) {
+        if (
+          this.map.getLevel() <= 5 &&
+          (this.cur_sido != sidoName || this.cur_gugun != gugunName)
+        ) {
           // 시도 클러스터 삭제
           for (let i = 0; i < this.sidos.length; i++) {
             this.sidos[i].style.display = "none";
@@ -228,12 +317,20 @@ export default {
           for (let i = 0; i < this.guguns.length; i++) {
             this.guguns[i].style.display = "none";
           }
-
+          this.select_marker = null;
           /*기존 마커 제거*/
           this.makers.forEach((element) => {
             element.setMap(null);
           });
           this.makers = [];
+          this.commakers.forEach((element) => {
+            element.setMap(null);
+          });
+          this.commakers = [];
+          if (this.circle) {
+            this.circle.setMap(null);
+            this.circle = null;
+          }
           /*--------------*/
 
           getAptInfoBySidoGugun(
@@ -242,10 +339,21 @@ export default {
             ({ data }) => {
               data.data.forEach((element) => {
                 var position = new kakao.maps.LatLng(element.lat, element.lng);
+                var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
+                  imageSize = new kakao.maps.Size(7, 7), // 마커이미지의 크기입니다
+                  imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                var markerImage = new kakao.maps.MarkerImage(
+                  imageSrc,
+                  imageSize,
+                  imageOption
+                );
+
                 var marker = new kakao.maps.Marker({
                   position: position,
+                  image: markerImage,
                 });
-
                 kakao.maps.event.addListener(marker, "click", () => {
                   var pos = marker.getPosition();
 
@@ -253,7 +361,8 @@ export default {
                     pos.La,
                     pos.Ma,
                     ({ data }) => {
-                      this.clickedMarker.addressName = data.documents[0].road_address.address_name;
+                      this.clickedMarker.addressName =
+                        data.documents[0].road_address.address_name;
                     },
                     (error) => {
                       console.log("kakao api 좌표로 주소얻기 오류 : " + error);
@@ -261,6 +370,120 @@ export default {
                   );
                   this.isMarkerClicked = true;
                   this.clickedMarker.code = element.aptcode;
+
+                  var imageSrc = require("@/assets/images/marker_point.png"), // 마커이미지의 주소입니다
+                    imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
+                    imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                  if (this.select_marker) {
+                    var imageSrc2 = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
+                      imageSize2 = new kakao.maps.Size(8, 8), // 마커이미지의 크기입니다
+                      imageOption2 = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                    var markerImage2 = new kakao.maps.MarkerImage(
+                      imageSrc2,
+                      imageSize2,
+                      imageOption2
+                    );
+                    this.select_marker.setImage(markerImage2);
+                    for (var i = 0; i < this.commakers.length; i++) {
+                      this.commakers[i].setMap(null);
+                    }
+                    this.commakers = [];
+                  }
+                  // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                  var markerImage = new kakao.maps.MarkerImage(
+                    imageSrc,
+                    imageSize,
+                    imageOption
+                  );
+
+                  marker.setImage(markerImage);
+                  //학군 정보
+                  getFindLocation(
+                    { lat: element.lat, lng: element.lng, category: "SC4" },
+                    ({ data }) => {
+                      data.documents.forEach((com) => {
+                        var position = new kakao.maps.LatLng(com.y, com.x);
+                        var imageSrc = require("@/assets/images/marker_sc.png"), // 마커이미지의 주소입니다
+                          imageSize = new kakao.maps.Size(25, 25), // 마커이미지의 크기입니다
+                          imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                        var markerImage = new kakao.maps.MarkerImage(
+                          imageSrc,
+                          imageSize,
+                          imageOption
+                        );
+
+                        var marker = new kakao.maps.Marker({
+                          position: position,
+                          image: markerImage,
+                        });
+                        marker.setMap(this.map);
+                        this.commakers.push(marker);
+                      });
+                    },
+                    (error) => {
+                      console.log("error", error);
+                    }
+                  );
+                  //카페 정보
+                  getFindLocation(
+                    { lat: element.lat, lng: element.lng, category: "CE7" },
+                    ({ data }) => {
+                      data.documents.forEach((com) => {
+                        var position = new kakao.maps.LatLng(com.y, com.x);
+                        var imageSrc = require("@/assets/images/marker_ce.png"), // 마커이미지의 주소입니다
+                          imageSize = new kakao.maps.Size(30, 30), // 마커이미지의 크기입니다
+                          imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                        var markerImage = new kakao.maps.MarkerImage(
+                          imageSrc,
+                          imageSize,
+                          imageOption
+                        );
+
+                        var marker = new kakao.maps.Marker({
+                          position: position,
+                          image: markerImage,
+                        });
+                        marker.setMap(this.map);
+                        this.commakers.push(marker);
+                      });
+                    },
+                    (error) => {
+                      console.log("error", error);
+                    }
+                  );
+                  //편의점 정보
+                  getFindLocation(
+                    { lat: element.lat, lng: element.lng, category: "CS2" },
+                    ({ data }) => {
+                      data.documents.forEach((com) => {
+                        var position = new kakao.maps.LatLng(com.y, com.x);
+                        var imageSrc = require("@/assets/images/marker_cs.png"), // 마커이미지의 주소입니다
+                          imageSize = new kakao.maps.Size(25, 25), // 마커이미지의 크기입니다
+                          imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                        var markerImage = new kakao.maps.MarkerImage(
+                          imageSrc,
+                          imageSize,
+                          imageOption
+                        );
+
+                        var marker = new kakao.maps.Marker({
+                          position: position,
+                          image: markerImage,
+                        });
+                        marker.setMap(this.map);
+                        this.commakers.push(marker);
+                      });
+                    },
+                    (error) => {
+                      console.log("error", error);
+                    }
+                  );
 
                   if (this.circle) {
                     this.circle.setMap(null);
@@ -270,13 +493,14 @@ export default {
                     radius: 1500, // 미터 단위의 원의 반지름입니다
                     strokeWeight: 5, // 선의 두께입니다
                     strokeColor: "#75B8FA", // 선의 색깔입니다
-                    strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+                    strokeOpacity: 0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
                     strokeStyle: "dashed", // 선의 스타일 입니다
                     fillColor: "#CFE7FF", // 채우기 색깔입니다
-                    fillOpacity: 0.7, // 채우기 불투명도 입니다
+                    fillOpacity: 0.5, // 채우기 불투명도 입니다
                   });
                   this.circle.setMap(this.map);
                   this.map.panTo(pos);
+                  this.select_marker = marker;
                 });
                 marker.setMap(this.map);
                 this.makers.push(marker);
@@ -303,7 +527,6 @@ export default {
   display: flex;
   flex-direction: row;
 }
-
 #map {
   width: 100%;
   height: 92%;
