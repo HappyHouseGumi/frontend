@@ -1,27 +1,45 @@
 <template>
   <div class="apt-info-wrapper">
     <div class="apt-info-header-wrapper">
-      <span>이 위치로 이동하기</span>
+      <span @click="moveTo" style="cursor: pointer">이 위치로 이동하기</span>
       <button @click="closeAptDealInfo">
         <font-awesome-icon icon="fa-solid fa-xmark" class="fa-2x" />
       </button>
     </div>
     <div class="divide-line"></div>
     <div class="apt-info-contents-wrapper">
-      <div id="roadview" style="width: 100%; height: 300px; margin-bottom: 30px; border-radius: 10px"></div>
+      <div
+        id="roadview"
+        style="
+          width: 100%;
+          height: 300px;
+          margin-bottom: 30px;
+          border-radius: 10px;
+        "
+      ></div>
       <div style="margin-bottom: 20px">
         <div style="margin-bottom: 10px">
-          <span style="color: black; font-size: 18px; font-weight: 600; line-height: 22px">{{
-            clickedMarker.addressName
-          }}</span>
+          <span
+            style="
+              color: black;
+              font-size: 18px;
+              font-weight: 600;
+              line-height: 22px;
+            "
+            >{{ clickedMarker.addressName }}</span
+          >
         </div>
         <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
         <div>
           <div style="margin-bottom: 10px">
             <span style="color: #000000; font-size: 16px">최근 실거래가</span>
-            <span style="color: #666; font-size: 12px; margin-left: 5px">{{ recentDeal.date }}</span>
+            <span style="color: #666; font-size: 12px; margin-left: 5px">{{
+              recentDeal.date
+            }}</span>
           </div>
-          <span style="color: #000000; font-size: 22px; font-weight: bold">{{ recentDeal.price }}</span>
+          <span style="color: #000000; font-size: 22px; font-weight: bold">{{
+            recentDeal.price
+          }}</span>
         </div>
       </div>
       <div class="chart-wrapper" style="margin-bottom: 20px">차트 정보</div>
@@ -35,16 +53,28 @@
         </thead>
         <tbody>
           <tr v-for="(info, index) in paginatedData" :key="index">
-            <td>{{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일</td>
+            <td>
+              {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
+            </td>
             <td>{{ info.floor }}층</td>
             <td>{{ info.dealAmount }}만원</td>
           </tr>
         </tbody>
       </table>
       <div class="btn-cover">
-        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">이전</button>
-        <span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
-        <button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">다음</button>
+        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
+          이전
+        </button>
+        <span class="page-count"
+          >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
+        >
+        <button
+          :disabled="pageNum >= pageCount - 1"
+          @click="nextPage"
+          class="page-btn"
+        >
+          다음
+        </button>
       </div>
     </div>
   </div>
@@ -111,7 +141,12 @@ export default {
       });
 
       const recentDeal = this.aptDealInfo.filter((el, index) => index === 0)[0];
-      this.recentDeal.date = recentDeal.dealYear + "." + recentDeal.dealMonth + "." + recentDeal.dealDay;
+      this.recentDeal.date =
+        recentDeal.dealYear +
+        "." +
+        recentDeal.dealMonth +
+        "." +
+        recentDeal.dealDay;
       this.recentDeal.price = recentDeal.dealAmount + " 만원";
     },
   },
@@ -141,6 +176,9 @@ export default {
         e.path[2].childNodes[1].childNodes[0].classList.remove("show");
         e.path[2].childNodes[1].childNodes[0].classList.add("hidden");
       }
+    },
+    moveTo() {
+      this.$emit("moveTo", this.clickedMarker.pos);
     },
     nextPage() {
       this.pageNum += 1;
@@ -341,8 +379,8 @@ tr:hover td {
 
 .btn-cover .page-btn:hover {
   background: #e7e5e5;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .btn-cover .page-count {
