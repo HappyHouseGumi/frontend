@@ -2,6 +2,7 @@
   <div class="search-area">
     <div class="search">
       <select v-model="boardListData.key" class="selectSubject">
+        <option disabled :value="null">선택</option>
         <option value="subject">지역</option>
         <option value="title">제목</option>
       </select>

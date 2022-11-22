@@ -2,6 +2,7 @@
   <div class="search-area">
     <div class="search">
       <select v-model="selectedCategory">
+        <option disabled value="">선택</option>
         <option value="title">제목</option>
         <option value="userName">글쓴이</option>
       </select>
@@ -27,7 +28,7 @@ export default {
         return;
       }
       if (this.selectedCategory === "") {
-        alert("분류를 선택해주세요!");
+        alert("검색 분류를 선택해주세요!");
         return;
       }
 
@@ -86,7 +87,8 @@ export default {
 }
 
 .search > select {
-  padding: 10px 10px;
+  padding: 0 10px;
+  height: 40px;
   width: 100px;
   border-radius: 10px;
   outline: none;
