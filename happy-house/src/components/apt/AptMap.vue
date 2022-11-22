@@ -15,8 +15,7 @@
         :clickedMarker="clickedMarker"
         @closeAptDealInfo="closeAptDealInfo"
         @moveTo="moveTo"
-        @favorPress="favorPress"
-      />
+        @favorPress="favorPress" />
     </div>
   </div>
 </template>
@@ -119,9 +118,9 @@ export default {
         data.data.forEach((element) => {
           var content = null;
           if (this.level == 6)
-            content = `<div class = "sido" style="display:none; font-size : 30px; font-weight:bold">${element.count}</div>`;
+            content = `<div class = "sido" style="display:none; font-size : 20px; font-weight:bold">${element.count}</div>`;
           else
-            content = `<div class = "sido" style="display:; font-size : 30px; font-weight:bold">${element.count}</div>`;
+            content = `<div class = "sido" style="display:; font-size : 20px; font-weight:bold">${element.count}</div>`;
           var position = new kakao.maps.LatLng(element.lat, element.lng);
           var customOverlay = new kakao.maps.CustomOverlay({
             position: position,
@@ -165,6 +164,9 @@ export default {
       this.closeCommarker();
       if (this.select_marker) {
         var selectMarkerImage = this.getMarkerImg("marker", 8, 8);
+        if (this.interestApt.has(this.clickedMarker.code)) {
+          selectMarkerImage = this.getMarkerImg("marker_inter", 25, 25);
+        }
         this.select_marker.setImage(selectMarkerImage);
         this.select_marker = null;
       }
@@ -192,31 +194,18 @@ export default {
         let level = this.map.getLevel();
 
         // 레벨 6 이상부터는 마커 출력 XXXXX
-        if (level >= 7) {
+        if (level >= 6) {
           if (this.makers.length != 0) {
             this.makers.forEach((element) => {
               if (this.select_marker != element) element.setMap(null);
             });
           }
           this.interestMarker.forEach((element) => {
+            console.log(element);
             element.setMap(this.map);
           });
 
           this.hideCommarker();
-          // if (this.select_marker) {
-          //   var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
-          //     imageSize = new kakao.maps.Size(7, 7), // 마커이미지의 크기입니다
-          //     imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-          //   // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-          //   var markerImage = new kakao.maps.MarkerImage(
-          //     imageSrc,
-          //     imageSize,
-          //     imageOption
-          //   );
-          //   this.select_marker.setImage(markerImage);
-          //   this.select_marker = null;
-          // }
         } else {
           this.interestMarker.forEach((element) => {
             element.setMap(null);
@@ -356,8 +345,10 @@ export default {
               data.data.forEach((element) => {
                 var position = new kakao.maps.LatLng(element.lat, element.lng);
 
-                var markerImage = this.getMarkerImg("marker", 8, 8);
-
+                var markerImage = this.getMarkerImg("marker", 12, 12);
+                if (this.interestApt.has(element.aptcode)) {
+                  markerImage = this.getMarkerImg("marker_inter", 25, 25);
+                }
                 var marker = new kakao.maps.Marker({
                   position: position,
                   image: markerImage,
@@ -365,7 +356,14 @@ export default {
                 kakao.maps.event.addListener(marker, "click", () => {
                   this.closeCommarker();
                   if (this.select_marker) {
-                    var selectMarkerImage = this.getMarkerImg("marker", 8, 8);
+                    var selectMarkerImage = this.getMarkerImg("marker", 12, 12);
+                    if (this.interestApt.has(this.clickedMarker.code)) {
+                      selectMarkerImage = this.getMarkerImg(
+                        "marker_inter",
+                        25,
+                        25
+                      );
+                    }
                     this.select_marker.setImage(selectMarkerImage);
                   }
                   var pos = marker.getPosition();
@@ -383,14 +381,16 @@ export default {
                   this.isMarkerClicked = true;
                   this.clickedMarker.code = element.aptcode;
                   this.clickedMarker.pos = marker.getPosition();
-                  console.log(this.interestApt.has(element.aptcode));
-                  console.log(this.interestApt);
                   if (this.interestApt.has(element.aptcode)) {
                     this.clickedMarker.favor = true;
+                  } else {
+                    this.clickedMarker.favor = false;
                   }
+                  //마커 이미지
                   var markerImage = this.getMarkerImg("marker_point", 35, 35);
-                  //기존에 눌렀던 마커는 다시 점으로 바꿈
-
+                  if (this.interestApt.has(element.aptcode)) {
+                    markerImage = this.getMarkerImg("marker_inter", 35, 35);
+                  }
                   marker.setImage(markerImage);
                   //학군 정보
                   getFindLocation(
@@ -540,7 +540,6 @@ export default {
     createInterestMarkers() {
       let user = JSON.parse(localStorage.getItem("loginUser"));
       if (user) {
-        console.log(user.userId);
         this.userId = parseInt(user.userId);
         this.interestMarker.forEach((element) => {
           element.setMap(null);
@@ -561,7 +560,6 @@ export default {
                   image: markerImage,
                 });
                 kakao.maps.event.addListener(marker, "click", () => {
-                  this.map.setLevel(3);
                   this.map.panTo(marker.getPosition());
                 });
                 marker.setMap(this.map);
@@ -575,14 +573,11 @@ export default {
     },
     registInterestMarker(aptcode) {
       let user = JSON.parse(localStorage.getItem("loginUser"));
-      if (this.interestApt.size == 10) {
-        alert("관심 아파트는 10개까지 밖에 설정이 불가합니다.");
-        return;
-      }
       if (user) {
         this.userId = user.userId;
+        var payload = { userId: this.userId, aptCode: aptcode };
         addInterestApt(
-          { userId: this.userId, aptCode: aptcode },
+          JSON.stringify(payload),
           ({ data }) => {
             if (data.flag == "success") {
               this.interestApt.add(aptcode);
@@ -600,7 +595,6 @@ export default {
       if (user) {
         this.userId = user.userId;
         var payload = { userId: this.userId, aptCode: aptcode };
-        console.log(JSON.stringify(payload));
         deleteInterestApt(
           JSON.stringify(payload),
           ({ data }) => {
@@ -626,6 +620,10 @@ export default {
       if (favor) {
         this.deleteInterestMarker(aptcode);
       } else {
+        if (this.interestApt.size == 10) {
+          alert("관심 아파트는 10개까지 밖에 설정이 불가합니다.");
+          return;
+        }
         this.registInterestMarker(aptcode);
       }
       this.clickedMarker.favor = !this.clickedMarker.favor;

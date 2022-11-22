@@ -7,10 +7,9 @@
         </button>
         <!-- 여기서 if 달아서 쓰시오!!  -->
         <button
-          v-if="favor === false"
+          v-if="clickedMarker.favor === false"
           style="color: #ffc10a"
-          @click="favorPress"
-        >
+          @click="favorPress">
           <font-awesome-icon icon="fa-regular fa-star" />
         </button>
         <button v-else style="color: #ffc10a" @click="favorPress">
@@ -30,8 +29,7 @@
           height: 300px;
           margin-bottom: 30px;
           border-radius: 10px;
-        "
-      ></div>
+        "></div>
       <div style="margin-bottom: 20px">
         <div style="margin-bottom: 10px">
           <span
@@ -60,8 +58,7 @@
       <div class="chart-wrapper" style="margin-bottom: 20px">
         <LineChartGenerator
           :chart-options="chartOptions"
-          :chart-data="chartData"
-        />
+          :chart-data="chartData" />
       </div>
       <table>
         <thead>
@@ -91,8 +88,7 @@
         <button
           :disabled="pageNum >= pageCount - 1"
           @click="nextPage"
-          class="page-btn"
-        >
+          class="page-btn">
           다음
         </button>
       </div>
@@ -227,7 +223,6 @@ export default {
   updated() {},
 
   mounted() {
-    this.favor = this.clickedMarker.favor;
     // var roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
     // var roadview = new window.kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
     // var roadviewClient = new window.kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
@@ -261,8 +256,11 @@ export default {
       this.pageNum -= 1;
     },
     favorPress() {
-      this.$emit("favorPress", this.clickedMarker.code, this.favor);
-      this.favor = !this.favor;
+      this.$emit(
+        "favorPress",
+        this.clickedMarker.code,
+        this.clickedMarker.favor
+      );
     },
   },
 };
