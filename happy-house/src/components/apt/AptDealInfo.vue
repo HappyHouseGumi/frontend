@@ -1,9 +1,18 @@
 <template>
   <div class="apt-info-wrapper">
     <div class="apt-info-header-wrapper">
-      <button @click="moveTo" style="cursor: pointer">
-        <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
-      </button>
+      <div>
+        <button @click="moveTo" style="cursor: pointer">
+          <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
+        </button>
+        <!-- 여기서 if 달아서 쓰시오!!  -->
+        <button style="color: #ffc10a">
+          <font-awesome-icon icon="fa-regular fa-star" />
+        </button>
+        <button style="color: #ffc10a">
+          <font-awesome-icon icon="fa-solid fa-star" />
+        </button>
+      </div>
       <button @click="closeAptDealInfo">
         <font-awesome-icon icon="fa-solid fa-xmark" class="fa-lg" />
       </button>
@@ -217,10 +226,14 @@ export default {
   margin-bottom: 20px;
 }
 
-.apt-info-header-wrapper > button {
+.apt-info-header-wrapper button {
   border: none;
   background: none;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+}
+
+.apt-info-header-wrapper > div > button {
+  margin-right: 15px;
 }
 
 .divide-line {
