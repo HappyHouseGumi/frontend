@@ -15,15 +15,34 @@
       <div class="ask">
         <span>QnA</span>
         <div class="divide-line"></div>
-        <router-link to="/qna"><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></router-link>
+        <!-- <router-link to="/qna"><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></router-link> -->
+        <a @click="moveToqna"><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+const qnaStore = "qnaStore";
+
 export default {
   name: "MainContents",
+  methods: {
+    ...mapMutations(qnaStore, { setQnaListData: "SET_QNA_LIST_DATA" }),
+
+    moveToqna() {
+      let sendingParam = {
+        pgno: 1,
+        key: null,
+        word: null,
+      };
+      this.setQnaListData(sendingParam);
+
+      this.$router.push({ name: "qna" });
+      // this.$router.go();
+    },
+  },
 };
 </script>
 

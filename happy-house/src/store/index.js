@@ -5,9 +5,10 @@ import aptStore from "@/store/modules/aptStore";
 import boardStore from "@/store/modules/boardStore";
 import noticeStore from "@/store/modules/noticeStore";
 import likeStore from "@/store/modules/likeStore";
+import qnaStore from "@/store/modules/qnaStore";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  modules: { userStore, aptStore, boardStore, noticeStore, likeStore },
+  modules: { userStore, aptStore, boardStore, noticeStore, likeStore, qnaStore },
 });

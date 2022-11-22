@@ -53,6 +53,8 @@
 
 <script type="module">
 import { registQna } from "@/api/qna";
+import { mapMutations } from "vuex";
+const qnaStore = "qnaStore";
 
 export default {
   name: "QnaRegist",
@@ -67,6 +69,8 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(qnaStore, { setQnaListData: "SET_QNA_LIST_DATA" }),
+
     registQna() {
       if (
         this.question.userName === "" ||
@@ -81,6 +85,13 @@ export default {
         alert("이름은 최대 6글자까지 가능합니다.");
         return;
       }
+
+      let sendingParam = {
+        pgno: 1,
+        key: null,
+        word: null,
+      };
+      this.setQnaListData(sendingParam);
 
       registQna(
         this.question,
