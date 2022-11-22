@@ -1,35 +1,35 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <input placeholder="제목을 입력해주세요." v-model="searchInput" />
+      <input placeholder="제목을 입력해주세요." v-model="noticeListData.word" />
       <button @click="searchBtn">검색</button>
     </div>
   </div>
 </template>
 
 <script type="module">
+import { mapState } from "vuex";
+const noticeStore = "noticeStore";
+
 export default {
   name: "NoticeSearch",
   data() {
-    return {
-      searchClass: "subject",
-      searchInput: "",
-    };
+    return {};
   },
+
+  computed: {
+    ...mapState(noticeStore, ["noticeListData"]),
+  },
+
   methods: {
     searchBtn() {
-      if (this.searchClass === "") {
-        alert("검색할 지역을 선택해주세요!");
-        return;
-      }
-      if (this.searchInput === "") {
+      if (this.noticeListData.word === "" || this.noticeListData.word === null) {
         alert("검색어를 입력해주세요!");
         return;
       }
 
       let searchParam = {};
-      searchParam.searchClass = this.searchClass;
-      searchParam.searchInput = this.searchInput;
+      searchParam.searchInput = this.noticeListData.word;
 
       this.$emit("searchParam", searchParam);
     },

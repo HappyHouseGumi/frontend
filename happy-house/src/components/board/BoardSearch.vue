@@ -22,7 +22,7 @@ export default {
 
   data() {
     return {
-      searchClass: "subject",
+      searchClass: "",
       searchInput: "",
     };
   },
@@ -36,11 +36,11 @@ export default {
       this.searchClass = this.boardListData.key;
       this.searchInput = this.boardListData.word;
 
-      if (this.searchClass === "") {
-        alert("검색할 지역을 선택해주세요!");
+      if (this.searchClass === "" || this.searchClass === null) {
+        alert("검색 분류를 선택해주세요!");
         return;
       }
-      if (this.searchInput === "") {
+      if (this.searchInput === "" || this.searchInput === null) {
         alert("검색어를 입력해주세요!");
         return;
       }

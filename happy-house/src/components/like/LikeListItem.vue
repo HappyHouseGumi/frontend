@@ -5,7 +5,9 @@
     <td>{{ like.boardId }}</td>
     <td>{{ like.subject }}</td>
     <td style="font-weight: bold">
-      <router-link :to="{ name: 'boarddetail', params: { id: like.boardId } }">{{ like.title }}</router-link>
+      <router-link :to="{ name: 'boarddetail', params: { id: like.boardId, pass: 'like' } }">{{
+        like.title
+      }}</router-link>
     </td>
     <td>{{ like.nickName }}</td>
   </tr>

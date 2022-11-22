@@ -161,7 +161,7 @@ export default {
           ({ data }) => {
             if (data.flag === "success") {
               alert("글 삭제 성공");
-              this.moveListBoard();
+              this.$router.push({ name: "boardlist" });
             } else {
               console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
             }
@@ -175,7 +175,11 @@ export default {
       }
     },
     moveListBoard() {
-      this.$router.push({ name: "boardlist" });
+      if (this.$route.params.pass === "board") {
+        this.$router.push({ name: "boardlist" });
+      } else {
+        this.$router.push({ name: "likelist" });
+      }
     },
     registReply() {
       if (confirm("댓글을 등록하시겠습니까?")) {
