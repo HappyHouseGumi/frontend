@@ -24,7 +24,9 @@
           <span style="color: #000000; font-size: 22px; font-weight: bold">{{ recentDeal.price }}</span>
         </div>
       </div>
-      <div class="chart-wrapper" style="margin-bottom: 20px">차트 정보</div>
+      <div class="chart-wrapper" style="margin-bottom: 20px">
+        <LineChartGenerator :chart-options="chartOptions" :chart-data="chartData" />
+      </div>
       <table>
         <thead>
           <tr>
@@ -52,11 +54,27 @@
 
 <script type="module">
 import { mapState, mapGetters } from "vuex";
+import { Line as LineChartGenerator } from "vue-chartjs/legacy";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+} from "chart.js";
+
+ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
 
 const aptStore = "aptStore";
 
 export default {
   name: "AptDealInfo",
+  components: {
+    LineChartGenerator,
+  },
   data() {
     return {
       pageNum: 0,
@@ -68,6 +86,20 @@ export default {
       recentDeal: {
         date: "",
         price: "",
+      },
+      chartData: {
+        labels: [],
+        datasets: [
+          {
+            label: "연별 거래 금액",
+            backgroundColor: "#0069d9;",
+            data: [],
+          },
+        ],
+      },
+      chartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
       },
     };
   },
@@ -113,6 +145,18 @@ export default {
       const recentDeal = this.aptDealInfo.filter((el, index) => index === 0)[0];
       this.recentDeal.date = recentDeal.dealYear + "." + recentDeal.dealMonth + "." + recentDeal.dealDay;
       this.recentDeal.price = recentDeal.dealAmount + " 만원";
+
+      const chartList = this.aptDealInfo.filter(
+        (arr, index, callback) => index === callback.findIndex((el) => el.dealYear === arr.dealYear)
+      );
+      this.chartData.labels = [];
+      this.chartData.datasets[0].data = [];
+
+      chartList.map((el) => {
+        this.chartData.labels.push(el.dealYear);
+        const dealAmount = el.dealAmount.split(",").join("");
+        this.chartData.datasets[0].data.push(dealAmount);
+      });
     },
   },
   created() {},
