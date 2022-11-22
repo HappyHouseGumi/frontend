@@ -2,11 +2,13 @@
   <div class="interest-regist-wrapper">
     <div class="interest-regist">
       <select v-model="selectedSido" @change="changeSido">
+        <option disabled value="">시/도</option>
         <option v-for="(list, index) in optionSido" :key="index" :value="list.dongCode">
           {{ list.sidoName }}
         </option>
       </select>
       <select v-model="selectedGugun">
+        <option disabled value="">구/군</option>
         <option v-for="(list, index) in optionGugun" :key="index" :value="list.dongCode">
           {{ list.gugunName }}
         </option>

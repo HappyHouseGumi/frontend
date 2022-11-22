@@ -153,7 +153,6 @@ export default {
     },
     initMap() {
       const container = document.getElementById("map");
-      console.log(this.lat, this.lng);
       const options = {
         center: new kakao.maps.LatLng(this.lat, this.lng),
         level: this.level,
@@ -305,7 +304,6 @@ export default {
           }
           /*기존 마커 제거*/
           this.makers.forEach((element) => {
-            console.log(this.select_marker);
             if (this.select_marker != element) element.setMap(null);
           });
           // this.makers = [];
