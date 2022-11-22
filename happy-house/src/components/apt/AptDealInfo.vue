@@ -1,7 +1,7 @@
 <template>
   <div class="apt-info-wrapper">
     <div class="apt-info-header-wrapper">
-      <span>{{ clickedMarker.addressName }}</span>
+      <span>이 위치로 이동하기</span>
       <button @click="closeAptDealInfo">
         <font-awesome-icon icon="fa-solid fa-xmark" class="fa-2x" />
       </button>
@@ -170,7 +170,7 @@ export default {
 
 .apt-info-header-wrapper > span {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .apt-info-header-wrapper > button {
