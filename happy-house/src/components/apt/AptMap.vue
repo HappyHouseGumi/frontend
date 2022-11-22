@@ -15,6 +15,7 @@
         :clickedMarker="clickedMarker"
         @closeAptDealInfo="closeAptDealInfo"
         @moveTo="moveTo"
+        @favorPress="favorPress"
       />
     </div>
   </div>
@@ -73,6 +74,7 @@ export default {
       clickedMarker: {
         addressName: "",
         code: "",
+        favor: false,
         pos: null,
       },
       toggle: {
@@ -381,6 +383,11 @@ export default {
                   this.isMarkerClicked = true;
                   this.clickedMarker.code = element.aptcode;
                   this.clickedMarker.pos = marker.getPosition();
+                  console.log(this.interestApt.has(element.aptcode));
+                  console.log(this.interestApt);
+                  if (this.interestApt.has(element.aptcode)) {
+                    this.clickedMarker.favor = true;
+                  }
                   var markerImage = this.getMarkerImg("marker_point", 35, 35);
                   //기존에 눌렀던 마커는 다시 점으로 바꿈
 
@@ -544,7 +551,7 @@ export default {
           ({ data }) => {
             if (data.flag == "success") {
               data.data.forEach((element) => {
-                this.interestApt.add(element.aptCode);
+                this.interestApt.add(element.aptcode);
                 var position = new kakao.maps.LatLng(element.lat, element.lng);
 
                 var markerImage = this.getMarkerImg("marker_inter", 35, 35);
@@ -568,12 +575,12 @@ export default {
     },
     registInterestMarker(aptcode) {
       let user = JSON.parse(localStorage.getItem("loginUser"));
-      if (this.interestApt.size() == 10) {
+      if (this.interestApt.size == 10) {
         alert("관심 아파트는 10개까지 밖에 설정이 불가합니다.");
         return;
       }
       if (user) {
-        this.userId = parseInt(localStorage.getItem("loginUser").userId);
+        this.userId = user.userId;
         addInterestApt(
           { userId: this.userId, aptCode: aptcode },
           ({ data }) => {
@@ -591,9 +598,11 @@ export default {
     deleteInterestMarker(aptcode) {
       let user = JSON.parse(localStorage.getItem("loginUser"));
       if (user) {
-        this.userId = parseInt(localStorage.getItem("loginUser").userId);
+        this.userId = user.userId;
+        var payload = { userId: this.userId, aptCode: aptcode };
+        console.log(JSON.stringify(payload));
         deleteInterestApt(
-          { userId: this.userId, aptCode: aptcode },
+          JSON.stringify(payload),
           ({ data }) => {
             if (data.flag == "success") {
               this.interestApt.delete(aptcode);
@@ -601,6 +610,7 @@ export default {
           },
           (error) => console.log("deleteInterestMarker  error :" + error)
         );
+        this.createInterestMarkers();
       }
     },
     clickCategory(e) {
@@ -611,6 +621,14 @@ export default {
         e.target.classList.remove("categoryDeactive");
         e.target.classList.add("categoryActive");
       }
+    },
+    favorPress(aptcode, favor) {
+      if (favor) {
+        this.deleteInterestMarker(aptcode);
+      } else {
+        this.registInterestMarker(aptcode);
+      }
+      this.clickedMarker.favor = !this.clickedMarker.favor;
     },
   },
 };

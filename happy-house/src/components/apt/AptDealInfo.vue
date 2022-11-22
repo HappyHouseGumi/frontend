@@ -6,10 +6,14 @@
           <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
         </button>
         <!-- 여기서 if 달아서 쓰시오!!  -->
-        <button style="color: #ffc10a">
+        <button
+          v-if="favor === false"
+          style="color: #ffc10a"
+          @click="favorPress"
+        >
           <font-awesome-icon icon="fa-regular fa-star" />
         </button>
-        <button style="color: #ffc10a">
+        <button v-else style="color: #ffc10a" @click="favorPress">
           <font-awesome-icon icon="fa-solid fa-star" />
         </button>
       </div>
@@ -19,24 +23,45 @@
     </div>
     <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
     <div class="apt-info-contents-wrapper">
-      <div id="roadview" style="width: 100%; height: 300px; margin-bottom: 30px; border-radius: 10px"></div>
+      <div
+        id="roadview"
+        style="
+          width: 100%;
+          height: 300px;
+          margin-bottom: 30px;
+          border-radius: 10px;
+        "
+      ></div>
       <div style="margin-bottom: 20px">
         <div style="margin-bottom: 10px">
-          <span style="color: black; font-size: 18px; font-weight: 600; line-height: 22px">{{
-            clickedMarker.addressName
-          }}</span>
+          <span
+            style="
+              color: black;
+              font-size: 18px;
+              font-weight: 600;
+              line-height: 22px;
+            "
+            >{{ clickedMarker.addressName }}</span
+          >
         </div>
         <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
         <div>
           <div style="margin-bottom: 10px">
             <span style="color: #000000; font-size: 16px">최근 실거래가</span>
-            <span style="color: #666; font-size: 12px; margin-left: 5px">{{ recentDeal.date }}</span>
+            <span style="color: #666; font-size: 12px; margin-left: 5px">{{
+              recentDeal.date
+            }}</span>
           </div>
-          <span style="color: #000000; font-size: 22px; font-weight: bold">{{ recentDeal.price }}</span>
+          <span style="color: #000000; font-size: 22px; font-weight: bold">{{
+            recentDeal.price
+          }}</span>
         </div>
       </div>
       <div class="chart-wrapper" style="margin-bottom: 20px">
-        <LineChartGenerator :chart-options="chartOptions" :chart-data="chartData" />
+        <LineChartGenerator
+          :chart-options="chartOptions"
+          :chart-data="chartData"
+        />
       </div>
       <table>
         <thead>
@@ -48,16 +73,28 @@
         </thead>
         <tbody>
           <tr v-for="(info, index) in paginatedData" :key="index">
-            <td>{{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일</td>
+            <td>
+              {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
+            </td>
             <td>{{ info.floor }}층</td>
             <td>{{ info.dealAmount }}만원</td>
           </tr>
         </tbody>
       </table>
       <div class="btn-cover">
-        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">이전</button>
-        <span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
-        <button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">다음</button>
+        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
+          이전
+        </button>
+        <span class="page-count"
+          >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
+        >
+        <button
+          :disabled="pageNum >= pageCount - 1"
+          @click="nextPage"
+          class="page-btn"
+        >
+          다음
+        </button>
       </div>
     </div>
   </div>
@@ -77,7 +114,15 @@ import {
   PointElement,
 } from "chart.js";
 
-ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  LineElement,
+  LinearScale,
+  CategoryScale,
+  PointElement
+);
 
 const aptStore = "aptStore";
 
@@ -93,6 +138,7 @@ export default {
       roadview: null,
       roadviewContainer: null,
       roadviewClient: null,
+      favor: null,
       pageSize: 10,
       recentDeal: {
         date: "",
@@ -143,6 +189,7 @@ export default {
   watch: {
     GET_DEAL: function () {
       this.aptDealInfo = this.GET_DEAL;
+
       //this.pageSize = 0;
       this.pageNum = 0;
       var position = this.clickedMarker.pos;
@@ -154,11 +201,17 @@ export default {
       });
 
       const recentDeal = this.aptDealInfo.filter((el, index) => index === 0)[0];
-      this.recentDeal.date = recentDeal.dealYear + "." + recentDeal.dealMonth + "." + recentDeal.dealDay;
+      this.recentDeal.date =
+        recentDeal.dealYear +
+        "." +
+        recentDeal.dealMonth +
+        "." +
+        recentDeal.dealDay;
       this.recentDeal.price = recentDeal.dealAmount + " 만원";
 
       const chartList = this.aptDealInfo.filter(
-        (arr, index, callback) => index === callback.findIndex((el) => el.dealYear === arr.dealYear)
+        (arr, index, callback) =>
+          index === callback.findIndex((el) => el.dealYear === arr.dealYear)
       );
       this.chartData.labels = [];
       this.chartData.datasets[0].data = [];
@@ -174,6 +227,7 @@ export default {
   updated() {},
 
   mounted() {
+    this.favor = this.clickedMarker.favor;
     // var roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
     // var roadview = new window.kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
     // var roadviewClient = new window.kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
@@ -205,6 +259,10 @@ export default {
     },
     prevPage() {
       this.pageNum -= 1;
+    },
+    favorPress() {
+      this.$emit("favorPress", this.clickedMarker.code, this.favor);
+      this.favor = !this.favor;
     },
   },
 };
@@ -399,8 +457,8 @@ tr:hover td {
 
 .btn-cover .page-btn:hover {
   background: #e7e5e5;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .btn-cover .page-count {
