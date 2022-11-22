@@ -5,7 +5,6 @@
     <div v-if="loginId != null">
       <button class="board-regist-btn" @click="moveRegistBoard">글 등록하기</button>
     </div>
-    {{ boardListData }}
     <table>
       <thead>
         <tr>
@@ -17,12 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <board-list-item
-          v-for="(board, index) in boards"
-          :key="index"
-          :board="board"
-          :paramsDetail="params"
-        ></board-list-item>
+        <board-list-item v-for="(board, index) in boards" :key="index" :board="board"></board-list-item>
       </tbody>
     </table>
 
@@ -34,11 +28,14 @@
 import BoardListItem from "@/components/board/BoardListItem.vue";
 import BoardSearch from "@/components/board/BoardSearch.vue";
 import PaginationCom from "@/components/common/PaginationCom.vue";
-import { getBoardList, getBoardListCount } from "@/api/board";
+// import { getBoardList, getBoardListCount } from "@/api/board";
+import { getBoardList } from "@/api/board";
+
+import { apiInstance } from "@/api/index";
+const api = apiInstance();
 
 // import { mapState, mapMutations, mapGetters } from "vuex";
 import { mapState, mapMutations } from "vuex";
-
 const boardStore = "boardStore";
 
 export default {
@@ -70,36 +67,91 @@ export default {
       const id = JSON.parse(localStorage.getItem("loginUser")).userId;
       this.loginId = id;
     }
+    this.params.pgno = this.boardListData.pgno;
+    this.params.key = this.boardListData.key;
+    this.params.word = this.boardListData.word;
+    console.log(this.boardListData);
 
-    getBoardListCount(
-      this.params,
-      ({ data }) => {
+    const getBaord = async (param) => {
+      try {
+        let data = await api.post(`/board/count`, param);
+        console.log(param);
+        data = data.data;
         if (data.flag === "success") {
-          // console.log(data.data);
+          // console.log("Board 리스트 개수 :", data.data);
           this.total = data.data[0];
-        } else {
-          console.log("Board 리스트 개수 가져오기 오류: ", data.data[0].msg);
         }
-      },
-      (error) => {
-        console.log("Board 리스트 개수 가져오기 오류 : " + error);
-      }
-    );
-
-    getBoardList(
-      this.params,
-      ({ data }) => {
+        data = await api.post(`/board/list`, param);
+        data = data.data;
         if (data.flag === "success") {
           this.boards = data.data;
           // console.log("board List 출력 :\n", this.boards);
-        } else {
-          console.log("Board 리스트 가져오기 오류: ", data.data[0].msg);
         }
-      },
-      (error) => {
-        console.log("Board 리스트 가져오기 오류 : " + error);
+      } catch (error) {
+        console.log("Board 리스트 : ", error);
       }
-    );
+    };
+
+    getBaord(this.params);
+
+    // getBoardListCount(
+    //   this.params,
+    //   ({ data }) => {
+    //     if (data.flag === "success") {
+    //       // console.log("Board 리스트 개수 :", data.data);
+    //       this.total = data.data[0];
+    //       getBoardList(
+    //         this.params,
+    //         ({ data }) => {
+    //           if (data.flag === "success") {
+    //             this.boards = data.data;
+    //             // console.log("board List 출력 :\n", this.boards);
+    //           } else {
+    //             console.log("Board 리스트 가져오기 오류: ", data.data[0].msg);
+    //           }
+    //         },
+    //         (error) => {
+    //           console.log("Board 리스트 가져오기 오류 : " + error);
+    //         }
+    //       );
+    //     } else {
+    //       console.log("Board 리스트 개수 가져오기 오류: ", data.data[0].msg);
+    //     }
+    //   },
+    //   (error) => {
+    //     console.log("Board 리스트 개수 가져오기 오류 : " + error);
+    //   }
+    // );
+
+    // getBoardListCount(
+    //   this.params,
+    //   ({ data }) => {
+    //     if (data.flag === "success") {
+    //       // console.log("Board 리스트 개수 :", data.data);
+    //       this.total = data.data[0];
+    //     } else {
+    //       console.log("Board 리스트 개수 가져오기 오류: ", data.data[0].msg);
+    //     }
+    //   },
+    //   (error) => {
+    //     console.log("Board 리스트 개수 가져오기 오류 : " + error);
+    //   }
+    // );
+    //
+    // getBoardList(
+    //   this.params,
+    //   ({ data }) => {
+    //     if (data.flag === "success") {
+    //       this.boards = data.data;
+    //       console.log("board List 출력 :\n", this.boards);
+    //     } else {
+    //       console.log("Board 리스트 가져오기 오류: ", data.data[0].msg);
+    //     }
+    //   },
+    //   (error) => {
+    //     console.log("Board 리스트 가져오기 오류 : " + error);
+    //   }
+    // );
   },
 
   mounted() {},
@@ -110,6 +162,7 @@ export default {
 
   methods: {
     ...mapMutations(boardStore, ["SET_BOARD_LIST_DATA"]),
+    // ...mapMutations(boardStore, { setBoardListData: "SET_BOARD_LIST_DATA" }),
 
     moveRegistBoard() {
       this.$router.push({ name: "boardregist" });
@@ -120,35 +173,25 @@ export default {
 
       this.SET_BOARD_LIST_DATA(this.params);
 
-      getBoardListCount(
-        this.params,
-        ({ data }) => {
+      const getBaord = async (param) => {
+        try {
+          let data = await api.post(`/board/count`, param);
+          console.log(param);
+          data = data.data;
           if (data.flag === "success") {
-            // console.log(data.data);
             this.total = data.data[0];
-          } else {
-            console.log("Board 리스트 개수 가져오기 오류: ", data.data[0].msg);
           }
-        },
-        (error) => {
-          console.log("Board 리스트 개수 가져오기 오류 : " + error);
-        }
-      );
-
-      getBoardList(
-        this.params,
-        ({ data }) => {
+          data = await api.post(`/board/list`, param);
+          data = data.data;
           if (data.flag === "success") {
             this.boards = data.data;
-            //console.log("board List 출력 :\n", this.boards);
-          } else {
-            console.log("Board 리스트 검색으로 가져오기 오류: ", data.data[0].msg);
           }
-        },
-        (error) => {
-          console.log("Board 리스트 검색으로 가져오기 오류 : " + error);
+        } catch (error) {
+          console.log("Board 리스트 : ", error);
         }
-      );
+      };
+
+      getBaord(this.params);
     },
 
     pagingMethod(page) {
@@ -156,13 +199,14 @@ export default {
       this.params.pgno = page;
 
       this.SET_BOARD_LIST_DATA(this.params);
+      // this.setBoardListData(this.params);
 
       getBoardList(
         this.params,
         ({ data }) => {
           if (data.flag === "success") {
             this.boards = data.data;
-            //console.log("board List 출력 :\n", this.boards);
+            // console.log("페이지 이동 후!!!\nboard List 출력 :\n", this.boards);
           } else {
             console.log("Board 리스트 검색으로 가져오기 오류: ", data.data[0].msg);
           }
