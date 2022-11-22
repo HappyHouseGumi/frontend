@@ -67,7 +67,6 @@ export default {
   methods: {
     writeNotice() {
       this.notice.userId = this.loginId;
-      // console.log(this.notice);
 
       if (this.notice.title === "" || this.notice.content === "") {
         alert("빈칸을 모두 채워주세요.");
@@ -101,6 +100,7 @@ table {
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
+  border-collapse: collapse;
 }
 
 colgroup {
@@ -160,45 +160,41 @@ td > textarea {
   color: #f71b1b;
   font-weight: bold;
 }
-.selectSubject {
-  width: 110px;
-  height: 32px;
-  border: 1px solid #999;
-  background-size: 20px;
-  padding: 5px 30px 5px 10px;
-  border-radius: 4px;
-  outline: 1;
-  margin-right: 8px;
-}
-.selectSubject option {
-  background: #fff;
-  color: black;
-  padding: 3px 0;
-}
+
 .notice-regist-wrapper > div {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-button {
+.regist-btn,
+.cancel-btn {
   margin-top: 30px;
-  margin-bottom: 100px;
-  width: 120px;
+  width: 110px;
   height: 40px;
   font-weight: bold;
-  color: white;
+  color: #007bff;
   border: 0;
   outline: 0;
-  border-radius: 5px;
+  background: white;
+  border: 1px solid #007bff;
+  border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.regist-btn:hover {
+  color: white;
+  background: #007bff;
 }
 
 .regist-btn {
-  background: #3c90e2;
   margin-right: 20px;
 }
 
 .cancel-btn {
+  border: 1px solid rgb(138, 137, 137);
   background: rgb(138, 137, 137);
+  color: white;
 }
 </style>
