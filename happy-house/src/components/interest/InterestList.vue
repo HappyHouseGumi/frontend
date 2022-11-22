@@ -205,6 +205,11 @@ a {
   }
 }
 
+tr:hover td {
+  cursor: pointer;
+  background: #e7e5e5;
+}
+
 .delete-interest-btn {
   border: none;
   background: none;

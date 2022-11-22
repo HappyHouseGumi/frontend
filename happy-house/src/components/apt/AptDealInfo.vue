@@ -1,99 +1,83 @@
 <template>
   <div class="apt-info-wrapper">
     <div class="apt-info-header-wrapper">
-      <span>{{ clickedMarker.addressName }}</span>
+      <span>이 위치로 이동하기</span>
       <button @click="closeAptDealInfo">
         <font-awesome-icon icon="fa-solid fa-xmark" class="fa-2x" />
       </button>
     </div>
     <div class="divide-line"></div>
     <div class="apt-info-contents-wrapper">
-      <!-- <font-awesome-icon icon="fa-solid fa-house" class="fa-3x" /> -->
-      <div id="roadview" style="width: 100%; height: 300px"></div>
+      <div id="roadview" style="width: 100%; height: 300px; margin-bottom: 30px; border-radius: 10px"></div>
+      <div style="margin-bottom: 20px">
+        <div style="margin-bottom: 10px">
+          <span style="color: black; font-size: 18px; font-weight: 600; line-height: 22px">{{
+            clickedMarker.addressName
+          }}</span>
+        </div>
+        <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
+        <div>
+          <div style="margin-bottom: 10px">
+            <span style="color: #000000; font-size: 16px">최근 실거래가</span>
+            <span style="color: #666; font-size: 12px; margin-left: 5px">{{ recentDeal.date }}</span>
+          </div>
+          <span style="color: #000000; font-size: 22px; font-weight: bold">{{ recentDeal.price }}</span>
+        </div>
+      </div>
+      <div class="chart-wrapper" style="margin-bottom: 20px">차트 정보</div>
       <table>
-        <tr>
-          <th>거래 일자</th>
-          <th>거래 층수</th>
-          <th>거래 가격</th>
-        </tr>
-        <tr v-for="(info, index) in paginatedData" :key="index">
-          <td>
-            {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
-          </td>
-          <td>{{ info.floor }}층</td>
-          <td>{{ info.dealAmount }}만원</td>
-        </tr>
+        <thead>
+          <tr>
+            <th>거래 일자</th>
+            <th>거래 층수</th>
+            <th>거래 가격</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(info, index) in paginatedData" :key="index">
+            <td>{{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일</td>
+            <td>{{ info.floor }}층</td>
+            <td>{{ info.dealAmount }}만원</td>
+          </tr>
+        </tbody>
       </table>
       <div class="btn-cover">
-        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
-          이전
-        </button>
-        <span class="page-count"
-          >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
-        >
-        <button
-          :disabled="pageNum >= pageCount - 1"
-          @click="nextPage"
-          class="page-btn">
-          다음
-        </button>
+        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">이전</button>
+        <span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
+        <button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">다음</button>
       </div>
-      <!-- <div class="btn-cover">
-        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
-          이전
-        </button>
-        <span class="page-count"
-          >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
-        >
-        <button
-          :disabled="pageNum >= pageCount - 1"
-          @click="nextPage"
-          class="page-btn">
-          다음
-        </button>
-      </div> -->
-      <!-- <div
-        v-for="(info, index) in this.GET_DEAL"
-        :key="index"
-        class="apt-info-content">
-        <div class="apt-info-drop-down">
-          <div
-            class="apt-info-drop-down-selected"
-            @click="(e) => showInfoDetail(e)">
-            <span
-              ><font-awesome-icon icon="fa-solid fa-caret-down" />
-              {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
-              거래내역</span
-            >
-          </div>
-          <div class="apt-info-drop-down-options">
-            <ul class="hidden">
-              <li>
-                <i><b>거래 층수</b></i> {{ info.floor }}층
-              </li>
-              <li>
-                <i><b>거래 금액</b></i> {{ info.dealAmount }}만원
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
 
 <script type="module">
-// import { getAptDealInfo } from "@/api/apt";
 import { mapState, mapGetters } from "vuex";
+
 const aptStore = "aptStore";
+
 export default {
   name: "AptDealInfo",
+  data() {
+    return {
+      pageNum: 0,
+      aptDealInfo: [],
+      roadview: null,
+      roadviewContainer: null,
+      roadviewClient: null,
+      pageSize: 10,
+      recentDeal: {
+        date: "",
+        price: "",
+      },
+    };
+  },
   props: {
     clickedMarker: {},
   },
   computed: {
     ...mapState(aptStore, ["dealList"]),
     ...mapGetters(aptStore, ["GET_DEAL"]),
+
     pageCount() {
       let listLeng = this.GET_DEAL.length,
         listSize = this.pageSize,
@@ -125,6 +109,10 @@ export default {
       roadviewClient.getNearestPanoId(position, 50, function (panoId) {
         roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
       });
+
+      const recentDeal = this.aptDealInfo.filter((el, index) => index === 0)[0];
+      this.recentDeal.date = recentDeal.dealYear + "." + recentDeal.dealMonth + "." + recentDeal.dealDay;
+      this.recentDeal.price = recentDeal.dealAmount + " 만원";
     },
   },
   created() {},
@@ -140,16 +128,6 @@ export default {
     // roadviewClient.getNearestPanoId(position, 50, (panoId) => {
     //   roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
     // });
-  },
-  data() {
-    return {
-      pageNum: 0,
-      aptDealInfo: [],
-      roadview: null,
-      roadviewContainer: null,
-      roadviewClient: null,
-      pageSize: 10,
-    };
   },
   methods: {
     closeAptDealInfo() {
@@ -192,7 +170,7 @@ export default {
 
 .apt-info-header-wrapper > span {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .apt-info-header-wrapper > button {
@@ -263,34 +241,112 @@ export default {
 }
 
 table {
+  font-size: 0.9em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   width: 100%;
   border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
 }
-table th {
-  font-size: 1.2rem;
+
+th {
+  text-align: left;
+  font-size: 0.9rem;
 }
-table tr {
-  height: 2rem;
-  text-align: center;
-  border-bottom: 1px solid #505050;
+
+thead {
+  font-weight: bold;
+  color: #fff;
+  background: #0069d9;
 }
-table tr:first-of-type {
-  border-top: 2px solid #404040;
+
+td,
+th {
+  padding: 10px 20px;
+  vertical-align: middle;
 }
-table tr td {
-  padding: 1rem 0;
-  font-size: 1.1rem;
+
+td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
 }
+
+a {
+  color: #73685d;
+}
+
+@media all and (max-width: 768px) {
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  th {
+    text-align: right;
+  }
+
+  table {
+    position: relative;
+    padding-bottom: 0;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  thead {
+    float: left;
+    white-space: nowrap;
+  }
+
+  tbody {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  tr {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  th {
+    border-bottom: 1px solid #a39485;
+  }
+
+  td {
+    border-bottom: 1px solid #e5e5e5;
+  }
+}
+
+tr:hover td {
+  cursor: pointer;
+  background: #e7e5e5;
+}
+
 .btn-cover {
   margin-top: 1.5rem;
   text-align: center;
 }
+
 .btn-cover .page-btn {
-  width: 5rem;
-  height: 2rem;
+  padding: 8px 15px;
+  border-radius: 10px;
   letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
+
+.btn-cover .page-btn:hover {
+  background: #e7e5e5;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
 .btn-cover .page-count {
-  padding: 0 1rem;
+  margin: 0 10px;
+  font-size: 0.9rem;
 }
 </style>

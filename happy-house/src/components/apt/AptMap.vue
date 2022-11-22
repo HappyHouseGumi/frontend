@@ -1,6 +1,15 @@
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
+    <div id="map-floating-btn-wrapper">
+      <button>학교</button>
+    </div>
+    <div id="map-floating-btn-wrapper">
+      <button>카페</button>
+    </div>
+    <div id="map-floating-btn-wrapper">
+      <button>편의점</button>
+    </div>
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
         :clickedMarker="clickedMarker"
@@ -444,10 +453,41 @@ export default {
   display: flex;
   flex-direction: row;
 }
+
 #map {
   width: 100%;
   height: 92%;
+  position: relative;
+  overflow: hidden;
   z-index: 1;
+}
+
+#map-floating-btn-wrapper {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 50px;
+  height: 50px;
+  background: white;
+  z-index: 2;
+  border-radius: 3px;
+}
+
+#map-floating-btn-wrapper:nth-child(2) {
+  top: 70px;
+}
+
+#map-floating-btn-wrapper:nth-child(3) {
+  top: 130px;
+}
+
+#map-floating-btn-wrapper > button {
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
 
 .apt-deal-wrapper {
