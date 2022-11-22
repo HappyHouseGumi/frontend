@@ -1,15 +1,34 @@
 <template>
   <div class="content">
     <div class="wrapper">
-      <router-link to="/board/list">Board</router-link>
+      <!-- <router-link to="/board/list">Board</router-link> -->
+      <a @click="moveToboard">Board</a>
       <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+
+const boardStore = "boardStore";
+
 export default {
   name: "AppBoard",
+  methods: {
+    ...mapMutations(boardStore, { setBoardListData: "SET_BOARD_LIST_DATA" }),
+
+    moveToboard() {
+      let sendData = {
+        pgno: 1,
+        key: null,
+        word: null,
+      };
+      this.setBoardListData(sendData);
+      // this.SET_BOARD_LIST_DATA(sendData);
+      this.$router.go();
+    },
+  },
 };
 </script>
 

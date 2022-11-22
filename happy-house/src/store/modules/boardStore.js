@@ -12,44 +12,11 @@
 //     getters: {},
 // });
 
-// const boardStore = {
-//   namespaced: true,
-//   state: () => ({
-//     pgno: 1,
-//     key: null,
-//     word: null,
-//   }),
-//   // modules: {},
-//   mutations: {
-//     SET_BOARD_PGNO(state, payload) {
-//       state.pgno = payload;
-//     },
-//     SET_SEARCH_KEY(state, payload) {
-//       state.key = payload;
-//     },
-//     SET_SEARCH_WORD(state, payload) {
-//       state.word = payload;
-//     },
-//   },
-//   // actions: {},
-//   getters: {
-//     GET_BOARD_PGNO(state) {
-//       return state.pgno;
-//     },
-//     GET_SEARCH_KEY(state) {
-//       return state.key;
-//     },
-//     GET_SEARCH_WORD(state) {
-//       return state.word;
-//     },
-//   },
-// };
-
 const boardStore = {
   namespaced: true,
   state: () => ({
     boardListData: {
-      pgno: 1,
+      pgno: null,
       key: null,
       word: null,
     },
