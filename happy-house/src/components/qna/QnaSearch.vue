@@ -9,7 +9,7 @@
         <option value="userName">글쓴이</option>
       </select>
       <!-- <input v-model="searchInput" placeholder="검색어를 입력해주세요." /> -->
-      <input v-model="qnaListData.word" placeholder="검색어를 입력해주세요." />
+      <input v-model="qnaListData.word" placeholder="검색어를 입력해주세요." v-on:keyup.enter="searchBtn" />
       <button class="qna-search-btn" @click="searchBtn">검색</button>
     </div>
   </div>
