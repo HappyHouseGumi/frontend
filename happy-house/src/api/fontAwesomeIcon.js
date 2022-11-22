@@ -19,8 +19,9 @@ import {
   faBan,
   faThumbsUp as thumbsUpSolid,
   faLocationArrow,
+  faStar as starSolid,
 } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsUp as thumbsUpRegular } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as thumbsUpRegular, faStar as starRegular } from "@fortawesome/free-regular-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 library.add(
@@ -39,7 +40,9 @@ library.add(
   faBan,
   thumbsUpSolid,
   thumbsUpRegular,
-  faLocationArrow
+  faLocationArrow,
+  starSolid,
+  starRegular
 );
 
 // font awesome 컴포넌트를 전역으로 등록
