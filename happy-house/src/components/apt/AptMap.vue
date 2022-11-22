@@ -2,20 +2,13 @@
   <div class="map-wrapper">
     <div id="map"></div>
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
-      <AptDealInfo
-        :clickedMarker="clickedMarker"
-        @closeAptDealInfo="closeAptDealInfo" />
+      <AptDealInfo :clickedMarker="clickedMarker" @closeAptDealInfo="closeAptDealInfo" />
     </div>
   </div>
 </template>
 
 <script>
-import {
-  getAptInfoBySidoGugun,
-  getClusterSido,
-  getClusterGugun,
-  getAptDealInfo,
-} from "@/api/apt";
+import { getAptInfoBySidoGugun, getClusterSido, getClusterGugun, getAptDealInfo } from "@/api/apt";
 import { getFindLocation, getCoordsToAddress } from "@/api/kakao";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import AptDealInfo from "@/components/apt/AptDealInfo.vue";
@@ -82,10 +75,8 @@ export default {
           //console.log(data.data);
           data.data.forEach((element) => {
             var content = null;
-            if (this.level == 6)
-              content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
-            else
-              content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
+            if (this.level == 6) content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
+            else content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
             var position = new kakao.maps.LatLng(element.lat, element.lng);
             var customOverlay = new kakao.maps.CustomOverlay({
               position: position,
@@ -105,10 +96,8 @@ export default {
         ({ data }) => {
           data.data.forEach((element) => {
             var content = null;
-            if (this.level == 6)
-              content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
-            else
-              content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
+            if (this.level == 6) content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
+            else content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
             var position = new kakao.maps.LatLng(element.lat, element.lng);
             var customOverlay = new kakao.maps.CustomOverlay({
               position: position,
@@ -167,11 +156,7 @@ export default {
               imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
             // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-            var markerImage = new kakao.maps.MarkerImage(
-              imageSrc,
-              imageSize,
-              imageOption
-            );
+            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
             this.select_marker.setImage(markerImage);
             this.select_marker = null;
           }
@@ -235,11 +220,7 @@ export default {
     },
     searchAddrFromCoords(coords, callback) {
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoder.coord2RegionCode(
-        coords.getLng(),
-        coords.getLat(),
-        callback
-      );
+      this.geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
     },
     searchDetailAddrFromCoords(coords, callback) {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
@@ -261,10 +242,7 @@ export default {
 
         if (sidoName == "세종특별자치시") gugunName = "세종특별자치시";
 
-        if (
-          this.map.getLevel() <= 5 &&
-          (this.cur_sido != sidoName || this.cur_gugun != gugunName)
-        ) {
+        if (this.map.getLevel() <= 5 && (this.cur_sido != sidoName || this.cur_gugun != gugunName)) {
           // 시도 클러스터 삭제
           for (let i = 0; i < this.sidos.length; i++) {
             this.sidos[i].style.display = "none";
@@ -300,11 +278,7 @@ export default {
                   imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
                 // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                var markerImage = new kakao.maps.MarkerImage(
-                  imageSrc,
-                  imageSize,
-                  imageOption
-                );
+                var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
                 var marker = new kakao.maps.Marker({
                   position: position,
@@ -317,8 +291,7 @@ export default {
                     pos.La,
                     pos.Ma,
                     ({ data }) => {
-                      this.clickedMarker.addressName =
-                        data.documents[0].road_address.address_name;
+                      this.clickedMarker.addressName = data.documents[0].road_address.address_name;
                     },
                     (error) => {
                       console.log("kakao api 좌표로 주소얻기 오류 : " + error);
@@ -334,11 +307,7 @@ export default {
                     var imageSrc2 = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
                       imageSize2 = new kakao.maps.Size(8, 8), // 마커이미지의 크기입니다
                       imageOption2 = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                    var markerImage2 = new kakao.maps.MarkerImage(
-                      imageSrc2,
-                      imageSize2,
-                      imageOption2
-                    );
+                    var markerImage2 = new kakao.maps.MarkerImage(imageSrc2, imageSize2, imageOption2);
                     this.select_marker.setImage(markerImage2);
                     for (var i = 0; i < this.commakers.length; i++) {
                       this.commakers[i].setMap(null);
@@ -346,11 +315,7 @@ export default {
                     this.commakers = [];
                   }
                   // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                  var markerImage = new kakao.maps.MarkerImage(
-                    imageSrc,
-                    imageSize,
-                    imageOption
-                  );
+                  var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
                   marker.setImage(markerImage);
                   //학군 정보
@@ -364,11 +329,7 @@ export default {
                           imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
                         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(
-                          imageSrc,
-                          imageSize,
-                          imageOption
-                        );
+                        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
                         var marker = new kakao.maps.Marker({
                           position: position,
@@ -393,11 +354,7 @@ export default {
                           imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
                         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(
-                          imageSrc,
-                          imageSize,
-                          imageOption
-                        );
+                        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
                         var marker = new kakao.maps.Marker({
                           position: position,
@@ -422,11 +379,7 @@ export default {
                           imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
                         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(
-                          imageSrc,
-                          imageSize,
-                          imageOption
-                        );
+                        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
                         var marker = new kakao.maps.Marker({
                           position: position,

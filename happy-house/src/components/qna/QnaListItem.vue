@@ -123,4 +123,9 @@ a {
     border-bottom: 1px solid #e5e5e5;
   }
 }
+
+tr:hover td {
+  cursor: pointer;
+  background: #e7e5e5;
+}
 </style>
