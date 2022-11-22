@@ -106,6 +106,7 @@ table {
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
+  border-collapse: collapse;
 }
 
 colgroup {
@@ -172,24 +173,34 @@ td > textarea {
   justify-content: center;
 }
 
-button {
+.regist-btn,
+.cancel-btn {
   margin-top: 30px;
-  margin-bottom: 100px;
-  width: 120px;
+  width: 110px;
   height: 40px;
   font-weight: bold;
-  color: white;
+  color: #007bff;
   border: 0;
   outline: 0;
-  border-radius: 5px;
+  background: white;
+  border: 1px solid #007bff;
+  border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.regist-btn:hover {
+  color: white;
+  background: #007bff;
 }
 
 .regist-btn {
-  background: #3c90e2;
   margin-right: 20px;
 }
 
 .cancel-btn {
+  border: 1px solid rgb(138, 137, 137);
   background: rgb(138, 137, 137);
+  color: white;
 }
 </style>

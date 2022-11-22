@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="wrapper">
-      <router-link to="/notice/list">Notice</router-link>
+      <router-link to="/notice/list">공지사항</router-link>
       <router-view></router-view>
     </div>
   </div>
@@ -28,7 +28,7 @@ export default {
 }
 
 .wrapper > a {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 50px 0;
   text-decoration: none;

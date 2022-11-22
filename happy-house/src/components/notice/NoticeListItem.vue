@@ -31,16 +31,71 @@ export default {
 </script>
 
 <style scoped>
+td,
+th {
+  padding: 15px 30px;
+  vertical-align: middle;
+}
+
 td {
-  width: 80%;
-  height: 55px;
-  padding: 10px 15px;
-  border-bottom: 1px solid #d8d8d8;
-  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
 }
 
 a {
+  color: #73685d;
   text-decoration: none;
-  color: #666;
+}
+
+@media all and (max-width: 768px) {
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  th {
+    text-align: right;
+  }
+
+  table {
+    position: relative;
+    padding-bottom: 0;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  thead {
+    float: left;
+    white-space: nowrap;
+  }
+
+  tbody {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  tr {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  th {
+    border-bottom: 1px solid #a39485;
+  }
+
+  td {
+    border-bottom: 1px solid #e5e5e5;
+  }
+}
+
+tr:hover td {
+  cursor: pointer;
+  background: #e7e5e5;
 }
 </style>
