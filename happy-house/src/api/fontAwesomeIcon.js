@@ -17,7 +17,9 @@ import {
   faHouse,
   faCaretDown,
   faBan,
+  faThumbsUp as thumbsUpSolid,
 } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp as thumbsUpRegular } from "@fortawesome/free-regular-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 library.add(
@@ -33,7 +35,9 @@ library.add(
   faXmark,
   faHouse,
   faCaretDown,
-  faBan
+  faBan,
+  thumbsUpSolid,
+  thumbsUpRegular
 );
 
 // font awesome 컴포넌트를 전역으로 등록
