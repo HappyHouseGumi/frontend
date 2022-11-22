@@ -2,7 +2,7 @@
   <div class="content">
     <div class="wrapper">
       <!-- <router-link to="/board/list">Board</router-link> -->
-      <a @click="moveToboard">Board</a>
+      <a @click="moveToboard">자유게시판</a>
       <router-view></router-view>
     </div>
   </div>
@@ -47,7 +47,7 @@ export default {
 }
 
 .wrapper > a {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 50px 0;
   text-decoration: none;

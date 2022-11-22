@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <div class="wrapper">
-      <router-link to="/like/list">Like Board</router-link>
+      <router-link to="/like/list">관심 게시글</router-link>
       <router-view></router-view>
     </div>
   </div>
@@ -28,7 +28,7 @@ export default {
 }
 
 .wrapper > a {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 50px 0;
   text-decoration: none;
