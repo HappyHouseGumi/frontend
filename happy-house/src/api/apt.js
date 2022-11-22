@@ -41,7 +41,8 @@ function addInterestApt(payload, success, fail) {
 }
 
 function deleteInterestApt(payload, success, fail) {
-  api.delete(`/apt/inter`, payload).then(success).catch(fail);
+  console.log(payload);
+  api.post(`/apt/inter/del`, payload).then(success).catch(fail);
 }
 
 export {
