@@ -2,18 +2,19 @@
   <div class="map-wrapper">
     <div id="map"></div>
     <div id="map-floating-btn-wrapper">
-      <button>학교</button>
+      <button @click="press('sc')">학교</button>
     </div>
     <div id="map-floating-btn-wrapper">
-      <button>카페</button>
+      <button @click="press('ce')">카페</button>
     </div>
     <div id="map-floating-btn-wrapper">
-      <button>편의점</button>
+      <button @click="press('cs')">편의점</button>
     </div>
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
         :clickedMarker="clickedMarker"
         @closeAptDealInfo="closeAptDealInfo"
+        @moveTo="moveTo"
       />
     </div>
   </div>
@@ -43,7 +44,16 @@ export default {
       sidos: null,
       guguns: null,
       makers: [],
-      commakers: [],
+      commakers: {
+        cs: [],
+        ce: [],
+        sc: [],
+      },
+      precommakers: {
+        cs: [],
+        ce: [],
+        sc: [],
+      },
       cur_sido: "",
       cur_gugun: "",
       geocoder: null,
@@ -60,11 +70,11 @@ export default {
         pos: null,
       },
       toggle: {
-        view: true,
         cs: false,
         ce: false,
-        sc: true,
+        sc: false,
       },
+      select_toggle_cnt: 0,
     };
   },
   computed: {
@@ -143,6 +153,16 @@ export default {
     ...mapMutations(aptStore, ["SET_DEAL_LIST"]),
     closeAptDealInfo() {
       this.isMarkerClicked = false;
+      this.closeCommarker();
+      if (this.select_marker) {
+        var selectMarkerImage = this.getMarkerImg("marker", 8, 8);
+        this.select_marker.setImage(selectMarkerImage);
+        this.select_marker = null;
+      }
+    },
+    moveTo(pos) {
+      this.map.setLevel(5);
+      this.map.panTo(pos);
     },
     initMap() {
       const container = document.getElementById("map");
@@ -164,27 +184,29 @@ export default {
         let level = this.map.getLevel();
 
         // 레벨 6 이상부터는 마커 출력 XXXXX
-        if (level > 5) {
+        if (level >= 7) {
           if (this.makers.length != 0) {
             this.makers.forEach((element) => {
-              element.setMap(null);
+              if (this.select_marker != element) element.setMap(null);
             });
           }
-          // this.closeCommarker();
-          if (this.select_marker) {
-            var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
-              imageSize = new kakao.maps.Size(7, 7), // 마커이미지의 크기입니다
-              imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          this.hideCommarker();
+          // if (this.select_marker) {
+          //   var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
+          //     imageSize = new kakao.maps.Size(7, 7), // 마커이미지의 크기입니다
+          //     imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
-            // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-            var markerImage = new kakao.maps.MarkerImage(
-              imageSrc,
-              imageSize,
-              imageOption
-            );
-            this.select_marker.setImage(markerImage);
-            this.select_marker = null;
-          }
+          //   // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+          //   var markerImage = new kakao.maps.MarkerImage(
+          //     imageSrc,
+          //     imageSize,
+          //     imageOption
+          //   );
+          //   this.select_marker.setImage(markerImage);
+          //   this.select_marker = null;
+          // }
+        } else {
+          this.showCommarker();
         }
 
         /* 클러스터 정보 수정 */
@@ -216,10 +238,6 @@ export default {
             for (let i = 0; i < this.guguns.length; i++) {
               this.guguns[i].style.display = "";
             }
-          }
-          if (this.circle) {
-            this.circle.setMap(null);
-            this.circle = null;
           }
         } else {
           for (let i = 0; i < this.sidos.length; i++) {
@@ -255,7 +273,29 @@ export default {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
       this.geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
     },
-
+    press(category) {
+      if (this.map.getLevel() >= 7) return; // 맵 레벨이 7이상이면 리턴
+      if (!this.select_marker) return; // 선택 마커 없으면 리턴
+      this.toggle[category] = !this.toggle[category];
+      if (this.toggle[category]) {
+        if (this.circle) this.circle.setMap(this.map);
+        this.select_toggle_cnt++;
+        this.commakers[category].forEach((element) => {
+          element.setMap(this.map);
+        });
+      } else {
+        this.commakers[category].forEach((element) => {
+          element.setMap(null);
+        });
+        this.select_toggle_cnt--;
+      }
+      if (this.select_toggle_cnt == 1) {
+        if (this.circle) this.circle.setMap(this.map);
+      }
+      if (this.select_toggle_cnt == 0) {
+        if (this.circle) this.circle.setMap(null);
+      }
+    },
     displayCenterInfo(result, status) {
       let sidoName = "";
       let gugunName = "";
@@ -283,17 +323,16 @@ export default {
           for (let i = 0; i < this.guguns.length; i++) {
             this.guguns[i].style.display = "none";
           }
-          this.select_marker = null;
           /*기존 마커 제거*/
           this.makers.forEach((element) => {
-            element.setMap(null);
+            console.log(this.select_marker);
+            if (this.select_marker != element) element.setMap(null);
           });
-          this.makers = [];
-          this.closeCommarker();
-          if (this.circle) {
-            this.circle.setMap(null);
-            this.circle = null;
-          }
+          // this.makers = [];
+          // if (this.circle) {
+          //   this.circle.setMap(null);
+          //   this.circle = null;
+          // }
           /*--------------*/
 
           getAptInfoBySidoGugun(
@@ -369,7 +408,7 @@ export default {
                     fillColor: "#CFE7FF", // 채우기 색깔입니다
                     fillOpacity: 0.5, // 채우기 불투명도 입니다
                   });
-
+                  //this.circle.setMap(this.map);
                   //SET_DEAL_LIST  TODO
                   getAptDealInfo(
                     this.clickedMarker.code,
@@ -411,22 +450,59 @@ export default {
       );
       return markerImage;
     },
-    //이름 변경해야함
-    buttonclick() {
-      this.circle.setMap(this.map);
-      for (var i = 0; i < this.commakers.length; i++) {
-        this.commakers[i].setMap(this.map);
+    showCommarker() {
+      if (this.circle) {
+        this.circle.setMap(this.map);
       }
+      this.commakers["sc"].forEach((element) => {
+        element.setMap(this.map);
+      });
+      this.commakers["ce"].forEach((element) => {
+        element.setMap(this.map);
+      });
+      this.commakers["cs"].forEach((element) => {
+        element.setMap(this.map);
+      });
+    },
+    hideCommarker() {
+      if (this.circle) {
+        this.circle.setMap(null);
+      }
+      this.commakers["sc"].forEach((element) => {
+        element.setMap(null);
+      });
+      this.commakers["ce"].forEach((element) => {
+        element.setMap(null);
+      });
+      this.commakers["cs"].forEach((element) => {
+        element.setMap(null);
+      });
     },
     closeCommarker() {
       if (this.circle) {
         this.circle.setMap(null);
       }
       this.circle = null;
-      for (var i = 0; i < this.commakers.length; i++) {
-        this.commakers[i].setMap(null);
-      }
-      this.commakers = [];
+      this.commakers["sc"].forEach((element) => {
+        element.setMap(null);
+      });
+      this.commakers["ce"].forEach((element) => {
+        element.setMap(null);
+      });
+      this.commakers["cs"].forEach((element) => {
+        element.setMap(null);
+      });
+      this.commakers = {
+        cs: [],
+        ce: [],
+        sc: [],
+      };
+      this.toggle = {
+        cs: false,
+        ce: false,
+        sc: false,
+      };
+      this.select_toggle_cnt = 0;
     },
     createCommarker(data, category) {
       data.documents.forEach((com) => {
@@ -438,7 +514,7 @@ export default {
           image: markerImage,
         });
         if (this.toggle[category]) marker.setMap(this.map);
-        this.commakers.push(marker);
+        this.commakers[category].push(marker);
       });
     },
   },
