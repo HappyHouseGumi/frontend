@@ -37,6 +37,7 @@ export default {
     return {
       isAvailableNickName: false,
       isAvailableEmail: false,
+      isFinalAvailableEmail: false,
       isSendEmailAuthor: false,
       inputCode: "",
       authorizedCode: "",
@@ -61,12 +62,15 @@ export default {
         alert("유효한 이메일을 입력해주세요.");
         return;
       }
+      if (!this.isFinalAvailableEmail) {
+        alert("이메일 인증이 되지 않았습니다. 이메일 인증 코드를 다시 전송해주세요.");
+        return;
+      }
 
       registUser(
         this.user,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("회원가입이 완료되었습니다!!");
             this.$router.push({ path: "/" });
           }
         },
@@ -140,10 +144,10 @@ export default {
         alert("코드를 입력해주세요.");
         return;
       }
-      console.log();
+
       if (this.inputCode === this.authorizedCode) {
         alert("이메일 인증에 성공하였습니다!");
-        this.isAvailableEmail = true;
+        this.isFinalAvailableEmail = true;
       }
     },
   },

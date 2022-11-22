@@ -7,7 +7,7 @@
         <div class="divide-line"></div>
         <div class="user-login-personal-wrapper">
           <input placeholder="Email" type="email" v-model="user.email" />
-          <input placeholder="Password" type="password" v-model="user.password" />
+          <input placeholder="Password" type="password" v-model="user.password" v-on:keyup.enter="loginUser" />
           <button @click="loginUser">로그인</button>
         </div>
       </div>

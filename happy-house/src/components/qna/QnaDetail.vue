@@ -20,7 +20,7 @@
         <button class="qna-delete-btn" @click="deleteQna">삭제</button>
       </div>
       <div v-else>
-        <input type="password" v-model="password" placeholder="비밀번호 확인" />
+        <input type="password" v-model="password" placeholder="비밀번호 확인" v-on:keyup.enter="checkWriter" />
         <button class="check-writer-btn" @click="checkWriter">확인</button>
       </div>
     </div>

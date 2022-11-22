@@ -241,7 +241,7 @@ export default {
 
 <style scoped>
 .board-regist-btn {
-  margin: 30px 0;
+  margin-top: 30px;
   float: right;
   width: 110px;
   height: 40px;
@@ -268,6 +268,7 @@ table {
   border-collapse: collapse;
   border-radius: 5px;
   overflow: hidden;
+  margin-top: 50px;
 }
 
 th {

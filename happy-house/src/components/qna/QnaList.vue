@@ -228,7 +228,7 @@ export default {
 
 .qna-list-item-wrapper {
   margin-top: 50px;
-  margin-bottom: 130px;
+  margin-bottom: 40px;
   width: 100%;
 }
 </style>

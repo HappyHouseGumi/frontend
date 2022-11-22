@@ -6,7 +6,7 @@
         <option value="subject">지역</option>
         <option value="title">제목</option>
       </select>
-      <input placeholder="검색할 내용을 입력해주세요." v-model="likeListData.word" />
+      <input placeholder="검색할 내용을 입력해주세요." v-model="likeListData.word" v-on:keyup.enter="searchBtn" />
       <button @click="searchBtn">검색</button>
     </div>
   </div>

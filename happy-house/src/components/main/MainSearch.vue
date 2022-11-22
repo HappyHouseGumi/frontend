@@ -3,7 +3,7 @@
     <div class="main">
       <div class="search-area">
         <div class="search">
-          <input placeholder="주소를 검색해주세요." v-model="inputLocation" />
+          <input placeholder="주소를 검색해주세요." v-model="inputLocation" v-on:keyup.enter="searchLocation" />
           <button @click="searchLocation">
             <font-awesome-icon icon="fa-solid fa-magnifying-glass" class="fa-2x" />
           </button>

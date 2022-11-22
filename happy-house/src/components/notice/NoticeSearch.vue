@@ -1,7 +1,7 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <input placeholder="제목을 입력해주세요." v-model="noticeListData.word" />
+      <input placeholder="제목을 입력해주세요." v-model="noticeListData.word" v-on:keyup.enter="searchBtn" />
       <button @click="searchBtn">검색</button>
     </div>
   </div>
