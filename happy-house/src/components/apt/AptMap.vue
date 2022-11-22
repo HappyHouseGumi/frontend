@@ -4,7 +4,8 @@
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
         :clickedMarker="clickedMarker"
-        @closeAptDealInfo="closeAptDealInfo" />
+        @closeAptDealInfo="closeAptDealInfo"
+      />
     </div>
   </div>
 </template>
@@ -49,6 +50,12 @@ export default {
         code: "",
         pos: null,
       },
+      toggle: {
+        view: true,
+        cs: false,
+        ce: false,
+        sc: true,
+      },
     };
   },
   computed: {
@@ -75,54 +82,53 @@ export default {
     } else {
       this.initMap();
     }
+    this.sidos = [];
+    this.guguns = [];
 
-    if (!this.sidos) {
-      getClusterSido(
-        ({ data }) => {
-          //console.log(data.data);
-          data.data.forEach((element) => {
-            var content = null;
-            if (this.level == 6)
-              content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
-            else
-              content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
-            var position = new kakao.maps.LatLng(element.lat, element.lng);
-            var customOverlay = new kakao.maps.CustomOverlay({
-              position: position,
-              content: content,
-            });
-            customOverlay.setMap(this.map);
-            this.sidos = document.getElementsByClassName("sido");
+    getClusterSido(
+      ({ data }) => {
+        //console.log(data.data);
+        data.data.forEach((element) => {
+          var content = null;
+          if (this.level == 6)
+            content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
+          else
+            content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
+          var position = new kakao.maps.LatLng(element.lat, element.lng);
+          var customOverlay = new kakao.maps.CustomOverlay({
+            position: position,
+            content: content,
           });
-        },
-        (error) => {
-          console.log("오류 : " + error);
-        }
-      );
-    }
-    if (!this.guguns) {
-      getClusterGugun(
-        ({ data }) => {
-          data.data.forEach((element) => {
-            var content = null;
-            if (this.level == 6)
-              content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
-            else
-              content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
-            var position = new kakao.maps.LatLng(element.lat, element.lng);
-            var customOverlay = new kakao.maps.CustomOverlay({
-              position: position,
-              content: content,
-            });
-            customOverlay.setMap(this.map);
-            this.guguns = document.getElementsByClassName("gugun");
+          customOverlay.setMap(this.map);
+          this.sidos = document.getElementsByClassName("sido");
+        });
+      },
+      (error) => {
+        console.log("오류 : " + error);
+      }
+    );
+
+    getClusterGugun(
+      ({ data }) => {
+        data.data.forEach((element) => {
+          var content = null;
+          if (this.level == 6)
+            content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
+          else
+            content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
+          var position = new kakao.maps.LatLng(element.lat, element.lng);
+          var customOverlay = new kakao.maps.CustomOverlay({
+            position: position,
+            content: content,
           });
-        },
-        (error) => {
-          console.log("오류 : " + error);
-        }
-      );
-    }
+          customOverlay.setMap(this.map);
+          this.guguns = document.getElementsByClassName("gugun");
+        });
+      },
+      (error) => {
+        console.log("오류 : " + error);
+      }
+    );
   },
   methods: {
     ...mapMutations(aptStore, ["SET_DEAL_LIST"]),
@@ -155,12 +161,7 @@ export default {
               element.setMap(null);
             });
           }
-          if (this.commakers.length != 0) {
-            this.commakers.forEach((element) => {
-              element.setMap(null);
-            });
-            this.commakers = [];
-          }
+          // this.closeCommarker();
           if (this.select_marker) {
             var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
               imageSize = new kakao.maps.Size(7, 7), // 마커이미지의 크기입니다
@@ -279,10 +280,7 @@ export default {
             element.setMap(null);
           });
           this.makers = [];
-          this.commakers.forEach((element) => {
-            element.setMap(null);
-          });
-          this.commakers = [];
+          this.closeCommarker();
           if (this.circle) {
             this.circle.setMap(null);
             this.circle = null;
@@ -295,24 +293,20 @@ export default {
             ({ data }) => {
               data.data.forEach((element) => {
                 var position = new kakao.maps.LatLng(element.lat, element.lng);
-                var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
-                  imageSize = new kakao.maps.Size(7, 7), // 마커이미지의 크기입니다
-                  imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
-                // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                var markerImage = new kakao.maps.MarkerImage(
-                  imageSrc,
-                  imageSize,
-                  imageOption
-                );
+                var markerImage = this.getMarkerImg("marker", 7, 7);
 
                 var marker = new kakao.maps.Marker({
                   position: position,
                   image: markerImage,
                 });
                 kakao.maps.event.addListener(marker, "click", () => {
+                  this.closeCommarker();
+                  if (this.select_marker) {
+                    var selectMarkerImage = this.getMarkerImg("marker", 8, 8);
+                    this.select_marker.setImage(selectMarkerImage);
+                  }
                   var pos = marker.getPosition();
-
                   getCoordsToAddress(
                     pos.La,
                     pos.Ma,
@@ -327,57 +321,14 @@ export default {
                   this.isMarkerClicked = true;
                   this.clickedMarker.code = element.aptcode;
                   this.clickedMarker.pos = marker.getPosition();
-                  var imageSrc = require("@/assets/images/marker_point.png"), // 마커이미지의 주소입니다
-                    imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
-                    imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                  if (this.select_marker) {
-                    var imageSrc2 = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
-                      imageSize2 = new kakao.maps.Size(8, 8), // 마커이미지의 크기입니다
-                      imageOption2 = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-                    var markerImage2 = new kakao.maps.MarkerImage(
-                      imageSrc2,
-                      imageSize2,
-                      imageOption2
-                    );
-                    this.select_marker.setImage(markerImage2);
-                    for (var i = 0; i < this.commakers.length; i++) {
-                      this.commakers[i].setMap(null);
-                    }
-                    this.commakers = [];
-                  }
-                  // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                  var markerImage = new kakao.maps.MarkerImage(
-                    imageSrc,
-                    imageSize,
-                    imageOption
-                  );
+                  var markerImage = this.getMarkerImg("marker_point", 35, 35);
+                  //기존에 눌렀던 마커는 다시 점으로 바꿈
 
                   marker.setImage(markerImage);
                   //학군 정보
                   getFindLocation(
                     { lat: element.lat, lng: element.lng, category: "SC4" },
-                    ({ data }) => {
-                      data.documents.forEach((com) => {
-                        var position = new kakao.maps.LatLng(com.y, com.x);
-                        var imageSrc = require("@/assets/images/marker_sc.png"), // 마커이미지의 주소입니다
-                          imageSize = new kakao.maps.Size(25, 25), // 마커이미지의 크기입니다
-                          imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(
-                          imageSrc,
-                          imageSize,
-                          imageOption
-                        );
-
-                        var marker = new kakao.maps.Marker({
-                          position: position,
-                          image: markerImage,
-                        });
-                        marker.setMap(this.map);
-                        this.commakers.push(marker);
-                      });
-                    },
+                    ({ data }) => this.createCommarker(data, "sc"),
                     (error) => {
                       console.log("error", error);
                     }
@@ -385,28 +336,7 @@ export default {
                   //카페 정보
                   getFindLocation(
                     { lat: element.lat, lng: element.lng, category: "CE7" },
-                    ({ data }) => {
-                      data.documents.forEach((com) => {
-                        var position = new kakao.maps.LatLng(com.y, com.x);
-                        var imageSrc = require("@/assets/images/marker_ce.png"), // 마커이미지의 주소입니다
-                          imageSize = new kakao.maps.Size(30, 30), // 마커이미지의 크기입니다
-                          imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(
-                          imageSrc,
-                          imageSize,
-                          imageOption
-                        );
-
-                        var marker = new kakao.maps.Marker({
-                          position: position,
-                          image: markerImage,
-                        });
-                        marker.setMap(this.map);
-                        this.commakers.push(marker);
-                      });
-                    },
+                    ({ data }) => this.createCommarker(data, "ce"),
                     (error) => {
                       console.log("error", error);
                     }
@@ -414,36 +344,12 @@ export default {
                   //편의점 정보
                   getFindLocation(
                     { lat: element.lat, lng: element.lng, category: "CS2" },
-                    ({ data }) => {
-                      data.documents.forEach((com) => {
-                        var position = new kakao.maps.LatLng(com.y, com.x);
-                        var imageSrc = require("@/assets/images/marker_cs.png"), // 마커이미지의 주소입니다
-                          imageSize = new kakao.maps.Size(25, 25), // 마커이미지의 크기입니다
-                          imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-                        var markerImage = new kakao.maps.MarkerImage(
-                          imageSrc,
-                          imageSize,
-                          imageOption
-                        );
-
-                        var marker = new kakao.maps.Marker({
-                          position: position,
-                          image: markerImage,
-                        });
-                        marker.setMap(this.map);
-                        this.commakers.push(marker);
-                      });
-                    },
+                    ({ data }) => this.createCommarker(data, "cs"),
                     (error) => {
                       console.log("error", error);
                     }
                   );
 
-                  if (this.circle) {
-                    this.circle.setMap(null);
-                  }
                   this.circle = new kakao.maps.Circle({
                     center: pos, // 원의 중심좌표 입니다
                     radius: 1500, // 미터 단위의 원의 반지름입니다
@@ -467,7 +373,6 @@ export default {
                       console.log("아파트 거래정보 불러오기 오류 : " + error);
                     }
                   );
-                  this.circle.setMap(this.map);
                   this.map.panTo(pos);
                   this.select_marker = marker;
                 });
@@ -483,6 +388,49 @@ export default {
           );
         }
       }
+    },
+    getMarkerImg(imgName, x, y) {
+      var imageSrc = require("@/assets/images/" + imgName + ".png"), // 마커이미지의 주소입니다
+        imageSize = new kakao.maps.Size(x, y), // 마커이미지의 크기입니다
+        imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+      // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+      var markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption
+      );
+      return markerImage;
+    },
+    //이름 변경해야함
+    buttonclick() {
+      this.circle.setMap(this.map);
+      for (var i = 0; i < this.commakers.length; i++) {
+        this.commakers[i].setMap(this.map);
+      }
+    },
+    closeCommarker() {
+      if (this.circle) {
+        this.circle.setMap(null);
+      }
+      this.circle = null;
+      for (var i = 0; i < this.commakers.length; i++) {
+        this.commakers[i].setMap(null);
+      }
+      this.commakers = [];
+    },
+    createCommarker(data, category) {
+      data.documents.forEach((com) => {
+        var position = new kakao.maps.LatLng(com.y, com.x);
+        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+        var markerImage = this.getMarkerImg("marker_" + category, 25, 25);
+        var marker = new kakao.maps.Marker({
+          position: position,
+          image: markerImage,
+        });
+        if (this.toggle[category]) marker.setMap(this.map);
+        this.commakers.push(marker);
+      });
     },
   },
 };
