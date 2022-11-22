@@ -1,39 +1,42 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <select v-model="searchClass" class="selectSubject">
+      <select v-model="likeListData.key" class="selectSubject">
         <option value="subject">지역</option>
         <option value="title">제목</option>
       </select>
-      <input placeholder="검색할 내용을 입력해주세요." v-model="searchInput" />
+      <input placeholder="검색할 내용을 입력해주세요." v-model="likeListData.word" />
       <button @click="searchBtn">검색</button>
     </div>
   </div>
 </template>
 
 <script type="module">
+import { mapState } from "vuex";
+const likeStore = "likeStore";
+
 export default {
   name: "LikeSearch",
   data() {
-    return {
-      searchClass: "subject",
-      searchInput: "",
-    };
+    return {};
+  },
+  computed: {
+    ...mapState(likeStore, ["likeListData"]),
   },
   methods: {
     searchBtn() {
-      if (this.searchClass === "") {
-        alert("검색할 지역을 선택해주세요!");
+      if (this.likeListData.key === "" || this.likeListData.key === null) {
+        alert("검색 분류을 선택해주세요!");
         return;
       }
-      if (this.searchInput === "") {
+      if (this.likeListData.word === "" || this.likeListData.word === null) {
         alert("검색어를 입력해주세요!");
         return;
       }
 
       let searchParam = {};
-      searchParam.searchClass = this.searchClass;
-      searchParam.searchInput = this.searchInput;
+      searchParam.searchClass = this.likeListData.key;
+      searchParam.searchInput = this.likeListData.word;
 
       this.$emit("searchParam", searchParam);
     },

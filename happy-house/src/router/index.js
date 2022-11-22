@@ -107,7 +107,7 @@ const routes = [
         component: BoardRegist,
       },
       {
-        path: "detail/:id",
+        path: "detail/:id/:pass",
         name: "boarddetail",
         component: BoardDetail,
       },

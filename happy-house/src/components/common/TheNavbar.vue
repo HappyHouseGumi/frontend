@@ -6,7 +6,7 @@
     <div>
       <router-link to="/apt" class="navbar-menus">실거래가조회</router-link>
       <router-link to="/interest" class="navbar-menus">관심지역</router-link>
-      <router-link to="/notice" class="navbar-menus">공지사항</router-link>
+      <span @click="moveTonotice" class="navbar-menus">공지사항</span>
       <!-- <router-link to="/board" class="navbar-menus">자유게시판</router-link> -->
       <span @click="moveToboard" class="navbar-menus">자유게시판</span>
       <span v-if="isLoginStatus">
@@ -25,10 +25,6 @@
 </template>
 
 <script>
-// import { mapMutations } from "vuex";
-
-// const boardStore = "boardStore";
-
 export default {
   name: "TheNavbar",
   data() {
@@ -38,9 +34,6 @@ export default {
     };
   },
   methods: {
-    // ...mapMutations(boardStore, { setBoardListData: "SET_BOARD_LIST_DATA" }),
-    // ...mapMutations(boardStore, ["SET_BOARD_LIST_DATA"]),
-
     logout() {
       localStorage.removeItem("loginUser");
       this.isLoginStatus = false;
@@ -48,14 +41,12 @@ export default {
     },
 
     moveToboard() {
-      // let sendData = {
-      //   pgno: 1,
-      //   key: null,
-      //   word: null,
-      // };
-      // this.setBoardListData(sendData);
-      // this.SET_BOARD_LIST_DATA(sendData);
       this.$router.push({ name: "board" });
+      this.$router.go();
+    },
+
+    moveTonotice() {
+      this.$router.push({ name: "notice" });
       this.$router.go();
     },
   },

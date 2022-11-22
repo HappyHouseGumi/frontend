@@ -174,7 +174,6 @@ export default {
       const getBaord = async (param) => {
         try {
           let data = await api.post(`/board/count`, param);
-          console.log(param);
           data = data.data;
           if (data.flag === "success") {
             this.total = data.data[0];
@@ -183,6 +182,8 @@ export default {
           data = data.data;
           if (data.flag === "success") {
             this.boards = data.data;
+          } else {
+            this.boards = null;
           }
         } catch (error) {
           console.log("Board 리스트 : ", error);
