@@ -1,18 +1,24 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <select v-model="selectedCategory">
-        <option disabled value="">선택</option>
+      <!-- <select v-model="selectedCategory"> -->
+      <select v-model="qnaListData.key" class="selectSubject">
+        <!-- <option disabled value="">선택</option> -->
+        <option disabled value="null">선택</option>
         <option value="title">제목</option>
         <option value="userName">글쓴이</option>
       </select>
-      <input v-model="searchInput" placeholder="검색어를 입력해주세요." />
+      <!-- <input v-model="searchInput" placeholder="검색어를 입력해주세요." /> -->
+      <input v-model="qnaListData.word" placeholder="검색어를 입력해주세요." />
       <button class="qna-search-btn" @click="searchBtn">검색</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+const qnaStore = "qnaStore";
+
 export default {
   name: "QnaSearch",
   data() {
@@ -21,13 +27,32 @@ export default {
       selectedCategory: "",
     };
   },
+  computed: {
+    ...mapState(qnaStore, ["qnaListData"]),
+  },
   methods: {
+    // searchBtn() {
+    //   if (this.searchInput === "") {
+    //     alert("검색어를 입력해주세요!");
+    //     return;
+    //   }
+    //   if (this.selectedCategory === "") {
+    //     alert("검색 분류를 선택해주세요!");
+    //     return;
+    //   }
+
+    //   this.$emit("searchBtn", this.searchInput, this.selectedCategory);
+    // },
+
     searchBtn() {
-      if (this.searchInput === "") {
+      this.selectedCategory = this.qnaListData.key;
+      this.searchInput = this.qnaListData.word;
+
+      if (this.searchInput === "" || this.searchInput === null) {
         alert("검색어를 입력해주세요!");
         return;
       }
-      if (this.selectedCategory === "") {
+      if (this.selectedCategory === "" || this.selectedCategory === null) {
         alert("검색 분류를 선택해주세요!");
         return;
       }
@@ -95,4 +120,21 @@ export default {
   cursor: pointer;
   border: 1px solid #ddd;
 }
+/* .selectSubject {
+  padding: 0 10px;
+  outline: none;
+  width: 110px;
+  height: 40px;
+  border: 1px solid #ddd;
+  background-size: 20px;
+  border-radius: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.selectSubject option {
+  background: #fff;
+  color: black;
+  padding: 3px 0;
+} */
 </style>

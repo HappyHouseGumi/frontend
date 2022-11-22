@@ -38,7 +38,8 @@
           :key="index"
           :idx="index"
           :comment="comment"
-          @changData="changData" />
+          @changData="changData"
+        />
       </div>
     </div>
   </div>
@@ -46,12 +47,7 @@
 
 <script type="module">
 import QnaComment from "@/components/qna/QnaComment.vue";
-import {
-  deleteQna,
-  registQnaComment,
-  getQnaDetail,
-  getQnaComment,
-} from "@/api/qna";
+import { deleteQna, registQnaComment, getQnaDetail, getQnaComment } from "@/api/qna";
 
 export default {
   name: "QnaDetail",

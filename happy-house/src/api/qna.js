@@ -50,6 +50,16 @@ function deleteQnaComment(id, success, fail) {
   api.delete(`/qnacomment/${id}`).then(success).catch(fail);
 }
 
+// Post, For Paging
+function getQnaPagingList(param, success, fail) {
+  api.post(`/qna/list`, param).then(success).catch(fail);
+}
+
+// 게시글 리스트 갯수 불러오기
+function getQnaPagingListCount(param, success, fail) {
+  api.post(`/qna/count`, param).then(success).catch(fail);
+}
+
 export {
   getQnaList,
   getQnaSearchList,
@@ -61,4 +71,6 @@ export {
   modifyQna,
   modifyQnaComment,
   deleteQnaComment,
+  getQnaPagingList,
+  getQnaPagingListCount,
 };
