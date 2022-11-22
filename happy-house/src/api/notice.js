@@ -7,6 +7,11 @@ function getNoticeList(param, success, fail) {
   api.post(`/notice/list`, param).then(success).catch(fail);
 }
 
+// 게시글 리스트 갯수 불러오기
+function getNoticeListCount(param, success, fail) {
+  api.post(`/notice/count`, param).then(success).catch(fail);
+}
+
 // 게시글 상세 보기
 function getNoticeDetail(id, success, fail) {
   api.get(`/notice/${id}`).then(success).catch(fail);
@@ -27,4 +32,4 @@ function deleteNotice(id, success, fail) {
   api.delete(`/notice/${id}`).then(success).catch(fail);
 }
 
-export { getNoticeList, getNoticeDetail, writeNotice, modifyNotice, deleteNotice };
+export { getNoticeList, getNoticeListCount, getNoticeDetail, writeNotice, modifyNotice, deleteNotice };

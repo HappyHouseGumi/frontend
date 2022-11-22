@@ -1,15 +1,31 @@
 <template>
   <div class="content">
     <div class="wrapper">
-      <router-link to="/notice/list">공지사항</router-link>
+      <a @click="moveTonotice">공지사항</a>
       <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+const noticeStore = "noticeStore";
+
 export default {
   name: "AppNotice",
+
+  methods: {
+    ...mapMutations(noticeStore, { setNoticeListData: "SET_NOTICE_LIST_DATA" }),
+
+    moveTonotice() {
+      let sendData = {
+        pgno: 1,
+        word: null,
+      };
+      this.setNoticeListData(sendData);
+      this.$router.go();
+    },
+  },
 };
 </script>
 

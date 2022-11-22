@@ -1,14 +1,14 @@
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
-    <div id="map-floating-btn-wrapper">
-      <button @click="press('sc')">학교</button>
+    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+      <button @click="press('sc')" class="categoryDeactive">학교</button>
     </div>
-    <div id="map-floating-btn-wrapper">
-      <button @click="press('ce')">카페</button>
+    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+      <button @click="press('ce')" class="categoryDeactive">카페</button>
     </div>
-    <div id="map-floating-btn-wrapper">
-      <button @click="press('cs')">편의점</button>
+    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+      <button @click="press('cs')" class="categoryDeactive">편의점</button>
     </div>
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
@@ -603,6 +603,15 @@ export default {
         );
       }
     },
+    clickCategory(e) {
+      if (e.target.classList[0] === "categoryActive") {
+        e.target.classList.remove("categoryActive");
+        e.target.classList.add("categoryDeactive");
+      } else {
+        e.target.classList.remove("categoryDeactive");
+        e.target.classList.add("categoryActive");
+      }
+    },
   },
 };
 </script>
@@ -626,30 +635,50 @@ export default {
 
 #map-floating-btn-wrapper {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 20px;
+  left: 30px;
   width: 50px;
   height: 50px;
   background: white;
   z-index: 2;
   border-radius: 3px;
+  box-shadow: 0px 1px 4px 0px rgb(0 0 0 / 50%);
 }
 
 #map-floating-btn-wrapper:nth-child(2) {
-  top: 70px;
+  top: 90px;
 }
 
 #map-floating-btn-wrapper:nth-child(3) {
-  top: 130px;
+  top: 160px;
 }
 
 #map-floating-btn-wrapper > button {
   width: 100%;
   height: 100%;
-  background: none;
   border: none;
+  border-radius: 3px;
   font-size: 0.9rem;
   font-weight: bold;
+}
+
+#map-floating-btn-wrapper > button:hover {
+  background: gray;
+  color: white;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.categoryDeactive {
+  background: white;
+  color: black;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.categoryActive {
+  background: gray;
+  color: white;
 }
 
 .apt-deal-wrapper {

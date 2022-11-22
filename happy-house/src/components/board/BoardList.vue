@@ -70,12 +70,10 @@ export default {
     this.params.pgno = this.boardListData.pgno;
     this.params.key = this.boardListData.key;
     this.params.word = this.boardListData.word;
-    console.log(this.boardListData);
 
     const getBaord = async (param) => {
       try {
         let data = await api.post(`/board/count`, param);
-        console.log(param);
         data = data.data;
         if (data.flag === "success") {
           // console.log("Board 리스트 개수 :", data.data);
@@ -176,7 +174,6 @@ export default {
       const getBaord = async (param) => {
         try {
           let data = await api.post(`/board/count`, param);
-          console.log(param);
           data = data.data;
           if (data.flag === "success") {
             this.total = data.data[0];
@@ -185,6 +182,8 @@ export default {
           data = data.data;
           if (data.flag === "success") {
             this.boards = data.data;
+          } else {
+            this.boards = null;
           }
         } catch (error) {
           console.log("Board 리스트 : ", error);
@@ -244,44 +243,109 @@ export default {
 .board-regist-btn {
   margin: 30px 0;
   float: right;
-  width: 120px;
+  width: 110px;
   height: 40px;
   font-weight: bold;
-  color: white;
+  color: #007bff;
   border: 0;
   outline: 0;
-  background: #3c90e2;
-  border-radius: 5px;
+  background: white;
+  border: 1px solid #007bff;
+  border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.board-regist-btn:hover {
+  color: white;
+  background: #007bff;
 }
 
 table {
-  margin-bottom: 20px;
+  font-size: 0.9em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   width: 100%;
-  table-layout: fixed;
-  border-top: 2px solid #222;
-  text-align: center;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 th {
-  height: 55px;
-  text-align: center;
+  text-align: left;
+  font-size: 1rem;
+}
+
+thead {
   font-weight: bold;
-  color: black;
-  border-bottom: 1px solid #d8d8d8;
-  background: #f9f9f9;
+  color: #fff;
+  background: #0069d9;
 }
 
-th > label:nth-child(1) {
-  width: 10%;
-  font-weight: normal;
-  font-size: 0.8rem;
-  margin-left: 5px;
+td,
+th {
+  padding: 15px 30px;
+  vertical-align: middle;
 }
 
-/* .arrow-left {
-  width: 0;
-  height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-} */
+td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+a {
+  color: #73685d;
+  text-decoration: none;
+}
+
+@media all and (max-width: 768px) {
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  th {
+    text-align: right;
+  }
+
+  table {
+    position: relative;
+    padding-bottom: 0;
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  thead {
+    float: left;
+    white-space: nowrap;
+  }
+
+  tbody {
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    white-space: nowrap;
+  }
+
+  tr {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  th {
+    border-bottom: 1px solid #a39485;
+  }
+
+  td {
+    border-bottom: 1px solid #e5e5e5;
+  }
+}
+
+tr:hover td {
+  cursor: pointer;
+  background: #e7e5e5;
+}
 </style>

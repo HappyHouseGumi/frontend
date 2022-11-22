@@ -1,39 +1,42 @@
 <template>
   <div class="search-area">
     <div class="search">
-      <select v-model="searchClass" class="selectSubject">
+      <select v-model="likeListData.key" class="selectSubject">
         <option value="subject">지역</option>
         <option value="title">제목</option>
       </select>
-      <input placeholder="검색할 내용을 입력해주세요." v-model="searchInput" />
+      <input placeholder="검색할 내용을 입력해주세요." v-model="likeListData.word" />
       <button @click="searchBtn">검색</button>
     </div>
   </div>
 </template>
 
 <script type="module">
+import { mapState } from "vuex";
+const likeStore = "likeStore";
+
 export default {
   name: "LikeSearch",
   data() {
-    return {
-      searchClass: "subject",
-      searchInput: "",
-    };
+    return {};
+  },
+  computed: {
+    ...mapState(likeStore, ["likeListData"]),
   },
   methods: {
     searchBtn() {
-      if (this.searchClass === "") {
-        alert("검색할 지역을 선택해주세요!");
+      if (this.likeListData.key === "" || this.likeListData.key === null) {
+        alert("검색 분류을 선택해주세요!");
         return;
       }
-      if (this.searchInput === "") {
+      if (this.likeListData.word === "" || this.likeListData.word === null) {
         alert("검색어를 입력해주세요!");
         return;
       }
 
       let searchParam = {};
-      searchParam.searchClass = this.searchClass;
-      searchParam.searchInput = this.searchInput;
+      searchParam.searchClass = this.likeListData.key;
+      searchParam.searchInput = this.likeListData.word;
 
       this.$emit("searchParam", searchParam);
     },
@@ -47,7 +50,12 @@ export default {
   height: 120px;
   padding: 30px 120px;
   border: 1px solid #ddd;
+  border-radius: 10px;
   background: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  margin-bottom: 50px;
 }
 
 .search {
@@ -63,32 +71,43 @@ export default {
   width: 475px;
   height: 40px;
   padding: 0 10px;
-  font-weight: bold;
   outline: none;
-  border: 1px solid #3c90e2;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.9rem;
 }
 
 .search > button {
-  width: 115px;
+  width: 110px;
   height: 40px;
   font-weight: bold;
-  color: white;
+  color: #007bff;
   border: 0;
   outline: 0;
-  background: #3c90e2;
-  border-radius: 5px;
+  background: white;
+  border: 1px solid #007bff;
+  border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.search > button:hover {
+  color: white;
+  background: #007bff;
 }
 
 .selectSubject {
+  padding: 0 10px;
+  outline: none;
   width: 110px;
   height: 40px;
-  border: 1px solid #3c90e2;
+  border: 1px solid #ddd;
   background-size: 20px;
-  padding: 5px 30px 5px 10px;
-  border-radius: 4px;
-  outline: 1;
-  margin-right: 8px;
+  border-radius: 10px;
+  margin-right: 10px;
+  cursor: pointer;
 }
+
 .selectSubject option {
   background: #fff;
   color: black;

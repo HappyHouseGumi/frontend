@@ -1,45 +1,38 @@
 <template>
   <div class="apt-info-wrapper">
     <div class="apt-info-header-wrapper">
-      <span @click="moveTo" style="cursor: pointer">이 위치로 이동하기</span>
+      <div>
+        <button @click="moveTo" style="cursor: pointer">
+          <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
+        </button>
+        <!-- 여기서 if 달아서 쓰시오!!  -->
+        <button style="color: #ffc10a">
+          <font-awesome-icon icon="fa-regular fa-star" />
+        </button>
+        <button style="color: #ffc10a">
+          <font-awesome-icon icon="fa-solid fa-star" />
+        </button>
+      </div>
       <button @click="closeAptDealInfo">
-        <font-awesome-icon icon="fa-solid fa-xmark" class="fa-2x" />
+        <font-awesome-icon icon="fa-solid fa-xmark" class="fa-lg" />
       </button>
     </div>
-    <div class="divide-line"></div>
+    <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
     <div class="apt-info-contents-wrapper">
-      <div
-        id="roadview"
-        style="
-          width: 100%;
-          height: 300px;
-          margin-bottom: 30px;
-          border-radius: 10px;
-        "
-      ></div>
+      <div id="roadview" style="width: 100%; height: 300px; margin-bottom: 30px; border-radius: 10px"></div>
       <div style="margin-bottom: 20px">
         <div style="margin-bottom: 10px">
-          <span
-            style="
-              color: black;
-              font-size: 18px;
-              font-weight: 600;
-              line-height: 22px;
-            "
-            >{{ clickedMarker.addressName }}</span
-          >
+          <span style="color: black; font-size: 18px; font-weight: 600; line-height: 22px">{{
+            clickedMarker.addressName
+          }}</span>
         </div>
         <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
         <div>
           <div style="margin-bottom: 10px">
             <span style="color: #000000; font-size: 16px">최근 실거래가</span>
-            <span style="color: #666; font-size: 12px; margin-left: 5px">{{
-              recentDeal.date
-            }}</span>
+            <span style="color: #666; font-size: 12px; margin-left: 5px">{{ recentDeal.date }}</span>
           </div>
-          <span style="color: #000000; font-size: 22px; font-weight: bold">{{
-            recentDeal.price
-          }}</span>
+          <span style="color: #000000; font-size: 22px; font-weight: bold">{{ recentDeal.price }}</span>
         </div>
       </div>
       <div class="chart-wrapper" style="margin-bottom: 20px">
@@ -55,28 +48,16 @@
         </thead>
         <tbody>
           <tr v-for="(info, index) in paginatedData" :key="index">
-            <td>
-              {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
-            </td>
+            <td>{{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일</td>
             <td>{{ info.floor }}층</td>
             <td>{{ info.dealAmount }}만원</td>
           </tr>
         </tbody>
       </table>
       <div class="btn-cover">
-        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
-          이전
-        </button>
-        <span class="page-count"
-          >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
-        >
-        <button
-          :disabled="pageNum >= pageCount - 1"
-          @click="nextPage"
-          class="page-btn"
-        >
-          다음
-        </button>
+        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">이전</button>
+        <span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
+        <button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">다음</button>
       </div>
     </div>
   </div>
@@ -173,12 +154,7 @@ export default {
       });
 
       const recentDeal = this.aptDealInfo.filter((el, index) => index === 0)[0];
-      this.recentDeal.date =
-        recentDeal.dealYear +
-        "." +
-        recentDeal.dealMonth +
-        "." +
-        recentDeal.dealDay;
+      this.recentDeal.date = recentDeal.dealYear + "." + recentDeal.dealMonth + "." + recentDeal.dealDay;
       this.recentDeal.price = recentDeal.dealAmount + " 만원";
 
       const chartList = this.aptDealInfo.filter(
@@ -239,7 +215,7 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 20px;
 }
 
 .apt-info-header-wrapper {
@@ -250,14 +226,14 @@ export default {
   margin-bottom: 20px;
 }
 
-.apt-info-header-wrapper > span {
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-
-.apt-info-header-wrapper > button {
+.apt-info-header-wrapper button {
   border: none;
   background: none;
+  font-size: 1.3rem;
+}
+
+.apt-info-header-wrapper > div > button {
+  margin-right: 15px;
 }
 
 .divide-line {
@@ -423,8 +399,8 @@ tr:hover td {
 
 .btn-cover .page-btn:hover {
   background: #e7e5e5;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .btn-cover .page-count {

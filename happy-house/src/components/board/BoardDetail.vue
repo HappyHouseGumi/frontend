@@ -6,14 +6,20 @@
       <div class="detail-header-wrapper">
         <span>{{ board.title }}</span>
         <div>
-          <span>{{ board.nickName }}</span> | <span>{{ board.regDate }}</span> |
-          <span>{{ board.hit }}</span>
-        </div>
-        <div v-if="!checkingLike && loginId != null">
-          <button @click="registLike" class="board-delete-btn">좋아하기</button>
-        </div>
-        <div v-if="checkingLike && loginId != null">
-          <button @click="deleteLike" class="board-delete-btn">좋아하기 취소</button>
+          <div>
+            <span>{{ board.nickName }}</span> | <span>{{ board.regDate }}</span> |
+            <span>{{ board.hit }}</span>
+          </div>
+          <div v-if="!checkingLike && loginId != null">
+            <button @click="registLike" class="board-like-btn">
+              <font-awesome-icon icon="fa-regular fa-thumbs-up" class="fa-2x" />
+            </button>
+          </div>
+          <div v-else-if="checkingLike && loginId != null">
+            <button @click="deleteLike" class="board-unlike-btn">
+              <font-awesome-icon icon="fa-solid fa-thumbs-up" class="fa-2x" />
+            </button>
+          </div>
         </div>
       </div>
       <!-- 게시글 내용 -->
@@ -155,7 +161,7 @@ export default {
           ({ data }) => {
             if (data.flag === "success") {
               alert("글 삭제 성공");
-              this.moveListBoard();
+              this.$router.push({ name: "boardlist" });
             } else {
               console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
             }
@@ -169,7 +175,11 @@ export default {
       }
     },
     moveListBoard() {
-      this.$router.push({ name: "boardlist" });
+      if (this.$route.params.pass === "board") {
+        this.$router.push({ name: "boardlist" });
+      } else {
+        this.$router.push({ name: "likelist" });
+      }
     },
     registReply() {
       if (confirm("댓글을 등록하시겠습니까?")) {
@@ -262,13 +272,20 @@ export default {
   background: #fafafa;
 }
 
+.detail-header-wrapper > div {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .detail-header-wrapper > span {
   font-weight: bold;
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
 
-.detail-header-wrapper > div > span {
+.detail-header-wrapper > div > div > span {
   color: #666;
   font-size: 0.9rem;
   font-weight: bold;
@@ -361,5 +378,11 @@ export default {
   width: 100%;
   margin-top: 50px;
   margin-bottom: 100px;
+}
+
+.board-like-btn,
+.board-unlike-btn {
+  border: none;
+  background: none;
 }
 </style>
