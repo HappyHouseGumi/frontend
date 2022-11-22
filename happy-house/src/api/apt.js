@@ -32,6 +32,18 @@ function getLatLngFromDongcode(code, success, fail) {
   api.get(`/apt/latlng/${code}`).then(success).catch(fail);
 }
 
+function getInterestApts(userId, success, fail) {
+  api.get(`/apt/inter/${userId}`).then(success).catch(fail);
+}
+
+function addInterestApt(payload, success, fail) {
+  api.post(`/apt/inter`, payload).then(success).catch(fail);
+}
+
+function deleteInterestApt(payload, success, fail) {
+  api.delete(`/apt/inter`, payload).then(success).catch(fail);
+}
+
 export {
   getDongCode,
   getAptInfo,
@@ -40,4 +52,7 @@ export {
   getClusterGugun,
   getAptDealInfo,
   getLatLngFromDongcode,
+  getInterestApts,
+  addInterestApt,
+  deleteInterestApt,
 };

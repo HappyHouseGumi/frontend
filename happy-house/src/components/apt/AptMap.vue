@@ -26,6 +26,9 @@ import {
   getClusterSido,
   getClusterGugun,
   getAptDealInfo,
+  getInterestApts,
+  addInterestApt,
+  deleteInterestApt,
 } from "@/api/apt";
 import { getFindLocation, getCoordsToAddress } from "@/api/kakao";
 import { mapState, mapGetters, mapMutations } from "vuex";
@@ -44,6 +47,7 @@ export default {
       sidos: null,
       guguns: null,
       makers: [],
+      userId: 0,
       commakers: {
         cs: [],
         ce: [],
@@ -60,6 +64,8 @@ export default {
       lat: 36.2683,
       lng: 127.6358,
       level: 12,
+      interestApt: new Set(),
+      interestMarker: [],
       select_marker: null,
       marker: null,
       circle: null,
@@ -82,6 +88,7 @@ export default {
     ...mapGetters(aptStore, ["GET_LOC"]),
     ...mapMutations(aptStore, ["RESET_SEARCHED_LOCATION"]),
   },
+
   mounted() {
     // script 태그 객체 생성
     if (this.GET_LOC.level == 6) {
@@ -110,9 +117,9 @@ export default {
         data.data.forEach((element) => {
           var content = null;
           if (this.level == 6)
-            content = `<div class = "sido" style="display:none"><h1>${element.count}</h1></div>`;
+            content = `<div class = "sido" style="display:none; font-size : 30px; font-weight:bold">${element.count}</div>`;
           else
-            content = `<div class = "sido" style="display:"><h1>${element.count}</h1></div>`;
+            content = `<div class = "sido" style="display:; font-size : 30px; font-weight:bold">${element.count}</div>`;
           var position = new kakao.maps.LatLng(element.lat, element.lng);
           var customOverlay = new kakao.maps.CustomOverlay({
             position: position,
@@ -132,9 +139,9 @@ export default {
         data.data.forEach((element) => {
           var content = null;
           if (this.level == 6)
-            content = `<div class = "gugun" style = "display:"><h2>${element.count}</h2> </div>`;
+            content = `<div class = "gugun" style = "display:; font-size : 20px; font-weight:bold">${element.count} </div>`;
           else
-            content = `<div class = "gugun" style = "display:none"><h2>${element.count}</h2> </div>`;
+            content = `<div class = "gugun" style = "display:none; font-size : 20px; font-weight:bold">${element.count}</div>`;
           var position = new kakao.maps.LatLng(element.lat, element.lng);
           var customOverlay = new kakao.maps.CustomOverlay({
             position: position,
@@ -166,7 +173,6 @@ export default {
     },
     initMap() {
       const container = document.getElementById("map");
-      console.log(this.lat, this.lng);
       const options = {
         center: new kakao.maps.LatLng(this.lat, this.lng),
         level: this.level,
@@ -177,7 +183,7 @@ export default {
       // console.log(this.geocoder);
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
+      this.createInterestMarkers();
       /* 줌 이벤트 시작 */
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
         // 지도의 현재 레벨을 얻어옵니다
@@ -190,6 +196,10 @@ export default {
               if (this.select_marker != element) element.setMap(null);
             });
           }
+          this.interestMarker.forEach((element) => {
+            element.setMap(this.map);
+          });
+
           this.hideCommarker();
           // if (this.select_marker) {
           //   var imageSrc = require("@/assets/images/marker.png"), // 마커이미지의 주소입니다
@@ -206,7 +216,10 @@ export default {
           //   this.select_marker = null;
           // }
         } else {
-          this.showCommarker();
+          this.interestMarker.forEach((element) => {
+            element.setMap(null);
+          });
+          if (this.select_toggle_cnt != 0) this.showCommarker();
         }
 
         /* 클러스터 정보 수정 */
@@ -325,7 +338,6 @@ export default {
           }
           /*기존 마커 제거*/
           this.makers.forEach((element) => {
-            console.log(this.select_marker);
             if (this.select_marker != element) element.setMap(null);
           });
           // this.makers = [];
@@ -342,7 +354,7 @@ export default {
               data.data.forEach((element) => {
                 var position = new kakao.maps.LatLng(element.lat, element.lng);
 
-                var markerImage = this.getMarkerImg("marker", 7, 7);
+                var markerImage = this.getMarkerImg("marker", 8, 8);
 
                 var marker = new kakao.maps.Marker({
                   position: position,
@@ -421,6 +433,7 @@ export default {
                       console.log("아파트 거래정보 불러오기 오류 : " + error);
                     }
                   );
+                  this.map.setLevel(2);
                   this.map.panTo(pos);
                   this.select_marker = marker;
                 });
@@ -516,6 +529,79 @@ export default {
         if (this.toggle[category]) marker.setMap(this.map);
         this.commakers[category].push(marker);
       });
+    },
+    createInterestMarkers() {
+      let user = JSON.parse(localStorage.getItem("loginUser"));
+      if (user) {
+        console.log(user.userId);
+        this.userId = parseInt(user.userId);
+        this.interestMarker.forEach((element) => {
+          element.setMap(null);
+        });
+        this.interestMarker = [];
+        getInterestApts(
+          this.userId,
+          ({ data }) => {
+            if (data.flag == "success") {
+              data.data.forEach((element) => {
+                this.interestApt.add(element.aptCode);
+                var position = new kakao.maps.LatLng(element.lat, element.lng);
+
+                var markerImage = this.getMarkerImg("marker_inter", 35, 35);
+
+                var marker = new kakao.maps.Marker({
+                  position: position,
+                  image: markerImage,
+                });
+                kakao.maps.event.addListener(marker, "click", () => {
+                  this.map.setLevel(3);
+                  this.map.panTo(marker.getPosition());
+                });
+                marker.setMap(this.map);
+                this.interestMarker.push(marker);
+              });
+            }
+          },
+          (error) => console.log("createInterestMarkers  error :" + error)
+        );
+      }
+    },
+    registInterestMarker(aptcode) {
+      let user = JSON.parse(localStorage.getItem("loginUser"));
+      if (this.interestApt.size() == 10) {
+        alert("관심 아파트는 10개까지 밖에 설정이 불가합니다.");
+        return;
+      }
+      if (user) {
+        this.userId = parseInt(localStorage.getItem("loginUser").userId);
+        addInterestApt(
+          { userId: this.userId, aptCode: aptcode },
+          ({ data }) => {
+            if (data.flag == "success") {
+              this.interestApt.add(aptcode);
+            }
+          },
+          (error) => console.log("registInterestMarker  error :" + error)
+        );
+        this.createInterestMarkers();
+      } else {
+        alert("회원만 등록 할 수 있습니다!!");
+      }
+    },
+    deleteInterestMarker(aptcode) {
+      let user = JSON.parse(localStorage.getItem("loginUser"));
+      if (user) {
+        this.userId = parseInt(localStorage.getItem("loginUser").userId);
+        deleteInterestApt(
+          { userId: this.userId, aptCode: aptcode },
+          ({ data }) => {
+            if (data.flag == "success") {
+              this.interestApt.delete(aptcode);
+            }
+          },
+          (error) => console.log("deleteInterestMarker  error :" + error)
+        );
+      }
     },
   },
 };
