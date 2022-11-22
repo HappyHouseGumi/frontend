@@ -43,7 +43,9 @@ export default {
   height: 120px;
   padding: 30px 120px;
   border: 1px solid #ddd;
+  border-radius: 10px;
   background: #f8f8f8;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 }
 
 .search {
@@ -59,35 +61,27 @@ export default {
   width: 475px;
   height: 40px;
   padding: 0 10px;
-  font-weight: bold;
   outline: none;
-  border: 1px solid #3c90e2;
+  border: 1px solid #ddd;
+  border-radius: 10px;
 }
 
 .search > button {
   width: 115px;
   height: 40px;
   font-weight: bold;
-  color: white;
+  color: #007bff;
   border: 0;
   outline: 0;
-  background: #3c90e2;
-  border-radius: 5px;
+  background: white;
+  border: 1px solid #007bff;
+  border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
-.selectSubject {
-  width: 110px;
-  height: 40px;
-  border: 1px solid #3c90e2;
-  background-size: 20px;
-  padding: 5px 30px 5px 10px;
-  border-radius: 4px;
-  outline: 1;
-  margin-right: 8px;
-}
-.selectSubject option {
-  background: #fff;
-  color: black;
-  padding: 3px 0;
+.search > button:hover {
+  color: white;
+  background: #007bff;
 }
 </style>

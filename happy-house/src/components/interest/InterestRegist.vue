@@ -116,9 +116,21 @@ export default {
 }
 
 .interest-regist > button {
-  padding: 10px 20px;
+  width: 120px;
+  height: 45px;
+  font-weight: bold;
+  color: #007bff;
+  border: 0;
+  outline: 0;
+  background: white;
+  border: 1px solid #007bff;
   border-radius: 10px;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.interest-regist > button:hover {
   color: white;
-  background: #0069d9;
+  background: #007bff;
 }
 </style>
