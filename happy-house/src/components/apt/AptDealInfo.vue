@@ -5,11 +5,7 @@
         <button @click="moveTo" style="cursor: pointer">
           <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
         </button>
-        <button
-          v-if="clickedMarker.favor === false"
-          style="color: #ffc10a"
-          @click="favorPress"
-        >
+        <button v-if="clickedMarker.favor === false" style="color: #ffc10a" @click="favorPress">
           <font-awesome-icon icon="fa-regular fa-star" />
         </button>
         <button v-else style="color: #ffc10a" @click="favorPress">
@@ -22,45 +18,24 @@
     </div>
     <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
     <div class="apt-info-contents-wrapper">
-      <div
-        id="roadview"
-        style="
-          width: 100%;
-          height: 300px;
-          margin-bottom: 30px;
-          border-radius: 10px;
-        "
-      ></div>
+      <div id="roadview" style="width: 100%; height: 300px; margin-bottom: 30px; border-radius: 10px"></div>
       <div style="margin-bottom: 20px">
         <div style="margin-bottom: 10px">
-          <span
-            style="
-              color: black;
-              font-size: 18px;
-              font-weight: 600;
-              line-height: 22px;
-            "
-            >{{ clickedMarker.addressName }}</span
-          >
+          <span style="color: black; font-size: 18px; font-weight: 600; line-height: 22px">{{
+            clickedMarker.addressName
+          }}</span>
         </div>
         <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
         <div>
           <div style="margin-bottom: 10px">
             <span style="color: #000000; font-size: 16px">최근 실거래가</span>
-            <span style="color: #666; font-size: 12px; margin-left: 5px">{{
-              recentDeal.date
-            }}</span>
+            <span style="color: #666; font-size: 12px; margin-left: 5px">{{ recentDeal.date }}</span>
           </div>
-          <span style="color: #000000; font-size: 22px; font-weight: bold">{{
-            recentDeal.price
-          }}</span>
+          <span style="color: #000000; font-size: 22px; font-weight: bold">{{ recentDeal.price }}</span>
         </div>
       </div>
       <div class="chart-wrapper" style="margin-bottom: 20px">
-        <LineChartGenerator
-          :chart-options="chartOptions"
-          :chart-data="chartData"
-        />
+        <LineChartGenerator :chart-options="chartOptions" :chart-data="chartData" />
       </div>
       <table>
         <thead>
@@ -72,29 +47,19 @@
         </thead>
         <tbody>
           <tr v-for="(info, index) in paginatedData" :key="index">
-            <td>
-              {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
-            </td>
+            <td>{{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일</td>
             <td>{{ info.floor }}층</td>
             <td>{{ info.dealAmount }}만원</td>
           </tr>
         </tbody>
       </table>
       <div class="btn-cover">
-        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
-          이전
-        </button>
-        <span class="page-count"
-          >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
-        >
-        <button
-          :disabled="pageNum >= pageCount - 1"
-          @click="nextPage"
-          class="page-btn"
-        >
-          다음
-        </button>
+        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">이전</button>
+        <span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
+        <button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">다음</button>
       </div>
+      <div style="border: 1px solid #f5f5f5; margin-top: 20px; margin-bottom: 20px"></div>
+      <span style="font-weight: bold; font-size: 1.1rem">지역 관련 게시글</span>
       <table style="margin-top: 20px">
         <thead style="background: #008c8c">
           <tr>
@@ -103,12 +68,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(board, index) in boards" :key="index">
+          <tr v-for="(board, index) in boards" :key="index" @click="(el) => showModal(el, board)">
             <td>
               {{ board.title }}
             </td>
             <td>{{ board.nickName }}</td>
           </tr>
+          <AptBoardModal v-if="isShowModal" @close="isShowModal = false" :modalInfo="modalInfo" />
         </tbody>
       </table>
     </div>
@@ -129,16 +95,9 @@ import {
   CategoryScale,
   PointElement,
 } from "chart.js";
+import AptBoardModal from "@/components/apt/AptBoardModal.vue";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement
-);
+ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
 
 const aptStore = "aptStore";
 
@@ -146,9 +105,12 @@ export default {
   name: "AptDealInfo",
   components: {
     LineChartGenerator,
+    AptBoardModal,
   },
   data() {
     return {
+      modalInfo: {},
+      isShowModal: false,
       pageNum: 0,
       aptDealInfo: [],
       roadview: null,
@@ -221,20 +183,12 @@ export default {
 
       // 최근 실거래가
       const recentDeal = this.aptDealInfo.filter((el, index) => index === 0)[0];
-      this.recentDeal.date =
-        recentDeal.dealYear +
-        "." +
-        recentDeal.dealMonth +
-        "." +
-        recentDeal.dealDay;
+      this.recentDeal.date = recentDeal.dealYear + "." + recentDeal.dealMonth + "." + recentDeal.dealDay;
       this.recentDeal.price = recentDeal.dealAmount + " 만원";
 
       // 차트
       const chartList = this.aptDealInfo
-        .filter(
-          (arr, index, callback) =>
-            index === callback.findIndex((el) => el.dealYear === arr.dealYear)
-        )
+        .filter((arr, index, callback) => index === callback.findIndex((el) => el.dealYear === arr.dealYear))
         .sort((a, b) => a.dealYear - b.dealYear);
 
       this.chartData.labels = [];
@@ -245,8 +199,7 @@ export default {
         const dealAmount = el.dealAmount.split(",").join("");
         this.chartData.datasets[0].data.push(dealAmount);
       });
-      this.searchName =
-        this.clickedMarker.sidoName + " " + this.clickedMarker.gugunName;
+      this.searchName = this.clickedMarker.sidoName + " " + this.clickedMarker.gugunName;
       if (this.clickedMarker.sidoName === "세종특별자치시") {
         this.searchName = this.clickedMarker.sidoName;
       }
@@ -269,6 +222,10 @@ export default {
 
   mounted() {},
   methods: {
+    showModal(el, board) {
+      this.isShowModal = true;
+      this.modalInfo = board;
+    },
     closeAptDealInfo() {
       this.$emit("closeAptDealInfo");
     },
@@ -291,11 +248,7 @@ export default {
       this.pageNum -= 1;
     },
     favorPress() {
-      this.$emit(
-        "favorPress",
-        this.clickedMarker.code,
-        this.clickedMarker.favor
-      );
+      this.$emit("favorPress", this.clickedMarker.code, this.clickedMarker.favor);
     },
   },
 };
@@ -490,8 +443,8 @@ tr:hover td {
 
 .btn-cover .page-btn:hover {
   background: #e7e5e5;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .btn-cover .page-count {
