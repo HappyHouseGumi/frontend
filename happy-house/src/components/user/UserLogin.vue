@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ["userLoginAction"]),
+
     loginUser() {
       if (this.user.email === "" || this.user.password === "") {
         alert("빈칸을 모두 입력해주세요.");
