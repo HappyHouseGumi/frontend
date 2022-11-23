@@ -139,19 +139,25 @@ export default {
       }
     );
 
-    const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
+    const loginUser = JSON.parse(localStorage.getItem("loginUser"));
 
-    getIsUserAdmin(
-      userId,
-      ({ data }) => {
-        if (data.flag === "success") {
-          this.isAdmin = true;
-        } else this.isAdmin = false;
-      },
-      (error) => {
-        console.log("관리자 확인 오류 : " + error);
-      }
-    );
+    let userId = "";
+
+    if (loginUser) userId = loginUser.userId;
+
+    if (userId) {
+      getIsUserAdmin(
+        userId,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.isAdmin = true;
+          } else this.isAdmin = false;
+        },
+        (error) => {
+          console.log("관리자 확인 오류 : " + error);
+        }
+      );
+    }
   },
 };
 </script>

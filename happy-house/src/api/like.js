@@ -32,4 +32,9 @@ function deleteLike(boardid, userid, success, fail) {
   api.delete(`/like/${boardid}/${userid}`).then(success).catch(fail);
 }
 
-export { getLikeList, getLikeListCount, checkLike, getCountLike, registLike, deleteLike };
+// 게시글 별 좋아요 사용자 불러오기
+function getLikeUser(boardid, success, fail) {
+  api.get(`/like/likeUser/${boardid}`).then(success).catch(fail);
+}
+
+export { getLikeList, getLikeListCount, checkLike, getCountLike, registLike, deleteLike, getLikeUser };

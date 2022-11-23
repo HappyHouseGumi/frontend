@@ -218,7 +218,7 @@ td > textarea {
 }
 
 .selectSubject {
-  width: 110px;
+  width: 150px;
   height: 40px;
   border: 1px solid #999;
   background-size: 20px;
