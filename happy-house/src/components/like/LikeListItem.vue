@@ -1,8 +1,6 @@
 <template>
   <tr>
-    <!-- <td>{{ pgno }}</td>
-      <td>{{ index + 1 }}</td> -->
-    <td>{{ like.boardId }}</td>
+    <td>{{ index + 1 }}</td>
     <td>{{ like.subject }}</td>
     <td style="font-weight: bold">
       <router-link :to="{ name: 'boarddetail', params: { id: like.boardId, pass: 'like' } }">{{
@@ -18,8 +16,7 @@ export default {
   name: "LikeListItem",
   props: {
     like: Object,
-    // pgno: Number,
-    // index: Number,
+    index: Number,
   },
 
   data() {

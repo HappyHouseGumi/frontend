@@ -12,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <like-list-item v-for="(like, index) in likes" :key="index" :like="like"></like-list-item>
+        <LikeListItem v-for="(like, index) in likes" :key="index" :like="like" :index="index" />
       </tbody>
     </table>
 

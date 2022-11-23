@@ -4,10 +4,14 @@
       <div class="notice">
         <span>공지사항</span>
         <div class="divide-line"></div>
-        <!-- 공지사항 최신 5가지 -->
         <div class="main-notice-item-wrapper">
           <MainNoticeItem v-for="(notice, index) in recentNotices" :key="index" :notice="notice" />
         </div>
+      </div>
+      <div class="chart">
+        <span>관심 차트</span>
+        <div class="divide-line"></div>
+        <a><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
       </div>
       <div class="guide">
         <span>이용안내</span>
@@ -19,7 +23,6 @@
       <div class="ask">
         <span>QnA</span>
         <div class="divide-line"></div>
-        <!-- <router-link to="/qna"><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></router-link> -->
         <a @click="moveToqna"><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
       </div>
     </div>
@@ -55,7 +58,6 @@ export default {
       this.setQnaListData(sendingParam);
 
       this.$router.push({ name: "qna" });
-      // this.$router.go();
     },
   },
   created() {
@@ -114,6 +116,7 @@ span {
   border: 1px solid #eeeeee;
 }
 
+.chart,
 .guide,
 .ask {
   width: 200px;

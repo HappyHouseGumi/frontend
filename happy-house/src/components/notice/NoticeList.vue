@@ -1,7 +1,6 @@
 <template>
   <div>
     <NoticeSearch @searchParam="searchList" />
-
     <div v-if="loginId != null">
       <button class="notice-regist-btn" @click="moveRegistNotice">글 등록하기</button>
     </div>
@@ -15,8 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        <NoticeListItem v-for="(notice, index) in notices" :key="index" :notice="notice" />
-        <!-- :index="index" :pgno="pgno" -->
+        <NoticeListItem v-for="(notice, index) in notices" :key="index" :notice="notice" :index="index" />
       </tbody>
     </table>
 

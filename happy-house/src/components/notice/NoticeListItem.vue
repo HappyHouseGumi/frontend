@@ -1,8 +1,6 @@
 <template>
   <tr>
-    <!-- <td>{{ pgno }}</td>
-      <td>{{ index + 1 }}</td> -->
-    <td>{{ notice.id }}</td>
+    <td>{{ index + 1 }}</td>
     <td style="font-weight: bold">
       <router-link :to="{ name: 'noticedetail', params: { id: notice.id } }">{{ notice.title }}</router-link>
     </td>
@@ -16,8 +14,7 @@ export default {
   name: "NoticeListItem",
   props: {
     notice: Object,
-    // pgno: Number,
-    // index: Number,
+    index: Number,
   },
 
   data() {

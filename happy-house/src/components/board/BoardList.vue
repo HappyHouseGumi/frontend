@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <board-list-item v-for="(board, index) in boards" :key="index" :board="board"></board-list-item>
+        <BoardListItem v-for="(board, index) in boards" :key="index" :board="board" :index="index" />
       </tbody>
     </table>
 

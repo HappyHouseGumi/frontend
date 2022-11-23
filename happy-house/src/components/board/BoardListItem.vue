@@ -1,8 +1,6 @@
 <template>
   <tr>
-    <!-- <td>{{ pgno }}</td>
-      <td>{{ index + 1 }}</td> -->
-    <td>{{ board.id }}</td>
+    <td>{{ index + 1 }}</td>
     <td>{{ board.subject }}</td>
     <td style="font-weight: bold">
       <router-link :to="{ name: 'boarddetail', params: { id: board.id, pass: 'board' } }">{{
@@ -19,6 +17,7 @@ export default {
   name: "BoardListItem",
   props: {
     board: Object,
+    index: Number,
   },
 
   data() {
