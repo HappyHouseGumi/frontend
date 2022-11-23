@@ -1,23 +1,31 @@
 <template>
-  <tr>
-    <!-- <td>{{ pgno }}</td>
-      <td>{{ index + 1 }}</td> -->
-    <td>{{ notice.id }}</td>
-    <td style="font-weight: bold">
-      <router-link :to="{ name: 'noticedetail', params: { id: notice.id } }">{{ notice.title }}</router-link>
-    </td>
-    <td>운영자</td>
-    <td>{{ notice.regDate }}</td>
-  </tr>
+  <table>
+    <thead>
+      <tr>
+        <th>글번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>등록일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(notice, index) in notices" :key="index" :notice="notice" :index="index">
+        <td>{{ index + 1 }}</td>
+        <td style="font-weight: bold">
+          <router-link :to="{ name: 'noticedetail', params: { id: notice.id } }">{{ notice.title }}</router-link>
+        </td>
+        <td>운영자</td>
+        <td>{{ notice.regDate }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script type="module">
 export default {
   name: "NoticeListItem",
   props: {
-    notice: Object,
-    // pgno: Number,
-    // index: Number,
+    notices: [],
   },
 
   data() {
@@ -31,6 +39,26 @@ export default {
 </script>
 
 <style scoped>
+table {
+  font-size: 0.9em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+th {
+  text-align: left;
+  font-size: 1rem;
+}
+
+thead {
+  font-weight: bold;
+  color: #fff;
+  background: #0069d9;
+}
+
 td,
 th {
   padding: 15px 30px;

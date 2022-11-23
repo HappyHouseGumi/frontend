@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ["userLoginAction"]),
+
     loginUser() {
       if (this.user.email === "" || this.user.password === "") {
         alert("빈칸을 모두 입력해주세요.");
@@ -78,11 +79,11 @@ export default {
   margin-top: 100px;
   margin-bottom: 150px;
   width: 500px;
-  height: 500px;
+  height: 600px;
   border: 1px solid white;
   border-radius: 10px;
   background: white;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -131,7 +132,7 @@ export default {
 }
 
 .user-login-personal-wrapper > button {
-  width: 350px;
+  width: 230px;
   height: 50px;
   border: none;
   color: white;

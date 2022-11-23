@@ -71,13 +71,13 @@ export default {
 
 .main {
   background: #000;
-  height: 720px;
+  height: 500px;
   overflow: hidden;
   z-index: 2;
 }
 
 .bg {
-  background: #000 url("@/assets/images/bg-main1.jpg") center no-repeat;
+  background: #000 url("@/assets/images/bg-main2.jpg") center no-repeat;
   background-size: cover;
   opacity: 0.3;
   position: absolute;
@@ -92,7 +92,7 @@ export default {
   position: relative;
   width: 850px;
   margin: 0 auto;
-  padding-top: 150px;
+  padding-top: 130px;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -143,6 +143,12 @@ export default {
   border-radius: 20px;
   background: #2e363e;
   overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.search-result::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
 }
 
 .search-no-result {
@@ -159,19 +165,5 @@ export default {
 .search-no-result > span {
   color: white;
   font-weight: bold;
-}
-
-.search-result::-webkit-scrollbar {
-  width: 8px;
-}
-
-.search-result::-webkit-scrollbar-thumb {
-  height: 30%;
-  background: #696c73;
-  border-radius: 10px;
-}
-
-.search-result::-webkit-scrollbar-track {
-  background: none;
 }
 </style>

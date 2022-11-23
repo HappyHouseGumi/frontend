@@ -1,24 +1,35 @@
 <template>
-  <tr>
-    <!-- <td>{{ pgno }}</td>
-      <td>{{ index + 1 }}</td> -->
-    <td>{{ board.id }}</td>
-    <td>{{ board.subject }}</td>
-    <td style="font-weight: bold">
-      <router-link :to="{ name: 'boarddetail', params: { id: board.id, pass: 'board' } }">{{
-        board.title
-      }}</router-link>
-    </td>
-    <td>{{ board.nickName }}</td>
-    <td>{{ board.regDate }}</td>
-  </tr>
+  <table>
+    <thead>
+      <tr>
+        <th>글번호</th>
+        <th>지역</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>등록일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(board, index) in boards" :key="index" :board="board" :index="index">
+        <td>{{ index + 1 }}</td>
+        <td>{{ board.subject }}</td>
+        <td style="font-weight: bold">
+          <router-link :to="{ name: 'boarddetail', params: { id: board.id, pass: 'board' } }">{{
+            board.title
+          }}</router-link>
+        </td>
+        <td>{{ board.nickName }}</td>
+        <td>{{ board.regDate }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script type="module">
 export default {
   name: "BoardListItem",
   props: {
-    board: Object,
+    boards: [],
   },
 
   data() {

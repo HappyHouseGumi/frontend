@@ -1,25 +1,33 @@
 <template>
-  <tr>
-    <!-- <td>{{ pgno }}</td>
-      <td>{{ index + 1 }}</td> -->
-    <td>{{ like.boardId }}</td>
-    <td>{{ like.subject }}</td>
-    <td style="font-weight: bold">
-      <router-link :to="{ name: 'boarddetail', params: { id: like.boardId, pass: 'like' } }">{{
-        like.title
-      }}</router-link>
-    </td>
-    <td>{{ like.nickName }}</td>
-  </tr>
+  <table>
+    <thead>
+      <tr>
+        <th>글번호</th>
+        <th>지역</th>
+        <th>제목</th>
+        <th>작성자</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(like, index) in likes" :key="index" :like="like" :index="index">
+        <td>{{ index + 1 }}</td>
+        <td>{{ like.subject }}</td>
+        <td style="font-weight: bold">
+          <router-link :to="{ name: 'boarddetail', params: { id: like.boardId, pass: 'like' } }">{{
+            like.title
+          }}</router-link>
+        </td>
+        <td>{{ like.nickName }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script type="module">
 export default {
   name: "LikeListItem",
   props: {
-    like: Object,
-    // pgno: Number,
-    // index: Number,
+    likes: [],
   },
 
   data() {

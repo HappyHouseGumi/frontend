@@ -1,26 +1,13 @@
 <template>
   <div>
     <BoardSearch @searchParam="searchList" />
-
     <div v-if="loginId != null">
       <button class="board-regist-btn" @click="moveRegistBoard">글 등록하기</button>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>글번호</th>
-          <th>지역</th>
-          <th>제목</th>
-          <th>작성자</th>
-          <th>등록일</th>
-        </tr>
-      </thead>
-      <tbody>
-        <board-list-item v-for="(board, index) in boards" :key="index" :board="board"></board-list-item>
-      </tbody>
-    </table>
-
-    <pagination-com :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
+    <div class="board-list-item-wrapper">
+      <BoardListItem :boards="boards" />
+    </div>
+    <PaginationCom :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
   </div>
 </template>
 
@@ -28,13 +15,11 @@
 import BoardListItem from "@/components/board/BoardListItem.vue";
 import BoardSearch from "@/components/board/BoardSearch.vue";
 import PaginationCom from "@/components/common/PaginationCom.vue";
-// import { getBoardList, getBoardListCount } from "@/api/board";
 import { getBoardList } from "@/api/board";
 
 import { apiInstance } from "@/api/index";
 const api = apiInstance();
 
-// import { mapState, mapMutations, mapGetters } from "vuex";
 import { mapState, mapMutations } from "vuex";
 const boardStore = "boardStore";
 
@@ -241,7 +226,7 @@ export default {
 
 <style scoped>
 .board-regist-btn {
-  margin-top: 30px;
+  margin: 30px 0;
   float: right;
   width: 110px;
   height: 40px;
@@ -261,92 +246,10 @@ export default {
   background: #007bff;
 }
 
-table {
-  font-size: 0.9em;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 5px;
-  overflow: hidden;
+.board-list-item-wrapper {
   margin-top: 50px;
-}
-
-th {
-  text-align: left;
-  font-size: 1rem;
-}
-
-thead {
-  font-weight: bold;
-  color: #fff;
-  background: #0069d9;
-}
-
-td,
-th {
-  padding: 15px 30px;
-  vertical-align: middle;
-}
-
-td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
-}
-
-a {
-  color: #73685d;
-  text-decoration: none;
-}
-
-@media all and (max-width: 768px) {
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
-    display: block;
-  }
-
-  th {
-    text-align: right;
-  }
-
-  table {
-    position: relative;
-    padding-bottom: 0;
-    border: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
-
-  thead {
-    float: left;
-    white-space: nowrap;
-  }
-
-  tbody {
-    overflow-x: auto;
-    overflow-y: hidden;
-    position: relative;
-    white-space: nowrap;
-  }
-
-  tr {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  th {
-    border-bottom: 1px solid #a39485;
-  }
-
-  td {
-    border-bottom: 1px solid #e5e5e5;
-  }
-}
-
-tr:hover td {
-  cursor: pointer;
-  background: #e7e5e5;
+  margin-bottom: 30px;
+  width: 100%;
+  height: 600px;
 }
 </style>

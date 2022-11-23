@@ -45,7 +45,7 @@ export default {
   border: 1px solid #ddd;
   border-radius: 10px;
   background: #f8f8f8;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
 }
 
 .search {

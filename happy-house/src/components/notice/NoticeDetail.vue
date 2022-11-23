@@ -144,17 +144,33 @@ export default {
   color: #4f5a66;
   font-size: 0.9rem;
   border-bottom: 1px solid #e3e7eb;
+  height: 600px;
+  overflow-y: scroll;
+}
+
+.detail-content-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detail-content-wrapper::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: #696c73;
+  border-radius: 10px;
+}
+
+.detail-content-wrapper::-webkit-scrollbar-track {
+  background: none;
 }
 
 .notice-modify-delete-wrapper {
   width: 100%;
   margin-top: 30px;
   text-align: right;
+  margin-bottom: 130px;
 }
 
 .notice-modify-delete-wrapper > div > button {
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
