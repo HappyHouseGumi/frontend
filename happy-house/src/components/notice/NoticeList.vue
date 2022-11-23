@@ -4,21 +4,10 @@
     <div v-if="loginId != null">
       <button class="notice-regist-btn" @click="moveRegistNotice">글 등록하기</button>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>글번호</th>
-          <th>제목</th>
-          <th>작성자</th>
-          <th>등록일</th>
-        </tr>
-      </thead>
-      <tbody>
-        <NoticeListItem v-for="(notice, index) in notices" :key="index" :notice="notice" :index="index" />
-      </tbody>
-    </table>
-
-    <pagination-com :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
+    <div class="notice-list-item-wrapper">
+      <NoticeListItem :notices="notices" />
+    </div>
+    <PaginationCom :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
   </div>
 </template>
 
@@ -31,7 +20,6 @@ import { getNoticeList } from "@/api/notice";
 import { apiInstance } from "@/api/index";
 const api = apiInstance();
 
-// import { mapState, mapMutations, mapGetters } from "vuex";
 import { mapState, mapMutations } from "vuex";
 const noticeStore = "noticeStore";
 
@@ -71,14 +59,12 @@ export default {
         let data = await api.post(`/notice/count`, param);
         data = data.data;
         if (data.flag === "success") {
-          // console.log("Notice 리스트 개수 :", data.data);
           this.total = data.data[0];
         }
         data = await api.post(`/notice/list`, param);
         data = data.data;
         if (data.flag === "success") {
           this.notices = data.data;
-          // console.log("Notice List 출력 :\n", this.notices);
         }
       } catch (error) {
         console.log("Notice 리스트 : ", error);
@@ -139,7 +125,6 @@ export default {
         ({ data }) => {
           if (data.flag === "success") {
             this.notices = data.data;
-            // console.log("페이지 이동 후!!!\nnotice List 출력 :\n", this.notices);
           } else {
             console.log("Notice 리스트 검색으로 가져오기 오류: ", data.data[0].msg);
           }
@@ -192,92 +177,10 @@ export default {
   background: #007bff;
 }
 
-table {
-  font-size: 0.9em;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: 5px;
-  overflow: hidden;
+.notice-list-item-wrapper {
   margin-top: 50px;
-}
-
-th {
-  text-align: left;
-  font-size: 1rem;
-}
-
-thead {
-  font-weight: bold;
-  color: #fff;
-  background: #0069d9;
-}
-
-td,
-th {
-  padding: 15px 30px;
-  vertical-align: middle;
-}
-
-td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
-}
-
-a {
-  color: #73685d;
-  text-decoration: none;
-}
-
-@media all and (max-width: 768px) {
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
-    display: block;
-  }
-
-  th {
-    text-align: right;
-  }
-
-  table {
-    position: relative;
-    padding-bottom: 0;
-    border: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
-
-  thead {
-    float: left;
-    white-space: nowrap;
-  }
-
-  tbody {
-    overflow-x: auto;
-    overflow-y: hidden;
-    position: relative;
-    white-space: nowrap;
-  }
-
-  tr {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  th {
-    border-bottom: 1px solid #a39485;
-  }
-
-  td {
-    border-bottom: 1px solid #e5e5e5;
-  }
-}
-
-tr:hover td {
-  cursor: pointer;
-  background: #e7e5e5;
+  margin-bottom: 30px;
+  width: 100%;
+  height: 600px;
 }
 </style>

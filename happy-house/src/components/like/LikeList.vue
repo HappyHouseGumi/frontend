@@ -1,22 +1,10 @@
 <template>
   <div>
-    <like-search @searchParam="searchList" />
-
-    <table>
-      <thead>
-        <tr>
-          <th>글번호</th>
-          <th>지역</th>
-          <th>제목</th>
-          <th>작성자</th>
-        </tr>
-      </thead>
-      <tbody>
-        <LikeListItem v-for="(like, index) in likes" :key="index" :like="like" :index="index" />
-      </tbody>
-    </table>
-
-    <pagination-com :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
+    <LikeSearch @searchParam="searchList" />
+    <div class="like-list-item-wrapper">
+      <LikeListItem :likes="likes" />
+    </div>
+    <PaginationCom :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
   </div>
 </template>
 
@@ -182,91 +170,10 @@ export default {
   border-radius: 5px;
 }
 
-table {
-  font-size: 0.9em;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+.like-list-item-wrapper {
+  margin-top: 50px;
+  margin-bottom: 30px;
   width: 100%;
-  border-collapse: collapse;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-th {
-  text-align: left;
-  font-size: 1rem;
-}
-
-thead {
-  font-weight: bold;
-  color: #fff;
-  background: #0069d9;
-}
-
-td,
-th {
-  padding: 15px 30px;
-  vertical-align: middle;
-}
-
-td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
-}
-
-a {
-  color: #73685d;
-  text-decoration: none;
-}
-
-@media all and (max-width: 768px) {
-  table,
-  thead,
-  tbody,
-  th,
-  td,
-  tr {
-    display: block;
-  }
-
-  th {
-    text-align: right;
-  }
-
-  table {
-    position: relative;
-    padding-bottom: 0;
-    border: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  }
-
-  thead {
-    float: left;
-    white-space: nowrap;
-  }
-
-  tbody {
-    overflow-x: auto;
-    overflow-y: hidden;
-    position: relative;
-    white-space: nowrap;
-  }
-
-  tr {
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  th {
-    border-bottom: 1px solid #a39485;
-  }
-
-  td {
-    border-bottom: 1px solid #e5e5e5;
-  }
-}
-
-tr:hover td {
-  cursor: pointer;
-  background: #e7e5e5;
+  height: 600px;
 }
 </style>
