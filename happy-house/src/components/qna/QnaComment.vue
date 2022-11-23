@@ -2,7 +2,7 @@
   <div class="comment-wrapper">
     <div>
       <div class="comment-header-wrapper">
-        <span>관리자</span> |
+        <span>운영자</span> |
         <span>{{ comment.regDate }}</span>
       </div>
       <div v-if="!isModifyStatus" class="comment-content-wrapper"><b>A.</b> {{ comment.content }}</div>
@@ -26,6 +26,7 @@
 
 <script type="module">
 import { modifyQnaComment, deleteQnaComment } from "@/api/qna";
+import { getIsUserAdmin } from "@/api/user";
 
 export default {
   name: "QnaComment",
@@ -35,7 +36,7 @@ export default {
   },
   data() {
     return {
-      isAdmin: true, // 임시 데이터
+      isAdmin: false,
       isModifyStatus: false,
       changedComment: {
         content: "",
@@ -82,6 +83,29 @@ export default {
         );
       }
     },
+  },
+  created() {
+    const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+
+    let userId = "";
+
+    if (loginUser) userId = loginUser.userId;
+
+    if (userId) {
+      getIsUserAdmin(
+        userId,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.isAdmin = true;
+          } else {
+            this.isAdmin = false;
+          }
+        },
+        (error) => {
+          console.log("관리자 확인 오류 : " + error);
+        }
+      );
+    }
   },
 };
 </script>
