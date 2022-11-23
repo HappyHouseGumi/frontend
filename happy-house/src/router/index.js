@@ -51,20 +51,22 @@ const isAdmin = (to, from, next) => {
 
   if (loginUser) userId = loginUser.userId;
 
-  getIsUserAdmin(
-    userId,
-    ({ data }) => {
-      if (data.flag === "success") {
-        next();
-      } else {
-        alert("관리자만 접근할 수 있습니다.");
-        router.push("/");
+  if (userId) {
+    getIsUserAdmin(
+      userId,
+      ({ data }) => {
+        if (data.flag === "success") {
+          next();
+        } else {
+          alert("관리자만 접근할 수 있습니다.");
+          router.push("/");
+        }
+      },
+      (error) => {
+        console.log("관리자 확인 오류 : " + error);
       }
-    },
-    (error) => {
-      console.log("관리자 확인 오류 : " + error);
-    }
-  );
+    );
+  }
 };
 
 // 비정상적인 접근

@@ -54,17 +54,19 @@ export default {
 
     if (loginUser) userId = loginUser.userId;
 
-    getIsUserAdmin(
-      userId,
-      ({ data }) => {
-        if (data.flag === "success") {
-          this.isAdmin = true;
-        } else this.isAdmin = false;
-      },
-      (error) => {
-        console.log("관리자 확인 오류 : " + error);
-      }
-    );
+    if (userId) {
+      getIsUserAdmin(
+        userId,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.isAdmin = true;
+          } else this.isAdmin = false;
+        },
+        (error) => {
+          console.log("관리자 확인 오류 : " + error);
+        }
+      );
+    }
 
     this.params.pgno = this.noticeListData.pgno;
     this.params.word = this.noticeListData.word;
