@@ -77,7 +77,7 @@ export default {
 }
 
 .bg {
-  background: #000 url("@/assets/images/bg-main1.jpg") center no-repeat;
+  background: #000 url("@/assets/images/bg-main2.jpg") center no-repeat;
   background-size: cover;
   opacity: 0.3;
   position: absolute;
