@@ -230,6 +230,7 @@ const routes = [
     path: "/interest",
     name: "interest",
     component: AppInterest,
+    beforeEnter: isLoginStatus,
   },
   {
     path: "/chart",

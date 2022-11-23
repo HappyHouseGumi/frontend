@@ -195,7 +195,6 @@ a {
 }
 
 tr:hover td {
-  cursor: pointer;
   background: #e7e5e5;
 }
 

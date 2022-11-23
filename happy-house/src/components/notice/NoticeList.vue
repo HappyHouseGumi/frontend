@@ -1,7 +1,7 @@
 <template>
   <div>
     <NoticeSearch @searchParam="searchList" />
-    <div v-if="loginId != null">
+    <div v-if="isAdmin">
       <button class="notice-regist-btn" @click="moveRegistNotice">글 등록하기</button>
     </div>
     <div class="notice-list-item-wrapper">
@@ -16,6 +16,7 @@ import NoticeListItem from "@/components/notice/NoticeListItem.vue";
 import NoticeSearch from "@/components/notice/NoticeSearch.vue";
 import PaginationCom from "@/components/common/PaginationCom.vue";
 import { getNoticeList } from "@/api/notice";
+import { getIsUserAdmin } from "@/api/user";
 
 import { apiInstance } from "@/api/index";
 const api = apiInstance();
@@ -34,7 +35,6 @@ export default {
   data() {
     return {
       notices: [],
-      loginId: null,
       params: {
         pgno: 1,
         word: null,
@@ -43,14 +43,29 @@ export default {
       page: 1,
       limit: 10,
       block: 5,
+      isAdmin: false,
     };
   },
 
   created() {
-    if (localStorage.getItem("loginUser") != null) {
-      const id = JSON.parse(localStorage.getItem("loginUser")).userId;
-      this.loginId = id;
-    }
+    const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+
+    let userId = "";
+
+    if (loginUser) userId = loginUser.userId;
+
+    getIsUserAdmin(
+      userId,
+      ({ data }) => {
+        if (data.flag === "success") {
+          this.isAdmin = true;
+        } else this.isAdmin = false;
+      },
+      (error) => {
+        console.log("관리자 확인 오류 : " + error);
+      }
+    );
+
     this.params.pgno = this.noticeListData.pgno;
     this.params.word = this.noticeListData.word;
 
