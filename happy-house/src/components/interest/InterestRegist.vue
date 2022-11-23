@@ -1,13 +1,13 @@
 <template>
   <div class="interest-regist-wrapper">
     <div class="interest-regist">
-      <select v-model="selectedSido" @change="changeSido">
+      <select v-model="selectedSido" @change="changeSido" ref="selectSido">
         <option disabled>시/도 선택</option>
         <option v-for="(list, index) in optionSido" :key="index" :value="list.dongCode">
           {{ list.sidoName }}
         </option>
       </select>
-      <select v-model="selectedGugun">
+      <select v-model="selectedGugun" @change="changeGugun" ref="selectGugun">
         <option disabled>구/군 선택</option>
         <option v-for="(list, index) in optionGugun" :key="index" :value="list.dongCode">
           {{ list.gugunName }}
@@ -28,6 +28,8 @@ export default {
     return {
       selectedSido: 0,
       selectedGugun: 0,
+      selectedSidoName: "",
+      selectedGugunName: "",
       optionSido: [],
       optionGugun: [],
     };
@@ -50,6 +52,9 @@ export default {
     changeSido() {
       this.isSidoSelected = true;
 
+      const selected = this.$refs.selectSido;
+      this.selectedSidoName = selected.options[selected.selectedIndex].text;
+
       getDongCode(
         "gugun",
         this.selectedSido,
@@ -63,11 +68,17 @@ export default {
         }
       );
     },
+    changeGugun() {
+      const selected = this.$refs.selectGugun;
+      this.selectedGugunName = selected.options[selected.selectedIndex].text;
+    },
     registInterestRegion() {
       const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
 
       const interest = {
         dongCode: this.selectedGugun,
+        sidoName: this.selectedSidoName,
+        gugunName: this.selectedGugunName,
         userId: userId,
       };
 
