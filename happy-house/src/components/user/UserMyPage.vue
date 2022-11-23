@@ -142,7 +142,7 @@ export default {
     },
     checkAvailableNickName() {
       if (this.changedInfo.nickName.length > 6) {
-        alert("닉네임은 최대 6자리 가능합니다.");
+        alert("닉네임은 최대 6자리까지 가능합니다.");
         return;
       }
 

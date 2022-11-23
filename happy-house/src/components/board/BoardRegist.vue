@@ -118,7 +118,6 @@ export default {
         this.board,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("게시글 등록 성공");
             this.moveListBoard();
           } else {
             console.log("게시글 등록 오류: ", data.data[0].msg);
@@ -219,7 +218,7 @@ td > textarea {
 }
 
 .selectSubject {
-  width: 110px;
+  width: 150px;
   height: 40px;
   border: 1px solid #999;
   background-size: 20px;

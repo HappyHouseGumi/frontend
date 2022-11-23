@@ -16,8 +16,7 @@
         :select_marker="select_marker"
         @closeAptDealInfo="closeAptDealInfo"
         @moveTo="moveTo"
-        @favorPress="favorPress"
-      />
+        @favorPress="favorPress" />
     </div>
   </div>
 </template>
@@ -63,6 +62,9 @@ export default {
       cur_sido: "",
       cur_gugun: "",
       geocoder: null,
+      fullName: "",
+      info: null,
+      info_marker: null,
       lat: 36.2683,
       lng: 127.6358,
       level: 12,
@@ -102,6 +104,13 @@ export default {
       this.level = this.GET_LOC.level;
       this.RESET_SEARCHED_LOCATION;
     }
+
+    if (this.GET_LOC.fullName) {
+      this.fullName = this.GET_LOC.fullName;
+      this.level = this.GET_LOC.level;
+    }
+    this.sidos = [];
+    this.guguns = [];
     if (!window.kakao || !window.kakao.maps) {
       const script = document.createElement("script");
       script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAOMAP_KEY}&libraries=services,clusterer,drawing`;
@@ -113,52 +122,6 @@ export default {
     } else {
       this.initMap();
     }
-    this.sidos = [];
-    this.guguns = [];
-
-    getClusterSido(
-      ({ data }) => {
-        data.data.forEach((element) => {
-          var content = null;
-          if (this.level == 6)
-            content = `<div class = "sido" style="display:none; font-size : 20px; font-weight:bold">${element.count}</div>`;
-          else
-            content = `<div class = "sido" style="display:; font-size : 20px; font-weight:bold">${element.count}</div>`;
-          var position = new kakao.maps.LatLng(element.lat, element.lng);
-          var customOverlay = new kakao.maps.CustomOverlay({
-            position: position,
-            content: content,
-          });
-          customOverlay.setMap(this.map);
-          this.sidos = document.getElementsByClassName("sido");
-        });
-      },
-      (error) => {
-        console.log("오류 : " + error);
-      }
-    );
-
-    getClusterGugun(
-      ({ data }) => {
-        data.data.forEach((element) => {
-          var content = null;
-          if (this.level == 6)
-            content = `<div class = "gugun" style = "display:; font-size : 20px; font-weight:bold">${element.count} </div>`;
-          else
-            content = `<div class = "gugun" style = "display:none; font-size : 20px; font-weight:bold">${element.count}</div>`;
-          var position = new kakao.maps.LatLng(element.lat, element.lng);
-          var customOverlay = new kakao.maps.CustomOverlay({
-            position: position,
-            content: content,
-          });
-          customOverlay.setMap(this.map);
-          this.guguns = document.getElementsByClassName("gugun");
-        });
-      },
-      (error) => {
-        console.log("오류 : " + error);
-      }
-    );
   },
   methods: {
     ...mapMutations(aptStore, ["SET_DEAL_LIST"]),
@@ -190,13 +153,63 @@ export default {
 
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-      this.createInterestMarkers();
+
+      getClusterSido(
+        ({ data }) => {
+          data.data.forEach((element) => {
+            var content = null;
+            if (this.level == 6)
+              content = `<div class = "sido" style="display:none; font-size : 20px; font-weight:bold">${element.count}</div>`;
+            else
+              content = `<div class = "sido" style="display:; font-size : 20px; font-weight:bold">${element.count}</div>`;
+            var position = new kakao.maps.LatLng(element.lat, element.lng);
+            var customOverlay = new kakao.maps.CustomOverlay({
+              position: position,
+              content: content,
+            });
+            customOverlay.setMap(this.map);
+            this.sidos = document.getElementsByClassName("sido");
+          });
+          getClusterGugun(
+            ({ data }) => {
+              data.data.forEach((element) => {
+                var content = null;
+                if (this.level == 6)
+                  content = `<div class = "gugun" style = "display:; font-size : 20px; font-weight:bold">${element.count} </div>`;
+                else
+                  content = `<div class = "gugun" style = "display:none; font-size : 20px; font-weight:bold">${element.count}</div>`;
+                var position = new kakao.maps.LatLng(element.lat, element.lng);
+                var customOverlay = new kakao.maps.CustomOverlay({
+                  position: position,
+                  content: content,
+                });
+                customOverlay.setMap(this.map);
+                this.guguns = document.getElementsByClassName("gugun");
+              });
+              this.createInterestMarkers();
+            },
+            (error) => {
+              console.log("오류 : " + error);
+            }
+          );
+        },
+        (error) => {
+          console.log("오류 : " + error);
+        }
+      );
 
       /* 줌 이벤트 시작 */
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
         // 지도의 현재 레벨을 얻어옵니다
         let level = this.map.getLevel();
-
+        if (this.info) {
+          this.info.close();
+          this.info = null;
+        }
+        if (this.info_marker) {
+          this.info_marker.setMap(null);
+          this.info_marker = null;
+        }
         // 레벨 6 이상부터는 마커 출력 X
         if (level >= 6) {
           if (this.makers.length != 0) {
@@ -262,7 +275,31 @@ export default {
           }
         }
       });
+      if (this.fullName) {
+        this.geocoder.addressSearch(this.fullName, (result, status) => {
+          // 정상적으로 검색이 완료됐으면
+          if (status === kakao.maps.services.Status.OK) {
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
+            // 결과값으로 받은 위치를 마커로 표시합니다
+            this.info_marker = new kakao.maps.Marker({
+              map: this.map,
+              position: coords,
+            });
+
+            // 인포윈도우로 장소에 대한 설명을 표시합니다
+            this.info = new kakao.maps.InfoWindow({
+              content:
+                '<div style="width:150px;text-align:center;padding:6px 0;">검색 위치</div>',
+            });
+            this.info.open(this.map, this.info_marker);
+
+            // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+            this.map.setCenter(coords);
+          }
+        });
+        this.fullName = null;
+      }
       // 지도가 확대 또는 축소되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
       kakao.maps.event.addListener(this.map, "idle", () => {
         this.searchAddrFromCoords(this.map.getCenter(), this.displayCenterInfo);

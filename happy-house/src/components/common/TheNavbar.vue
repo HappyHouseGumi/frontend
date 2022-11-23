@@ -8,8 +8,8 @@
       <span @click="moveTonotice" class="navbar-menus">공지사항</span>
       <span @click="moveToboard" class="navbar-menus">자유게시판</span>
       <span v-if="isLoginStatus">
-        <router-link to="/interest" class="navbar-menus">관심지역</router-link>
         <router-link to="/like" class="navbar-menus">관심게시글</router-link>
+        <router-link to="/interest" class="navbar-menus">관심지역</router-link>
       </span>
     </div>
     <div v-if="!isLoginStatus">

@@ -77,7 +77,6 @@ export default {
         this.notice,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("공지사항 등록 성공");
             this.moveListNotice();
           } else {
             console.log("공지사항 등록 오류: ", data.data[0].msg);

@@ -89,7 +89,6 @@ export default {
           this.question.id,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("글 삭제 완료!!");
               this.$router.push({ path: "/qna/list" });
             }
           },
@@ -104,7 +103,6 @@ export default {
         this.comment,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("댓글 작성 완료!!");
             this.originComments = data.data;
             this.comment.content = "";
           }
@@ -141,19 +139,25 @@ export default {
       }
     );
 
-    const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
+    const loginUser = JSON.parse(localStorage.getItem("loginUser"));
 
-    getIsUserAdmin(
-      userId,
-      ({ data }) => {
-        if (data.flag === "success") {
-          this.isAdmin = true;
-        } else this.isAdmin = false;
-      },
-      (error) => {
-        console.log("관리자 확인 오류 : " + error);
-      }
-    );
+    let userId = "";
+
+    if (loginUser) userId = loginUser.userId;
+
+    if (userId) {
+      getIsUserAdmin(
+        userId,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.isAdmin = true;
+          } else this.isAdmin = false;
+        },
+        (error) => {
+          console.log("관리자 확인 오류 : " + error);
+        }
+      );
+    }
   },
 };
 </script>

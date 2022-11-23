@@ -78,7 +78,6 @@ export default {
           this.notice.id,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("글 삭제 성공");
               this.moveListNotice();
             } else {
               console.log("notice 공지사항 삭제 오류: ", data.data[0].msg);

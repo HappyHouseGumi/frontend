@@ -2,9 +2,11 @@
   <div class="content">
     <div class="main">
       <div class="notice">
-        <span style="cursor: pointer" @mouseover="change">공지사항</span>
+        <span v-if="isNotice" style="cursor: pointer; font-weight: bold" @mouseover="changeMenu">공지사항</span>
+        <span v-else style="cursor: pointer; font-weight: normal" @mouseover="changeMenu">공지사항</span>
         <span> / </span>
-        <span style="cursor: pointer" @mouseover="change">뉴스</span>
+        <span v-if="isNotice" style="cursor: pointer; font-weight: normal" @mouseover="changeMenu">뉴스</span>
+        <span v-else style="cursor: pointer; font-weight: bold" @mouseover="changeMenu">뉴스</span>
         <div class="divide-line"></div>
         <div class="main-notice-item-wrapper" v-if="isNotice === true">
           <MainNoticeItem v-for="(notice, index) in recentNotices" :key="index" :notice="notice" />
@@ -13,7 +15,7 @@
           <MainNewsItem v-for="(news, index) in recentNews" :key="index" :news="news" />
         </div>
       </div>
-      <div class="chart">
+      <div class="chart" v-if="isLoginStatus">
         <span>관심 차트</span>
         <div class="divide-line"></div>
         <router-link :to="{ name: 'chart' }"
@@ -72,7 +74,7 @@ export default {
 
       this.$router.push({ name: "qna" });
     },
-    change() {
+    changeMenu() {
       this.isNotice = !this.isNotice;
     },
   },

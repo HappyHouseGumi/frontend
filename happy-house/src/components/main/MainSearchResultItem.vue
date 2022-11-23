@@ -27,7 +27,8 @@ export default {
       const location = {
         x: this.loc.y,
         y: this.loc.x,
-        level: 6,
+        level: 8,
+        fullName: this.loc.address_name,
       };
       this.SET_SEARCHED_LOCATION(location);
 

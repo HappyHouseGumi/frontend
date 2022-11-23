@@ -19,7 +19,9 @@
             >
           </td>
           <td>
-            <button class="delete-interest-btn" @click="(dongcode) => deleteInterestFunc(interest.dongCode)">
+            <button
+              class="delete-interest-btn"
+              @click="(dongcode) => deleteInterestFunc(interest.dongCode)">
               <font-awesome-icon icon="fa-solid fa-ban" class="fa-lg" />
             </button>
           </td>
@@ -50,6 +52,9 @@ export default {
       userId,
       ({ data }) => {
         if (data.flag === "success") {
+          data.data.forEach((element) => {
+            if (element.sidoName === "세종특별자치시") element.gugunName = "";
+          });
           this.interests = data.data;
         }
       },
@@ -86,14 +91,18 @@ export default {
     },
 
     moveInterestLocationMap(dongcode) {
-      const [filtered] = this.interests.filter((interest) => interest.dongCode === dongcode);
+      const [filtered] = this.interests.filter(
+        (interest) => interest.dongCode === dongcode
+      );
       const x = filtered.lat;
       const y = filtered.lng;
+      let fullname = filtered.sidoName + " " + filtered.gugunName;
 
       const location = {
         x,
         y,
-        level: 6,
+        level: 8,
+        fullName: fullname,
       };
       this.SET_SEARCHED_LOCATION(location);
 
@@ -195,7 +204,6 @@ a {
 }
 
 tr:hover td {
-  cursor: pointer;
   background: #e7e5e5;
 }
 

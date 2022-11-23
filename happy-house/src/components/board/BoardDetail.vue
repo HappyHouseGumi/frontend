@@ -18,8 +18,14 @@
           <div v-else-if="checkingLike && loginId != null">
             <button @click="deleteLike" class="board-unlike-btn">
               <font-awesome-icon icon="fa-solid fa-thumbs-up" class="fa-2x" />
-              <span v-if="likeCount != null" style="font-size: 1.2rem; margin-left: 10px">{{ likeCount }}</span>
             </button>
+            <span v-if="likeCount != null" class="like-user-count" @click="(id) => getLikeUserFunc(board.id)"
+              >{{ likeCount }}
+              <div v-if="isLikeUserOpen" class="like-user-box">
+                <span class="like-user-header">좋아요 목록</span>
+                <span v-for="(user, index) in likeUser" :key="index" class="like-user-list">{{ user }}</span>
+              </div>
+            </span>
           </div>
         </div>
       </div>
@@ -62,7 +68,7 @@
 <script type="module">
 import BoardComment from "./BoardComment.vue";
 import { getBoardDetail, deleteBoard, getComment, writeComment } from "@/api/board";
-import { registLike, deleteLike } from "@/api/like";
+import { registLike, deleteLike, getLikeUser } from "@/api/like";
 
 import { apiInstance } from "@/api/index";
 const api = apiInstance();
@@ -86,6 +92,8 @@ export default {
       sendinglike: {},
       checkingLike: null,
       likeCount: null,
+      likeUser: [],
+      isLikeUserOpen: false,
     };
   },
 
@@ -157,10 +165,24 @@ export default {
 
     getLike(this.sendinglike);
   },
-
-  mounted() {},
-
   methods: {
+    getLikeUserFunc(id) {
+      this.isLikeUserOpen = !this.isLikeUserOpen;
+
+      if (this.isLikeUserOpen) {
+        getLikeUser(
+          id,
+          ({ data }) => {
+            if (data.flag === "success") {
+              this.likeUser = data.data;
+            }
+          },
+          (error) => {
+            console.log("좋아요 유저 불러오기 오류 : " + error);
+          }
+        );
+      }
+    },
     moveModifyBoard() {
       this.$router.push({
         name: "boardmodify",
@@ -174,7 +196,6 @@ export default {
           this.board.id,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("글 삭제 성공");
               this.$router.push({ name: "boardlist" });
             } else {
               console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
@@ -203,7 +224,6 @@ export default {
           this.reply,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("댓글 등록 성공");
               this.reply.content = "";
               this.$router.go();
             } else {
@@ -226,7 +246,6 @@ export default {
         this.sendinglike,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("like board 등록 성공");
             this.$router.push({ name: "likelist" });
           } else {
             console.log("like board 등록 오류: ", data.data[0].msg);
@@ -244,7 +263,6 @@ export default {
         this.sendinglike.userId,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("like board 해제 성공");
             this.$router.push({ name: "likelist" });
           } else {
             console.log("like board 해제 오류: ", data.data[0].msg);
@@ -412,5 +430,48 @@ export default {
 .board-unlike-btn {
   border: none;
   background: none;
+}
+
+.like-user-count {
+  font-size: 1.2rem;
+  margin-left: 20px;
+  cursor: pointer;
+  position: relative;
+}
+
+.like-user-box {
+  position: absolute;
+  top: 40px;
+  width: 180px;
+  height: 200px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.like-user-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.like-user-box::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: #696c73;
+  border-radius: 10px;
+}
+
+.like-user-box::-webkit-scrollbar-track {
+  background: none;
+}
+
+.like-user-header {
+  font-size: 1.1rem;
+  color: black;
+  margin-bottom: 10px;
+  background: linear-gradient(to top, yellow 50%, transparent 50%);
 }
 </style>

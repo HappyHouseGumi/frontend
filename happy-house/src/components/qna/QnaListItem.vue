@@ -8,18 +8,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(question, index) in questions" :key="index">
+      <tr v-for="(question, index) in questions" :key="index" @click="(id) => moveQuestionDetail(question.id)">
         <td>
           <b>{{ index + 1 }}</b>
         </td>
         <td>
           {{ question.userName }}
         </td>
-        <td>
-          <router-link :to="{ name: 'qnadetail', params: { id: question.id } }"
-            ><b>Q.</b> {{ question.title }}</router-link
-          >
-        </td>
+        <td><b>Q.</b> {{ question.title }}</td>
       </tr>
     </tbody>
   </table>
@@ -30,6 +26,11 @@ export default {
   name: "QnaListItem",
   props: {
     questions: [],
+  },
+  methods: {
+    moveQuestionDetail(id) {
+      this.$router.push({ name: "qnadetail", params: { id: id } });
+    },
   },
 };
 </script>
