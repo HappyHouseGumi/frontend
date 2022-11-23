@@ -2,10 +2,23 @@
   <div class="content">
     <div class="main">
       <div class="notice">
-        <span>공지사항</span>
+        <span style="cursor: pointer" @mouseover="change">공지사항</span>
+        <span> / </span>
+        <span style="cursor: pointer" @mouseover="change">뉴스</span>
         <div class="divide-line"></div>
-        <div class="main-notice-item-wrapper">
-          <MainNoticeItem v-for="(notice, index) in recentNotices" :key="index" :notice="notice" />
+        <div class="main-notice-item-wrapper" v-if="isNotice === true">
+          <MainNoticeItem
+            v-for="(notice, index) in recentNotices"
+            :key="index"
+            :notice="notice"
+          />
+        </div>
+        <div class="main-notice-item-wrapper" v-else>
+          <MainNewsItem
+            v-for="(news, index) in recentNews"
+            :key="index"
+            :news="news"
+          />
         </div>
       </div>
       <div class="chart">
@@ -16,22 +29,28 @@
       <div class="guide">
         <span>이용안내</span>
         <div class="divide-line"></div>
-        <a href="https://www.notion.so/ssafys/Happy-House-4ee60d7d35a7491485b62dc127c67ce8" target="_blank"
+        <a
+          href="https://www.notion.so/ssafys/Happy-House-4ee60d7d35a7491485b62dc127c67ce8"
+          target="_blank"
           ><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x"
         /></a>
       </div>
       <div class="ask">
         <span>QnA</span>
         <div class="divide-line"></div>
-        <a @click="moveToqna"><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
+        <a @click="moveToqna"
+          ><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x"
+        /></a>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getNewsList } from "@/api/data";
 import { getNoticeList } from "@/api/notice";
 import MainNoticeItem from "@/components/main/MainNoticeItem.vue";
+import MainNewsItem from "@/components/main/MainNewsItem.vue";
 
 import { mapMutations } from "vuex";
 const qnaStore = "qnaStore";
@@ -40,10 +59,13 @@ export default {
   name: "MainContents",
   components: {
     MainNoticeItem,
+    MainNewsItem,
   },
   data() {
     return {
       recentNotices: [],
+      recentNews: [],
+      isNotice: true,
     };
   },
   methods: {
@@ -59,8 +81,12 @@ export default {
 
       this.$router.push({ name: "qna" });
     },
+    change() {
+      this.isNotice = !this.isNotice;
+    },
   },
   created() {
+    this.isNotice = true;
     getNoticeList(
       {},
       ({ data }) => {
@@ -68,6 +94,20 @@ export default {
           let origin = data.data;
           origin = origin.slice(0, 5);
           this.recentNotices = origin;
+        }
+      },
+      (error) => {
+        console.log("공지사항 리스트 불러오기 오류 : " + error);
+      }
+    );
+
+    getNewsList(
+      ({ data }) => {
+        if (data.flag === "success") {
+          let origin = data.data;
+          origin = origin.slice(0, 5);
+          // console.log(origin)
+          this.recentNews = origin;
         }
       },
       (error) => {
