@@ -64,6 +64,7 @@ export default {
   data() {
     return {
       recentNotices: [],
+      isLoginStatus: false,
       recentNews: [],
       isNotice: true,
     };
@@ -87,6 +88,12 @@ export default {
   },
   created() {
     this.isNotice = true;
+    const loginUser = localStorage.getItem("loginUser");
+
+    if (loginUser) {
+      this.isLoginStatus = true;
+    } else this.isLoginStatus = false;
+
     getNoticeList(
       {},
       ({ data }) => {

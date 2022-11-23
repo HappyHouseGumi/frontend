@@ -36,7 +36,7 @@ export default {
     logout() {
       localStorage.removeItem("loginUser");
       this.isLoginStatus = false;
-      this.$router.push("/");
+      this.$router.go();
     },
 
     moveToboard() {

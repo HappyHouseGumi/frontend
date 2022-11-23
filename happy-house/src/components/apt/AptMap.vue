@@ -187,16 +187,17 @@ export default {
 
       this.map = new kakao.maps.Map(container, options);
       this.geocoder = new kakao.maps.services.Geocoder();
-      // console.log(this.geocoder);
+
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
       this.createInterestMarkers();
+
       /* 줌 이벤트 시작 */
       kakao.maps.event.addListener(this.map, "zoom_changed", () => {
         // 지도의 현재 레벨을 얻어옵니다
         let level = this.map.getLevel();
 
-        // 레벨 6 이상부터는 마커 출력 XXXXX
+        // 레벨 6 이상부터는 마커 출력 X
         if (level >= 6) {
           if (this.makers.length != 0) {
             this.makers.forEach((element) => {
@@ -279,6 +280,7 @@ export default {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
       this.geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
     },
+
     press(category) {
       if (this.map.getLevel() >= 7) return; // 맵 레벨이 7이상이면 리턴
       if (!this.select_marker) return; // 선택 마커 없으면 리턴
@@ -302,6 +304,7 @@ export default {
         if (this.circle) this.circle.setMap(null);
       }
     },
+
     displayCenterInfo(result, status) {
       let sidoName = "";
       let gugunName = "";
@@ -455,9 +458,9 @@ export default {
       }
     },
     getMarkerImg(imgName, x, y) {
-      var imageSrc = require("@/assets/images/" + imgName + ".png"), // 마커이미지의 주소입니다
-        imageSize = new kakao.maps.Size(x, y), // 마커이미지의 크기입니다
-        imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+      var imageSrc = require("@/assets/images/" + imgName + ".png"), // 마커이미지의 주소
+        imageSize = new kakao.maps.Size(x, y), // 마커이미지의 크기
+        imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정
 
       // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
       var markerImage = new kakao.maps.MarkerImage(
@@ -589,9 +592,8 @@ export default {
           },
           (error) => console.log("registInterestMarker  error :" + error)
         );
-        // this.createInterestMarkers();
       } else {
-        alert("회원만 등록 할 수 있습니다!!");
+        alert("회원만 등록 가능합니다.");
       }
     },
     deleteInterestMarker(aptcode) {
@@ -608,7 +610,6 @@ export default {
           },
           (error) => console.log("deleteInterestMarker  error :" + error)
         );
-        //this.createInterestMarkers();
       }
     },
     clickCategory(e) {
@@ -621,7 +622,6 @@ export default {
       }
     },
     favorPress(aptcode, favor) {
-      // console.log(favor);
       var selectMarkerImage = null;
       if (favor) {
         this.deleteInterestMarker(aptcode);
@@ -631,7 +631,7 @@ export default {
         }
       } else {
         if (this.interestApt.size == 10) {
-          alert("관심 아파트는 10개까지 밖에 설정이 불가합니다.");
+          alert("관심 아파트는 최대 10개 설정 가능합니다.");
           return;
         }
 
