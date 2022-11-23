@@ -28,7 +28,7 @@ export default {
 }
 
 .wrapper > a {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 50px 0;
   text-decoration: none;
