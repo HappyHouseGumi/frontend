@@ -13,6 +13,7 @@
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
         :clickedMarker="clickedMarker"
+        :select_marker="select_marker"
         @closeAptDealInfo="closeAptDealInfo"
         @moveTo="moveTo"
         @favorPress="favorPress" />
@@ -114,7 +115,6 @@ export default {
 
     getClusterSido(
       ({ data }) => {
-        //console.log(data.data);
         data.data.forEach((element) => {
           var content = null;
           if (this.level == 6)
@@ -201,7 +201,6 @@ export default {
             });
           }
           this.interestMarker.forEach((element) => {
-            console.log(element);
             element.setMap(this.map);
           });
 
@@ -331,12 +330,6 @@ export default {
           this.makers.forEach((element) => {
             if (this.select_marker != element) element.setMap(null);
           });
-          // this.makers = [];
-          // if (this.circle) {
-          //   this.circle.setMap(null);
-          //   this.circle = null;
-          // }
-          /*--------------*/
 
           getAptInfoBySidoGugun(
             sidoName,
@@ -427,8 +420,6 @@ export default {
                     fillColor: "#CFE7FF", // 채우기 색깔입니다
                     fillOpacity: 0.5, // 채우기 불투명도 입니다
                   });
-                  //this.circle.setMap(this.map);
-                  //SET_DEAL_LIST  TODO
                   getAptDealInfo(
                     this.clickedMarker.code,
                     ({ data }) => {
@@ -562,6 +553,13 @@ export default {
                 kakao.maps.event.addListener(marker, "click", () => {
                   this.map.panTo(marker.getPosition());
                 });
+                var zindex = 0;
+                kakao.maps.event.addListener(marker, "mouseover", () => {
+                  marker.setZIndex(10);
+                });
+                kakao.maps.event.addListener(marker, "mouseout", () => {
+                  marker.setZIndex(zindex);
+                });
                 marker.setMap(this.map);
                 this.interestMarker.push(marker);
               });
@@ -585,7 +583,7 @@ export default {
           },
           (error) => console.log("registInterestMarker  error :" + error)
         );
-        this.createInterestMarkers();
+        // this.createInterestMarkers();
       } else {
         alert("회원만 등록 할 수 있습니다!!");
       }
@@ -604,7 +602,7 @@ export default {
           },
           (error) => console.log("deleteInterestMarker  error :" + error)
         );
-        this.createInterestMarkers();
+        //this.createInterestMarkers();
       }
     },
     clickCategory(e) {
@@ -617,14 +615,25 @@ export default {
       }
     },
     favorPress(aptcode, favor) {
+      // console.log(favor);
+      var selectMarkerImage = null;
       if (favor) {
         this.deleteInterestMarker(aptcode);
+        if (this.select_marker) {
+          selectMarkerImage = this.getMarkerImg("marker", 10, 10);
+          this.select_marker.setImage(selectMarkerImage);
+        }
       } else {
         if (this.interestApt.size == 10) {
           alert("관심 아파트는 10개까지 밖에 설정이 불가합니다.");
           return;
         }
+
         this.registInterestMarker(aptcode);
+        if (this.select_marker) {
+          selectMarkerImage = this.getMarkerImg("marker_inter", 35, 35);
+          this.select_marker.setImage(selectMarkerImage);
+        }
       }
       this.clickedMarker.favor = !this.clickedMarker.favor;
     },
