@@ -16,8 +16,8 @@ function registInterest(interest, success, fail) {
 
 // DELETE
 
-function deleteInterest(id, success, fail) {
-  api.delete(`/interest/${id}`).then(success).catch(fail);
+function deleteInterest(interest, success, fail) {
+  api.delete(`/interest`, { data: interest }).then(success).catch(fail);
 }
 
 export { registInterest, getInterestList, deleteInterest };

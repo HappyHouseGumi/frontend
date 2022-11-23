@@ -13,9 +13,11 @@
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
         :clickedMarker="clickedMarker"
+        :select_marker="select_marker"
         @closeAptDealInfo="closeAptDealInfo"
         @moveTo="moveTo"
-        @favorPress="favorPress" />
+        @favorPress="favorPress"
+      />
     </div>
   </div>
 </template>
@@ -114,7 +116,6 @@ export default {
 
     getClusterSido(
       ({ data }) => {
-        //console.log(data.data);
         data.data.forEach((element) => {
           var content = null;
           if (this.level == 6)
@@ -201,7 +202,6 @@ export default {
             });
           }
           this.interestMarker.forEach((element) => {
-            console.log(element);
             element.setMap(this.map);
           });
 
@@ -267,11 +267,7 @@ export default {
     },
     searchAddrFromCoords(coords, callback) {
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoder.coord2RegionCode(
-        coords.getLng(),
-        coords.getLat(),
-        callback
-      );
+      this.geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
     },
     searchDetailAddrFromCoords(coords, callback) {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
@@ -315,10 +311,7 @@ export default {
 
         if (sidoName == "세종특별자치시") gugunName = "세종특별자치시";
 
-        if (
-          this.map.getLevel() <= 5 &&
-          (this.cur_sido != sidoName || this.cur_gugun != gugunName)
-        ) {
+        if (this.map.getLevel() <= 5 && (this.cur_sido != sidoName || this.cur_gugun != gugunName)) {
           // 시도 클러스터 삭제
           for (let i = 0; i < this.sidos.length; i++) {
             this.sidos[i].style.display = "none";
@@ -331,12 +324,6 @@ export default {
           this.makers.forEach((element) => {
             if (this.select_marker != element) element.setMap(null);
           });
-          // this.makers = [];
-          // if (this.circle) {
-          //   this.circle.setMap(null);
-          //   this.circle = null;
-          // }
-          /*--------------*/
 
           getAptInfoBySidoGugun(
             sidoName,
@@ -358,11 +345,7 @@ export default {
                   if (this.select_marker) {
                     var selectMarkerImage = this.getMarkerImg("marker", 12, 12);
                     if (this.interestApt.has(this.clickedMarker.code)) {
-                      selectMarkerImage = this.getMarkerImg(
-                        "marker_inter",
-                        25,
-                        25
-                      );
+                      selectMarkerImage = this.getMarkerImg("marker_inter", 25, 25);
                     }
                     this.select_marker.setImage(selectMarkerImage);
                   }
@@ -371,8 +354,7 @@ export default {
                     pos.La,
                     pos.Ma,
                     ({ data }) => {
-                      this.clickedMarker.addressName =
-                        data.documents[0].road_address.address_name;
+                      this.clickedMarker.addressName = data.documents[0].road_address.address_name;
                     },
                     (error) => {
                       console.log("kakao api 좌표로 주소얻기 오류 : " + error);
@@ -427,8 +409,6 @@ export default {
                     fillColor: "#CFE7FF", // 채우기 색깔입니다
                     fillOpacity: 0.5, // 채우기 불투명도 입니다
                   });
-                  //this.circle.setMap(this.map);
-                  //SET_DEAL_LIST  TODO
                   getAptDealInfo(
                     this.clickedMarker.code,
                     ({ data }) => {
@@ -463,11 +443,7 @@ export default {
         imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
       // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-      var markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize,
-        imageOption
-      );
+      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
       return markerImage;
     },
     showCommarker() {
@@ -562,6 +538,13 @@ export default {
                 kakao.maps.event.addListener(marker, "click", () => {
                   this.map.panTo(marker.getPosition());
                 });
+                var zindex = 0;
+                kakao.maps.event.addListener(marker, "mouseover", () => {
+                  marker.setZIndex(10);
+                });
+                kakao.maps.event.addListener(marker, "mouseout", () => {
+                  marker.setZIndex(zindex);
+                });
                 marker.setMap(this.map);
                 this.interestMarker.push(marker);
               });
@@ -585,7 +568,7 @@ export default {
           },
           (error) => console.log("registInterestMarker  error :" + error)
         );
-        this.createInterestMarkers();
+        // this.createInterestMarkers();
       } else {
         alert("회원만 등록 할 수 있습니다!!");
       }
@@ -604,7 +587,7 @@ export default {
           },
           (error) => console.log("deleteInterestMarker  error :" + error)
         );
-        this.createInterestMarkers();
+        //this.createInterestMarkers();
       }
     },
     clickCategory(e) {
@@ -617,14 +600,25 @@ export default {
       }
     },
     favorPress(aptcode, favor) {
+      // console.log(favor);
+      var selectMarkerImage = null;
       if (favor) {
         this.deleteInterestMarker(aptcode);
+        if (this.select_marker) {
+          selectMarkerImage = this.getMarkerImg("marker", 10, 10);
+          this.select_marker.setImage(selectMarkerImage);
+        }
       } else {
         if (this.interestApt.size == 10) {
           alert("관심 아파트는 10개까지 밖에 설정이 불가합니다.");
           return;
         }
+
         this.registInterestMarker(aptcode);
+        if (this.select_marker) {
+          selectMarkerImage = this.getMarkerImg("marker_inter", 35, 35);
+          this.select_marker.setImage(selectMarkerImage);
+        }
       }
       this.clickedMarker.favor = !this.clickedMarker.favor;
     },
@@ -681,15 +675,15 @@ export default {
 #map-floating-btn-wrapper > button:hover {
   background: gray;
   color: white;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .categoryDeactive {
   background: white;
   color: black;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .categoryActive {

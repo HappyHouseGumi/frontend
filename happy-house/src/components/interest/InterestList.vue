@@ -31,7 +31,6 @@
 
 <script type="module">
 import { getInterestList, deleteInterest } from "@/api/interest";
-import { getLatLngFromDongcode } from "@/api/apt";
 import { mapState, mapMutations } from "vuex";
 
 const aptStore = "aptStore";
@@ -40,7 +39,6 @@ export default {
   name: "InterestList",
   data() {
     return {
-      importedInterests: [],
       interests: [],
     };
   },
@@ -52,21 +50,7 @@ export default {
       userId,
       ({ data }) => {
         if (data.flag === "success") {
-          this.importedInterests = data.data;
-
-          this.importedInterests.map((interest) =>
-            getLatLngFromDongcode(
-              interest.dongCode,
-              ({ data }) => {
-                if (data.flag === "success") {
-                  this.interests.push(data.data[0]);
-                }
-              },
-              (error) => {
-                console.log("동코드로 좌표 얻기 오류 : " + error);
-              }
-            )
-          );
+          this.interests = data.data;
         }
       },
       (error) => {
@@ -81,10 +65,15 @@ export default {
     ...mapMutations(aptStore, ["SET_SEARCHED_LOCATION"]),
 
     deleteInterestFunc(dongcode) {
-      const [filtered] = this.importedInterests.filter((interest) => interest.dongCode === dongcode);
+      const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
+
+      const deletedInterest = {
+        userId: userId,
+        dongCode: dongcode,
+      };
 
       deleteInterest(
-        filtered.id,
+        deletedInterest,
         ({ data }) => {
           if (data.flag === "success") {
             this.$router.go();

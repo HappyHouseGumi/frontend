@@ -6,10 +6,7 @@
           <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
         </button>
         <!-- 여기서 if 달아서 쓰시오!!  -->
-        <button
-          v-if="clickedMarker.favor === false"
-          style="color: #ffc10a"
-          @click="favorPress">
+        <button v-if="clickedMarker.favor === false" style="color: #ffc10a" @click="favorPress">
           <font-awesome-icon icon="fa-regular fa-star" />
         </button>
         <button v-else style="color: #ffc10a" @click="favorPress">
@@ -22,43 +19,24 @@
     </div>
     <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
     <div class="apt-info-contents-wrapper">
-      <div
-        id="roadview"
-        style="
-          width: 100%;
-          height: 300px;
-          margin-bottom: 30px;
-          border-radius: 10px;
-        "></div>
+      <div id="roadview" style="width: 100%; height: 300px; margin-bottom: 30px; border-radius: 10px"></div>
       <div style="margin-bottom: 20px">
         <div style="margin-bottom: 10px">
-          <span
-            style="
-              color: black;
-              font-size: 18px;
-              font-weight: 600;
-              line-height: 22px;
-            "
-            >{{ clickedMarker.addressName }}</span
-          >
+          <span style="color: black; font-size: 18px; font-weight: 600; line-height: 22px">{{
+            clickedMarker.addressName
+          }}</span>
         </div>
         <div style="border: 1px solid #f5f5f5; margin-bottom: 10px"></div>
         <div>
           <div style="margin-bottom: 10px">
             <span style="color: #000000; font-size: 16px">최근 실거래가</span>
-            <span style="color: #666; font-size: 12px; margin-left: 5px">{{
-              recentDeal.date
-            }}</span>
+            <span style="color: #666; font-size: 12px; margin-left: 5px">{{ recentDeal.date }}</span>
           </div>
-          <span style="color: #000000; font-size: 22px; font-weight: bold">{{
-            recentDeal.price
-          }}</span>
+          <span style="color: #000000; font-size: 22px; font-weight: bold">{{ recentDeal.price }}</span>
         </div>
       </div>
       <div class="chart-wrapper" style="margin-bottom: 20px">
-        <LineChartGenerator
-          :chart-options="chartOptions"
-          :chart-data="chartData" />
+        <LineChartGenerator :chart-options="chartOptions" :chart-data="chartData" />
       </div>
       <table>
         <thead>
@@ -70,27 +48,16 @@
         </thead>
         <tbody>
           <tr v-for="(info, index) in paginatedData" :key="index">
-            <td>
-              {{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일
-            </td>
+            <td>{{ info.dealYear }}년 {{ info.dealMonth }}월 {{ info.dealDay }}일</td>
             <td>{{ info.floor }}층</td>
             <td>{{ info.dealAmount }}만원</td>
           </tr>
         </tbody>
       </table>
       <div class="btn-cover">
-        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">
-          이전
-        </button>
-        <span class="page-count"
-          >{{ pageNum + 1 }} / {{ pageCount }} 페이지</span
-        >
-        <button
-          :disabled="pageNum >= pageCount - 1"
-          @click="nextPage"
-          class="page-btn">
-          다음
-        </button>
+        <button :disabled="pageNum === 0" @click="prevPage" class="page-btn">이전</button>
+        <span class="page-count">{{ pageNum + 1 }} / {{ pageCount }} 페이지</span>
+        <button :disabled="pageNum >= pageCount - 1" @click="nextPage" class="page-btn">다음</button>
       </div>
     </div>
   </div>
@@ -110,15 +77,7 @@ import {
   PointElement,
 } from "chart.js";
 
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  CategoryScale,
-  PointElement
-);
+ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
 
 const aptStore = "aptStore";
 
@@ -144,7 +103,7 @@ export default {
         labels: [],
         datasets: [
           {
-            label: "연별 거래 금액",
+            label: "연별 최근 거래 금액",
             backgroundColor: "#0069d9;",
             data: [],
           },
@@ -196,19 +155,16 @@ export default {
         roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
       });
 
+      // 최근 실거래가
       const recentDeal = this.aptDealInfo.filter((el, index) => index === 0)[0];
-      this.recentDeal.date =
-        recentDeal.dealYear +
-        "." +
-        recentDeal.dealMonth +
-        "." +
-        recentDeal.dealDay;
+      this.recentDeal.date = recentDeal.dealYear + "." + recentDeal.dealMonth + "." + recentDeal.dealDay;
       this.recentDeal.price = recentDeal.dealAmount + " 만원";
 
-      const chartList = this.aptDealInfo.filter(
-        (arr, index, callback) =>
-          index === callback.findIndex((el) => el.dealYear === arr.dealYear)
-      );
+      // 차트
+      const chartList = this.aptDealInfo
+        .filter((arr, index, callback) => index === callback.findIndex((el) => el.dealYear === arr.dealYear))
+        .sort((a, b) => a.dealYear - b.dealYear);
+
       this.chartData.labels = [];
       this.chartData.datasets[0].data = [];
 
@@ -217,22 +173,14 @@ export default {
         const dealAmount = el.dealAmount.split(",").join("");
         this.chartData.datasets[0].data.push(dealAmount);
       });
+
+      console.log(this.chartData.labels);
     },
   },
   created() {},
   updated() {},
 
-  mounted() {
-    // var roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
-    // var roadview = new window.kakao.maps.Roadview(roadviewContainer); //로드뷰 객체
-    // var roadviewClient = new window.kakao.maps.RoadviewClient(); //좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
-    // var position = this.clickedMarker.pos;
-    // console.log(position);
-    // // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
-    // roadviewClient.getNearestPanoId(position, 50, (panoId) => {
-    //   roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
-    // });
-  },
+  mounted() {},
   methods: {
     closeAptDealInfo() {
       this.$emit("closeAptDealInfo");
@@ -256,11 +204,7 @@ export default {
       this.pageNum -= 1;
     },
     favorPress() {
-      this.$emit(
-        "favorPress",
-        this.clickedMarker.code,
-        this.clickedMarker.favor
-      );
+      this.$emit("favorPress", this.clickedMarker.code, this.clickedMarker.favor);
     },
   },
 };
@@ -455,8 +399,8 @@ tr:hover td {
 
 .btn-cover .page-btn:hover {
   background: #e7e5e5;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .btn-cover .page-count {
