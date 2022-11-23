@@ -5,7 +5,6 @@
         <button @click="moveTo" style="cursor: pointer">
           <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
         </button>
-        <!-- 여기서 if 달아서 쓰시오!!  -->
         <button v-if="clickedMarker.favor === false" style="color: #ffc10a" @click="favorPress">
           <font-awesome-icon icon="fa-regular fa-star" />
         </button>
@@ -145,7 +144,6 @@ export default {
     GET_DEAL: function () {
       this.aptDealInfo = this.GET_DEAL;
 
-      //this.pageSize = 0;
       this.pageNum = 0;
       var position = this.clickedMarker.pos;
       var roadviewContainer = document.getElementById("roadview"); //로드뷰를 표시할 div
@@ -173,8 +171,6 @@ export default {
         const dealAmount = el.dealAmount.split(",").join("");
         this.chartData.datasets[0].data.push(dealAmount);
       });
-
-      console.log(this.chartData.labels);
     },
   },
   created() {},
