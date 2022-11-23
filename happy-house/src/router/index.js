@@ -45,7 +45,11 @@ const isLoginStatus = (to, from, next) => {
 
 // 관리자인지 확인
 const isAdmin = (to, from, next) => {
-  const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
+  const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+
+  let userId = "";
+
+  if (loginUser) userId = loginUser.userId;
 
   getIsUserAdmin(
     userId,
