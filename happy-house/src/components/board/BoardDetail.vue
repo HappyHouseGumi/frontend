@@ -18,6 +18,7 @@
           <div v-else-if="checkingLike && loginId != null">
             <button @click="deleteLike" class="board-unlike-btn">
               <font-awesome-icon icon="fa-solid fa-thumbs-up" class="fa-2x" />
+              <span v-if="likeCount != null">{{ likeCount }}</span>
             </button>
           </div>
         </div>
@@ -61,7 +62,10 @@
 <script type="module">
 import BoardComment from "./BoardComment.vue";
 import { getBoardDetail, deleteBoard, getComment, writeComment } from "@/api/board";
-import { checkLike, registLike, deleteLike } from "@/api/like";
+import { registLike, deleteLike } from "@/api/like";
+
+import { apiInstance } from "@/api/index";
+const api = apiInstance();
 
 export default {
   name: "BoardDetail",
@@ -81,6 +85,7 @@ export default {
       loginId: null,
       sendinglike: {},
       checkingLike: null,
+      likeCount: null,
     };
   },
 
@@ -122,11 +127,11 @@ export default {
       }
     );
 
-    checkLike(
-      this.sendinglike,
-      ({ data }) => {
+    const getLike = async (param) => {
+      try {
+        let data = await api.post(`/like/check`, param);
+        data = data.data;
         if (data.flag === "success") {
-          // console.log("like board 존재 여부 확인 성공:", data.data[0]);
           if (data.data[0] === 0) {
             // 좋아요 표시를 하지 않은 게시글
             this.checkingLike = false;
@@ -137,11 +142,20 @@ export default {
         } else {
           console.log("like board 존재 여부 확인 오류: ", data.data[0].msg);
         }
-      },
-      (error) => {
-        console.log("like board 존재 여부 확인 오류 : " + error);
+
+        if (this.checkingLike == true) {
+          data = await api.get(`/like/countBoard/${this.sendinglike.boardId}`);
+          data = data.data;
+          if (data.flag === "success") {
+            this.likeCount = data.data[0];
+          }
+        }
+      } catch (error) {
+        console.log("Board 리스트 : ", error);
       }
-    );
+    };
+
+    getLike(this.sendinglike);
   },
 
   mounted() {},

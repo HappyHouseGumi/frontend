@@ -26,6 +26,8 @@ import LikeList from "@/components/like/LikeList.vue";
 import AppApt from "@/views/AppApt.vue";
 import AptMap from "@/components/apt/AptMap.vue";
 import AppInterest from "@/views/AppInterest.vue";
+import AppChart from "@/views/AppChart.vue";
+import ChartRanking from "@/components/chart/ChartRanking.vue";
 
 Vue.use(VueRouter);
 
@@ -176,6 +178,19 @@ const routes = [
     path: "/interest",
     name: "interest",
     component: AppInterest,
+  },
+  {
+    path: "/chart",
+    name: "chart",
+    component: AppChart,
+    redirect: "/chart/ranking",
+    children: [
+      {
+        path: "ranking",
+        name: "charRanking",
+        component: ChartRanking,
+      },
+    ],
   },
 ];
 

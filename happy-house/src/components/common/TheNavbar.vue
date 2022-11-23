@@ -6,6 +6,7 @@
     <div>
       <router-link to="/apt" class="navbar-menus">실거래가조회</router-link>
       <router-link to="/interest" class="navbar-menus">관심지역</router-link>
+      <router-link to="/chart" class="navbar-menus">관심 랭킹</router-link>
       <span @click="moveTonotice" class="navbar-menus">공지사항</span>
       <!-- <router-link to="/board" class="navbar-menus">자유게시판</router-link> -->
       <span @click="moveToboard" class="navbar-menus">자유게시판</span>
