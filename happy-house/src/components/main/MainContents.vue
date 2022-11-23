@@ -5,7 +5,9 @@
         <span>공지사항</span>
         <div class="divide-line"></div>
         <!-- 공지사항 최신 5가지 -->
-        <div></div>
+        <div class="main-notice-item-wrapper">
+          <MainNoticeItem v-for="(notice, index) in recentNotices" :key="index" :notice="notice" />
+        </div>
       </div>
       <div class="guide">
         <span>이용안내</span>
@@ -23,11 +25,22 @@
 </template>
 
 <script>
+import { getNoticeList } from "@/api/notice";
+import MainNoticeItem from "@/components/main/MainNoticeItem.vue";
+
 import { mapMutations } from "vuex";
 const qnaStore = "qnaStore";
 
 export default {
   name: "MainContents",
+  components: {
+    MainNoticeItem,
+  },
+  data() {
+    return {
+      recentNotices: [],
+    };
+  },
   methods: {
     ...mapMutations(qnaStore, { setQnaListData: "SET_QNA_LIST_DATA" }),
 
@@ -42,6 +55,21 @@ export default {
       this.$router.push({ name: "qna" });
       // this.$router.go();
     },
+  },
+  created() {
+    getNoticeList(
+      {},
+      ({ data }) => {
+        if (data.flag === "success") {
+          let origin = data.data;
+          origin = origin.slice(0, 5);
+          this.recentNotices = origin;
+        }
+      },
+      (error) => {
+        console.log("공지사항 리스트 불러오기 오류 : " + error);
+      }
+    );
   },
 };
 </script>
@@ -79,7 +107,7 @@ span {
 
 .notice {
   width: 525px;
-  height: 210px;
+  height: 270px;
   padding: 30px;
   border: 1px solid #eeeeee;
 }
@@ -87,9 +115,13 @@ span {
 .guide,
 .ask {
   width: 200px;
-  height: 210px;
+  height: 270px;
   padding: 30px;
   margin-left: 30px;
   border: 1px solid #eeeeee;
+}
+
+.main-notice-item-wrapper {
+  width: 100%;
 }
 </style>
