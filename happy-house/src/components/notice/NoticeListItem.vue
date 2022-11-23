@@ -9,10 +9,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(notice, index) in notices" :key="index" :notice="notice" :index="index">
-        <td>{{ index + 1 }}</td>
-        <td style="font-weight: bold">
-          <router-link :to="{ name: 'noticedetail', params: { id: notice.id } }">{{ notice.title }}</router-link>
+      <tr
+        v-for="(notice, index) in notices"
+        :key="index"
+        :notice="notice"
+        :index="index"
+        @click="(id) => moveNoticeDetail(notice.id)"
+      >
+        <td>
+          <b>{{ index + 1 }}</b>
+        </td>
+        <td>
+          {{ notice.title }}
         </td>
         <td>운영자</td>
         <td>{{ notice.regDate }}</td>
@@ -27,14 +35,11 @@ export default {
   props: {
     notices: [],
   },
-
-  data() {
-    return {};
+  methods: {
+    moveNoticeDetail(id) {
+      this.$router.push({ name: "noticedetail", params: { id: id } });
+    },
   },
-
-  mounted() {},
-
-  methods: {},
 };
 </script>
 

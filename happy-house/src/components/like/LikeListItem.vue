@@ -9,14 +9,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(like, index) in likes" :key="index" :like="like" :index="index">
-        <td>{{ index + 1 }}</td>
-        <td>{{ like.subject }}</td>
-        <td style="font-weight: bold">
-          <router-link :to="{ name: 'boarddetail', params: { id: like.boardId, pass: 'like' } }">{{
-            like.title
-          }}</router-link>
+      <tr
+        v-for="(like, index) in likes"
+        :key="index"
+        :like="like"
+        :index="index"
+        @click="(id) => moveBoardDetail(like.boardId)"
+      >
+        <td>
+          <b>{{ index + 1 }}</b>
         </td>
+        <td>{{ like.subject }}</td>
+        <td>{{ like.title }}</td>
         <td>{{ like.nickName }}</td>
       </tr>
     </tbody>
@@ -29,14 +33,11 @@ export default {
   props: {
     likes: [],
   },
-
-  data() {
-    return {};
+  methods: {
+    moveBoardDetail(id) {
+      this.$router.push({ name: "boarddetail", params: { id: id, pass: "like" } });
+    },
   },
-
-  mounted() {},
-
-  methods: {},
 };
 </script>
 

@@ -10,14 +10,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(board, index) in boards" :key="index" :board="board" :index="index">
-        <td>{{ index + 1 }}</td>
-        <td>{{ board.subject }}</td>
-        <td style="font-weight: bold">
-          <router-link :to="{ name: 'boarddetail', params: { id: board.id, pass: 'board' } }">{{
-            board.title
-          }}</router-link>
+      <tr
+        v-for="(board, index) in boards"
+        :key="index"
+        :board="board"
+        :index="index"
+        @click="(id) => moveBoardDetail(board.id)"
+      >
+        <td>
+          <b>{{ index + 1 }}</b>
         </td>
+        <td>{{ board.subject }}</td>
+        <td>{{ board.title }}</td>
         <td>{{ board.nickName }}</td>
         <td>{{ board.regDate }}</td>
       </tr>
@@ -31,14 +35,11 @@ export default {
   props: {
     boards: [],
   },
-
-  data() {
-    return {};
+  methods: {
+    moveBoardDetail(id) {
+      this.$router.push({ name: "boarddetail", params: { id: id, pass: "board" } });
+    },
   },
-
-  mounted() {},
-
-  methods: {},
 };
 </script>
 
