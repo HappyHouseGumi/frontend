@@ -74,6 +74,8 @@ export default {
       isMarkerClicked: false,
       clickedMarker: {
         addressName: "",
+        sidoName: "",
+        gugunName: "",
         code: "",
         favor: false,
         pos: null,
@@ -268,7 +270,11 @@ export default {
     },
     searchAddrFromCoords(coords, callback) {
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+      this.geocoder.coord2RegionCode(
+        coords.getLng(),
+        coords.getLat(),
+        callback
+      );
     },
     searchDetailAddrFromCoords(coords, callback) {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
@@ -314,7 +320,10 @@ export default {
 
         if (sidoName == "세종특별자치시") gugunName = "세종특별자치시";
 
-        if (this.map.getLevel() <= 5 && (this.cur_sido != sidoName || this.cur_gugun != gugunName)) {
+        if (
+          this.map.getLevel() <= 5 &&
+          (this.cur_sido != sidoName || this.cur_gugun != gugunName)
+        ) {
           // 시도 클러스터 삭제
           for (let i = 0; i < this.sidos.length; i++) {
             this.sidos[i].style.display = "none";
@@ -348,7 +357,11 @@ export default {
                   if (this.select_marker) {
                     var selectMarkerImage = this.getMarkerImg("marker", 12, 12);
                     if (this.interestApt.has(this.clickedMarker.code)) {
-                      selectMarkerImage = this.getMarkerImg("marker_inter", 25, 25);
+                      selectMarkerImage = this.getMarkerImg(
+                        "marker_inter",
+                        25,
+                        25
+                      );
                     }
                     this.select_marker.setImage(selectMarkerImage);
                   }
@@ -357,7 +370,8 @@ export default {
                     pos.La,
                     pos.Ma,
                     ({ data }) => {
-                      this.clickedMarker.addressName = data.documents[0].road_address.address_name;
+                      this.clickedMarker.addressName =
+                        data.documents[0].road_address.address_name;
                     },
                     (error) => {
                       console.log("kakao api 좌표로 주소얻기 오류 : " + error);
@@ -366,6 +380,9 @@ export default {
                   this.isMarkerClicked = true;
                   this.clickedMarker.code = element.aptcode;
                   this.clickedMarker.pos = marker.getPosition();
+                  this.clickedMarker.sidoName = sidoName;
+                  this.clickedMarker.gugunName = gugunName;
+
                   if (this.interestApt.has(element.aptcode)) {
                     this.clickedMarker.favor = true;
                   } else {
@@ -445,8 +462,12 @@ export default {
         imageSize = new kakao.maps.Size(x, y), // 마커이미지의 크기
         imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정
 
-      // 마커의 이미지정보를 가지고 있는 마커이미지를 생성
-      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+      // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+      var markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption
+      );
       return markerImage;
     },
     showCommarker() {
@@ -675,15 +696,15 @@ export default {
 #map-floating-btn-wrapper > button:hover {
   background: gray;
   color: white;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .categoryDeactive {
   background: white;
   color: black;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .categoryActive {

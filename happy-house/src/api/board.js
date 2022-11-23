@@ -57,6 +57,11 @@ function deleteComment(id, success, fail) {
   api.delete(`/comment/${id}`).then(success).catch(fail);
 }
 
+// 게시글 리스트 불러오기
+function getBoardListByArea(name, success, fail) {
+  api.get(`/board/area/${name}`).then(success).catch(fail);
+}
+
 export {
   getBoardList,
   getBoardListCount,
@@ -69,4 +74,5 @@ export {
   writeComment,
   modifyComment,
   deleteComment,
+  getBoardListByArea,
 };
