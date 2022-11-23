@@ -12,7 +12,9 @@
       <div class="guide">
         <span>이용안내</span>
         <div class="divide-line"></div>
-        <a><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
+        <a href="https://www.notion.so/ssafys/Happy-House-4ee60d7d35a7491485b62dc127c67ce8" target="_blank"
+          ><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x"
+        /></a>
       </div>
       <div class="ask">
         <span>QnA</span>
