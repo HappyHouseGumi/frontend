@@ -26,8 +26,9 @@ import LikeList from "@/components/like/LikeList.vue";
 import AppApt from "@/views/AppApt.vue";
 import AptMap from "@/components/apt/AptMap.vue";
 import AppInterest from "@/views/AppInterest.vue";
-import ChartRanking from "@/components/chart/ChartRanking.vue";
 import AppChart from "@/views/AppChart.vue";
+import ChartRanking from "@/components/chart/ChartRanking.vue";
+import ChartStatistics from "@/components/chart/ChartStatistics.vue";
 import { getIsUserAdmin } from "@/api/user";
 
 Vue.use(VueRouter);
@@ -249,6 +250,12 @@ const routes = [
         name: "charRanking",
         beforeEnter: isLoginStatus,
         component: ChartRanking,
+      },
+      {
+        path: "statistics",
+        name: "charStatistics",
+        beforeEnter: isLoginStatus,
+        component: ChartStatistics,
       },
     ],
   },

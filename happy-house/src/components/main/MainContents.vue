@@ -18,7 +18,9 @@
       <div class="chart" v-if="isLoginStatus">
         <span>관심 차트</span>
         <div class="divide-line"></div>
-        <a><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
+        <router-link :to="{ name: 'chart' }"
+          ><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x"
+        /></router-link>
       </div>
       <div class="guide">
         <span>이용안내</span>
