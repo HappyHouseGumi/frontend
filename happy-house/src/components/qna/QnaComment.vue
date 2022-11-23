@@ -57,7 +57,6 @@ export default {
           this.changedComment,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("답글을 수정하였습니다.");
               this.$emit("changData", this.idx, this.changedComment);
               this.isModifyStatus = false;
             }
@@ -74,7 +73,6 @@ export default {
           this.comment.id,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("답글을 삭제하였습니다.");
               this.$router.go();
             }
           },

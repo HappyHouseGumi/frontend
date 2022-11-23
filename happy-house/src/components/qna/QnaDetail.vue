@@ -89,7 +89,6 @@ export default {
           this.question.id,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("글 삭제 완료!!");
               this.$router.push({ path: "/qna/list" });
             }
           },
@@ -104,7 +103,6 @@ export default {
         this.comment,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("댓글 작성 완료!!");
             this.originComments = data.data;
             this.comment.content = "";
           }

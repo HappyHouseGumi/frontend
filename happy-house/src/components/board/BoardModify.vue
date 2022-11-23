@@ -98,7 +98,6 @@ export default {
           this.sendingData,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("글 수정 완료!!");
               this.moveDetailBoard();
             } else {
               console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
