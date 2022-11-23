@@ -187,6 +187,22 @@ export default {
   color: #4f5a66;
   font-size: 0.9rem;
   border-bottom: 1px solid #e3e7eb;
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.detail-content-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detail-content-wrapper::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: #696c73;
+  border-radius: 10px;
+}
+
+.detail-content-wrapper::-webkit-scrollbar-track {
+  background: none;
 }
 
 .qna-modify-delete-wrapper {
@@ -197,7 +213,6 @@ export default {
 
 .qna-modify-delete-wrapper > div > button {
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
@@ -256,7 +271,6 @@ export default {
 .qna-comments-write-wrapper > div > button {
   background: #3c90e2;
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;

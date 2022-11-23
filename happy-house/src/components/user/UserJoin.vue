@@ -11,6 +11,12 @@
             <button @click="checkAvailableNickName">중복 체크</button>
           </div>
           <input placeholder="* 비밀번호를 입력해주세요" type="password" v-model="user.password" />
+          <input
+            placeholder="* 비밀번호를 재입력해주세요"
+            type="password"
+            @change="doubleCheckPassword"
+            v-model="checkPassword"
+          />
           <div class="user-join-email-wrapper">
             <input placeholder="* Email을 입력해주세요" type="email" v-model="user.email" class="user-email-input" />
             <button @click="certifyEmail"><font-awesome-icon icon="fa-solid fa-check" /></button>
@@ -36,11 +42,13 @@ export default {
   data() {
     return {
       isAvailableNickName: false,
+      isDoubleCheckPassword: false,
       isAvailableEmail: false,
       isFinalAvailableEmail: false,
       isSendEmailAuthor: false,
       inputCode: "",
       authorizedCode: "",
+      checkPassword: "",
       user: {
         nickName: "",
         password: "",
@@ -66,12 +74,16 @@ export default {
         alert("이메일 인증이 되지 않았습니다. 이메일 인증 코드를 다시 전송해주세요.");
         return;
       }
+      if (!this.isDoubleCheckPassword) {
+        alert("비밀번호 재확인을 해주세요.");
+        return;
+      }
 
       registUser(
         this.user,
         ({ data }) => {
           if (data.flag === "success") {
-            this.$router.push({ path: "/" });
+            this.$router.push({ path: "/user/login" });
           }
         },
         (error) => {
@@ -153,6 +165,14 @@ export default {
         this.isFinalAvailableEmail = false;
       }
     },
+    doubleCheckPassword() {
+      if (this.checkPassword === this.user.password) {
+        this.isDoubleCheckPassword = true;
+      } else {
+        alert("비밀번호가 일치하지 않습니다.");
+        this.isDoubleCheckPassword = false;
+      }
+    },
   },
 };
 </script>
@@ -169,13 +189,13 @@ export default {
 }
 
 .user-join-types > div {
-  margin-top: 50px;
-  margin-bottom: 130px;
+  margin-top: 100px;
+  margin-bottom: 180px;
   border: 1px solid white;
   border-radius: 10px;
   background: white;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  height: 700px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  height: 650px;
   width: 500px;
   display: flex;
   flex-direction: column;

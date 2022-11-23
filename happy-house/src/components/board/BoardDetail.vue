@@ -8,7 +8,7 @@
         <div>
           <div>
             <span>{{ board.nickName }}</span> | <span>{{ board.regDate }}</span> |
-            <span>{{ board.hit }}</span>
+            <span>조회수 : {{ board.hit }}</span>
           </div>
           <div v-if="!checkingLike && loginId != null">
             <button @click="registLike" class="board-like-btn">
@@ -18,7 +18,7 @@
           <div v-else-if="checkingLike && loginId != null">
             <button @click="deleteLike" class="board-unlike-btn">
               <font-awesome-icon icon="fa-solid fa-thumbs-up" class="fa-2x" />
-              <span v-if="likeCount != null">{{ likeCount }}</span>
+              <span v-if="likeCount != null" style="font-size: 1.2rem; margin-left: 10px">{{ likeCount }}</span>
             </button>
           </div>
         </div>
@@ -307,10 +307,26 @@ export default {
 
 .detail-content-wrapper {
   width: 100%;
+  height: 500px;
   padding: 25px 40px;
   color: #4f5a66;
   font-size: 0.9rem;
   border-bottom: 1px solid #e3e7eb;
+  overflow-y: scroll;
+}
+
+.detail-content-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.detail-content-wrapper::-webkit-scrollbar-thumb {
+  height: 30%;
+  background: #696c73;
+  border-radius: 10px;
+}
+
+.detail-content-wrapper::-webkit-scrollbar-track {
+  background: none;
 }
 
 .board-modify-delete-wrapper {
@@ -321,7 +337,6 @@ export default {
 
 .board-modify-delete-wrapper > div > button {
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
@@ -381,7 +396,6 @@ export default {
 .board-comments-write-wrapper > div > button {
   background: #3c90e2;
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;

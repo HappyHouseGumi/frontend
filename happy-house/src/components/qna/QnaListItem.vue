@@ -35,12 +35,6 @@ export default {
 </script>
 
 <style scoped>
-.qna-list-item-wrapper {
-  margin-top: 50px;
-  margin-bottom: 130px;
-  width: 100%;
-}
-
 table {
   font-size: 0.9em;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);

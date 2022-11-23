@@ -51,7 +51,7 @@ export default {
 <style scoped>
 .page {
   text-align: center; /* div 사이즈 영역 안에서의 center */
-  margin-bottom: 90px;
+  margin-bottom: 100px;
   /* width: 70%; */
 }
 

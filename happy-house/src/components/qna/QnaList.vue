@@ -1,7 +1,6 @@
 <template>
   <div>
     <QnaSearch @searchBtn="searchBtn" />
-
     <div class="qna-list-button-wrapper">
       <button v-if="isSearchedList" class="qna-list-btn" @click="moveQnaList">목록</button>
       <button class="qna-regist-btn" @click="moveRegistQna">1:1 문의</button>
@@ -9,8 +8,7 @@
     <div class="qna-list-item-wrapper">
       <QnaListItem :questions="questions" />
     </div>
-
-    <pagination-com :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
+    <PaginationCom :pageSetting="pageDataSetting(total, limit, block, this.page)" @paging="pagingMethod" />
   </div>
 </template>
 
@@ -228,7 +226,8 @@ export default {
 
 .qna-list-item-wrapper {
   margin-top: 50px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   width: 100%;
+  height: 600px;
 }
 </style>

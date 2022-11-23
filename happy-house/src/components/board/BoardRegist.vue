@@ -8,7 +8,7 @@
       <tbody>
         <tr>
           <th>
-            <label>분류</label>
+            <label>지역</label>
             <span class="essentail-mark">*</span>
           </th>
           <td>
