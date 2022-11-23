@@ -27,7 +27,7 @@
     <!-- 답글 영역 -->
     <div class="qna-comments-wrapper">
       <!-- 답글 쓰는 영역 : 관리자만 보이게 하기 -->
-      <div class="qna-comments-write-wrapper">
+      <div v-if="isAdmin" class="qna-comments-write-wrapper">
         <textarea placeholder="답글을 입력하세요." v-model="comment.content" />
         <div><button @click="registComment">답글 등록</button></div>
       </div>
@@ -48,6 +48,7 @@
 <script type="module">
 import QnaComment from "@/components/qna/QnaComment.vue";
 import { deleteQna, registQnaComment, getQnaDetail, getQnaComment } from "@/api/qna";
+import { getIsUserAdmin } from "@/api/user";
 
 export default {
   name: "QnaDetail",
@@ -58,6 +59,7 @@ export default {
     return {
       password: "",
       isWriter: false,
+      isAdmin: false,
       question: {},
       comment: {
         content: "",
@@ -136,6 +138,20 @@ export default {
       },
       (error) => {
         console.log("QnA comment 불러오기 오류 : " + error);
+      }
+    );
+
+    const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
+
+    getIsUserAdmin(
+      userId,
+      ({ data }) => {
+        if (data.flag === "success") {
+          this.isAdmin = true;
+        } else this.isAdmin = false;
+      },
+      (error) => {
+        console.log("관리자 확인 오류 : " + error);
       }
     );
   },

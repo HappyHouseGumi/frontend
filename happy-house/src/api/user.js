@@ -12,6 +12,10 @@ function getUserDetail(id, success, fail) {
   api.get(`/user/detail/${id}`).then(success).catch(fail);
 }
 
+function getIsUserAdmin(id, success, fail) {
+  api.get(`/user/admin/${id}`).then(success).catch(fail);
+}
+
 // POST
 
 function registUser(user, success, fail) {
@@ -42,4 +46,14 @@ function deleteUser(id, success, fail) {
   api.delete(`/user/${id}`).then(success).catch(fail);
 }
 
-export { registUser, getCheckNickName, checkEmail, login, loginOauth, modifyUser, deleteUser, getUserDetail };
+export {
+  registUser,
+  getCheckNickName,
+  checkEmail,
+  login,
+  loginOauth,
+  modifyUser,
+  deleteUser,
+  getUserDetail,
+  getIsUserAdmin,
+};
