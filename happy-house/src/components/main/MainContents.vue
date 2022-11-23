@@ -8,7 +8,7 @@
           <MainNoticeItem v-for="(notice, index) in recentNotices" :key="index" :notice="notice" />
         </div>
       </div>
-      <div class="chart">
+      <div v-if="isLoginStatus" class="chart">
         <span>관심 차트</span>
         <div class="divide-line"></div>
         <a><font-awesome-icon icon="fa-circle-arrow-right" class="fa-2x" /></a>
@@ -44,6 +44,7 @@ export default {
   data() {
     return {
       recentNotices: [],
+      isLoginStatus: false,
     };
   },
   methods: {
@@ -61,6 +62,12 @@ export default {
     },
   },
   created() {
+    const loginUser = localStorage.getItem("loginUser");
+
+    if (loginUser) {
+      this.isLoginStatus = true;
+    } else this.isLoginStatus = false;
+
     getNoticeList(
       {},
       ({ data }) => {

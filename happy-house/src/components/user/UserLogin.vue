@@ -82,7 +82,12 @@ export default {
       this.userLoginAction(this.user);
     },
     rememberEmail() {
-      this.isRememberEmail = !this.isRememberEmail;
+      if (this.isRememberEmail) {
+        this.isRememberEmail = false;
+        localStorage.removeItem("storeEmail");
+      } else {
+        this.isRememberEmail = true;
+      }
     },
   },
 };
