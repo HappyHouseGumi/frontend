@@ -169,13 +169,13 @@ export default {
 }
 
 .user-join-types > div {
-  margin-top: 50px;
-  margin-bottom: 130px;
+  margin-top: 100px;
+  margin-bottom: 180px;
   border: 1px solid white;
   border-radius: 10px;
   background: white;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  height: 700px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  height: 650px;
   width: 500px;
   display: flex;
   flex-direction: column;

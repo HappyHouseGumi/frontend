@@ -174,7 +174,7 @@ export default {
 
 <style scoped>
 .notice-regist-btn {
-  margin-top: 30px;
+  margin: 30px 0;
   float: right;
   width: 110px;
   height: 40px;
