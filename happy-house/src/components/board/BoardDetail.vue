@@ -174,7 +174,6 @@ export default {
           this.board.id,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("글 삭제 성공");
               this.$router.push({ name: "boardlist" });
             } else {
               console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
@@ -203,7 +202,6 @@ export default {
           this.reply,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("댓글 등록 성공");
               this.reply.content = "";
               this.$router.go();
             } else {
@@ -226,7 +224,6 @@ export default {
         this.sendinglike,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("like board 등록 성공");
             this.$router.push({ name: "likelist" });
           } else {
             console.log("like board 등록 오류: ", data.data[0].msg);
@@ -244,7 +241,6 @@ export default {
         this.sendinglike.userId,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("like board 해제 성공");
             this.$router.push({ name: "likelist" });
           } else {
             console.log("like board 해제 오류: ", data.data[0].msg);

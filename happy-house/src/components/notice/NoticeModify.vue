@@ -96,7 +96,6 @@ export default {
           this.sendingData,
           ({ data }) => {
             if (data.flag === "success") {
-              alert("글 수정 완료!!");
               this.moveDetailNotice();
             } else {
               console.log("notice 게시글 수정 오류: ", data.data[0].msg);

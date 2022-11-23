@@ -89,7 +89,6 @@ export default {
         this.sendingData,
         ({ data }) => {
           if (data.flag === "success") {
-            alert("글 수정 완료!!");
             this.$router.push({ name: "qnadetail", params: { id: this.question.id } });
           }
         },
