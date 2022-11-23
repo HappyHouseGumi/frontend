@@ -148,6 +148,9 @@ export default {
       if (this.inputCode === this.authorizedCode) {
         alert("이메일 인증에 성공하였습니다!");
         this.isFinalAvailableEmail = true;
+      } else {
+        alert("코드를 다시 입력해주세요!");
+        this.isFinalAvailableEmail = false;
       }
     },
   },
@@ -211,7 +214,18 @@ export default {
   align-items: center;
 }
 
-.user-join-personal-wrapper > input,
+.user-join-personal-wrapper > input {
+  width: 328px;
+  height: 40px;
+  padding: 0 10px;
+  margin-top: 30px;
+  margin-left: 0px;
+  margin-right: 29px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+}
+
 .user-join-nickname-wrapper > input {
   width: 350px;
   height: 40px;
@@ -242,7 +256,7 @@ export default {
 }
 
 .user-join-email-wrapper > input {
-  width: 315px;
+  width: 329px;
   height: 40px;
   padding: 0 10px;
   margin-top: 30px;
