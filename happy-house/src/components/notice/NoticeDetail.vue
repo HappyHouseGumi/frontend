@@ -171,7 +171,6 @@ export default {
 
 .notice-modify-delete-wrapper > div > button {
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;

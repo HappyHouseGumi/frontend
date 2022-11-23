@@ -213,7 +213,6 @@ export default {
 
 .qna-modify-delete-wrapper > div > button {
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
@@ -272,7 +271,6 @@ export default {
 .qna-comments-write-wrapper > div > button {
   background: #3c90e2;
   color: white;
-  font-weight: bold;
   padding: 5px 10px;
   border: none;
   border-radius: 5px;
