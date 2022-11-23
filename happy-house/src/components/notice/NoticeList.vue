@@ -1,7 +1,8 @@
 <template>
   <div>
     <NoticeSearch @searchParam="searchList" />
-    <div v-if="loginId != null">
+    <div v-if="loginId == 1">
+      <!-- 관리자 계정일 시만 글 등록 가능 -->
       <button class="notice-regist-btn" @click="moveRegistNotice">글 등록하기</button>
     </div>
     <div class="notice-list-item-wrapper">

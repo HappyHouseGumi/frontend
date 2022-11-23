@@ -2,6 +2,8 @@
   <div class="content">
     <div class="wrapper">
       <router-link to="/chart">관심 랭킹</router-link>
+      |
+      <router-link to="/chart/statistics">지역별 평균 매매가</router-link>
       <router-view></router-view>
     </div>
   </div>
@@ -27,8 +29,7 @@ export default {
 }
 
 .wrapper {
-  width: 1000px;
-  margin: 0 auto;
+  margin: 0 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -48,6 +48,7 @@ export default {
     if (localStorage.getItem("loginUser") != null) {
       const id = JSON.parse(localStorage.getItem("loginUser")).userId;
       this.loginId = id;
+      this.params.userId = this.loginId;
     }
     this.params.pgno = this.likeListData.pgno;
     this.params.key = this.likeListData.key;
