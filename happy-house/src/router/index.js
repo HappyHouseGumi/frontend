@@ -26,10 +26,53 @@ import LikeList from "@/components/like/LikeList.vue";
 import AppApt from "@/views/AppApt.vue";
 import AptMap from "@/components/apt/AptMap.vue";
 import AppInterest from "@/views/AppInterest.vue";
-import AppChart from "@/views/AppChart.vue";
 import ChartRanking from "@/components/chart/ChartRanking.vue";
+import AppChart from "@/views/AppChart.vue";
+import { getIsUserAdmin } from "@/api/user";
 
 Vue.use(VueRouter);
+
+// 로그인 유저인지 확인
+const isLoginStatus = (to, from, next) => {
+  const loginUser = localStorage.getItem("loginUser");
+
+  if (loginUser) next();
+  else {
+    alert("로그인이 필요한 서비스입니다.");
+    router.push("/user/login");
+  }
+};
+
+// 관리자인지 확인
+const isAdmin = (to, from, next) => {
+  const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
+
+  getIsUserAdmin(
+    userId,
+    ({ data }) => {
+      if (data.flag === "success") {
+        next();
+      } else {
+        alert("관리자만 접근할 수 있습니다.");
+        router.push("/");
+      }
+    },
+    (error) => {
+      console.log("관리자 확인 오류 : " + error);
+    }
+  );
+};
+
+// 비정상적인 접근
+const abnormalAccess = (to, from, next) => {
+  const flag = false;
+
+  if (flag) next();
+  else {
+    alert("비정상적인 접근입니다.");
+    router.push("/");
+  }
+};
 
 const routes = [
   {
@@ -61,6 +104,7 @@ const routes = [
       {
         path: "modify/:id",
         name: "qnamodify",
+        beforeEnter: abnormalAccess,
         component: QnaModify,
       },
     ],
@@ -78,6 +122,7 @@ const routes = [
       {
         path: "oauthjoin",
         name: "useroauthjoin",
+        beforeEnter: abnormalAccess,
         component: UserOauthJoin,
       },
       {
@@ -88,6 +133,7 @@ const routes = [
       {
         path: "mypage",
         name: "usermypage",
+        beforeEnter: isLoginStatus,
         component: UserMyPage,
       },
     ],
@@ -106,16 +152,19 @@ const routes = [
       {
         path: "regist",
         name: "boardregist",
+        beforeEnter: isLoginStatus,
         component: BoardRegist,
       },
       {
         path: "detail/:id/:pass",
         name: "boarddetail",
+        beforeEnter: isLoginStatus,
         component: BoardDetail,
       },
       {
         path: "modify/:id",
         name: "boardmodify",
+        beforeEnter: abnormalAccess,
         component: BoardModify,
       },
     ],
@@ -134,6 +183,7 @@ const routes = [
       {
         path: "regist",
         name: "noticeregist",
+        beforeEnter: isAdmin,
         component: NoticeRegist,
       },
       {
@@ -144,6 +194,7 @@ const routes = [
       {
         path: "modify/:id",
         name: "noticemodify",
+        beforeEnter: isAdmin,
         component: NoticeModify,
       },
     ],
@@ -157,6 +208,7 @@ const routes = [
       {
         path: "list",
         name: "likelist",
+        beforeEnter: isLoginStatus,
         component: LikeList,
       },
     ],
@@ -188,6 +240,7 @@ const routes = [
       {
         path: "ranking",
         name: "charRanking",
+        beforeEnter: isLoginStatus,
         component: ChartRanking,
       },
     ],
