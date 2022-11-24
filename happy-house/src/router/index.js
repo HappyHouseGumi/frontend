@@ -247,14 +247,12 @@ const routes = [
     children: [
       {
         path: "ranking",
-        name: "charRanking",
-        beforeEnter: isLoginStatus,
+        name: "chartRanking",
         component: ChartRanking,
       },
       {
         path: "statistics",
-        name: "charStatistics",
-        beforeEnter: isLoginStatus,
+        name: "chartStatistics",
         component: ChartStatistics,
       },
     ],

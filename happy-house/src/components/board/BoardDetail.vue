@@ -10,16 +10,14 @@
             <span>{{ board.nickName }}</span> | <span>{{ board.regDate }}</span> |
             <span>조회수 : {{ board.hit }}</span>
           </div>
-          <div v-if="!checkingLike && loginId != null">
-            <button @click="registLike" class="board-like-btn">
+          <div>
+            <button v-if="!checkingLike" @click="registLike" class="board-like-btn">
               <font-awesome-icon icon="fa-regular fa-thumbs-up" class="fa-2x" />
             </button>
-          </div>
-          <div v-else-if="checkingLike && loginId != null">
-            <button @click="deleteLike" class="board-unlike-btn">
+            <button v-else-if="checkingLike" @click="deleteLike" class="board-unlike-btn">
               <font-awesome-icon icon="fa-solid fa-thumbs-up" class="fa-2x" />
             </button>
-            <span v-if="likeCount != null" class="like-user-count" @click="(id) => getLikeUserFunc(board.id)"
+            <span class="like-user-count" @click="(id) => getLikeUserFunc(board.id)"
               >{{ likeCount }}
               <div v-if="isLikeUserOpen" class="like-user-box">
                 <span class="like-user-header">좋아요 목록</span>
@@ -68,7 +66,7 @@
 <script type="module">
 import BoardComment from "./BoardComment.vue";
 import { getBoardDetail, deleteBoard, getComment, writeComment } from "@/api/board";
-import { registLike, deleteLike, getLikeUser } from "@/api/like";
+import { registLike, deleteLike, getLikeUser, getCountLike } from "@/api/like";
 
 import { apiInstance } from "@/api/index";
 const api = apiInstance();
@@ -91,7 +89,7 @@ export default {
       loginId: null,
       sendinglike: {},
       checkingLike: null,
-      likeCount: null,
+      likeCount: 0,
       likeUser: [],
       isLikeUserOpen: false,
     };
@@ -151,12 +149,10 @@ export default {
           console.log("like board 존재 여부 확인 오류: ", data.data[0].msg);
         }
 
-        if (this.checkingLike == true) {
-          data = await api.get(`/like/countBoard/${this.sendinglike.boardId}`);
-          data = data.data;
-          if (data.flag === "success") {
-            this.likeCount = data.data[0];
-          }
+        data = await api.get(`/like/countBoard/${this.sendinglike.boardId}`);
+        data = data.data;
+        if (data.flag === "success") {
+          this.likeCount = data.data[0];
         }
       } catch (error) {
         console.log("Board 리스트 : ", error);
@@ -243,7 +239,18 @@ export default {
         this.sendinglike,
         ({ data }) => {
           if (data.flag === "success") {
-            this.$router.push({ name: "likelist" });
+            getCountLike(
+              this.sendinglike.boardId,
+              ({ data }) => {
+                if (data.flag === "success") {
+                  this.likeCount = data.data[0];
+                  this.checkingLike = true;
+                }
+              },
+              (error) => {
+                console.log("like 갯수 가져오기 오류 : " + error);
+              }
+            );
           } else {
             console.log("like board 등록 오류: ", data.data[0].msg);
           }
@@ -260,7 +267,18 @@ export default {
         this.sendinglike.userId,
         ({ data }) => {
           if (data.flag === "success") {
-            this.$router.push({ name: "likelist" });
+            getCountLike(
+              this.sendinglike.boardId,
+              ({ data }) => {
+                if (data.flag === "success") {
+                  this.likeCount = data.data[0];
+                  this.checkingLike = false;
+                }
+              },
+              (error) => {
+                console.log("like 갯수 가져오기 오류 : " + error);
+              }
+            );
           } else {
             console.log("like board 해제 오류: ", data.data[0].msg);
           }
