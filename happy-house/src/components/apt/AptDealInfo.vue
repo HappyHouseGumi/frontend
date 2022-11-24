@@ -5,7 +5,7 @@
         <button @click="moveTo" style="cursor: pointer">
           <font-awesome-icon icon="fa-solid fa-location-arrow" class="fa-lg" />
         </button>
-        <button v-if="clickedMarker.favor === false" style="color: #ffc10a" @click="favorPress">
+        <button v-if="favor === false" style="color: #ffc10a" @click="favorPress">
           <font-awesome-icon icon="fa-regular fa-star" />
         </button>
 
@@ -195,6 +195,19 @@ export default {
       this.sc = this.clickedMarker.com["sc"].documents;
       this.ce = this.clickedMarker.com["ce"].documents;
       this.cs = this.clickedMarker.com["cs"].documents;
+
+      if (!this.sc) {
+        this.sc = [];
+      }
+      if (!this.ce) {
+        this.ce = [];
+      }
+      if (!this.cs) {
+        this.cs = [];
+      }
+      if (this.clickedMarker.favor) {
+        this.favor = this.clickedMarker.favor;
+      }
       roadviewClient.getNearestPanoId(position, 50, function (panoId) {
         if (panoId) roadview.setPanoId(panoId, position);
         else {

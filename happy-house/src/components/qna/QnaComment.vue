@@ -5,7 +5,10 @@
         <span>운영자</span> |
         <span>{{ comment.regDate }}</span>
       </div>
-      <div v-if="!isModifyStatus" class="comment-content-wrapper"><b>A.</b> {{ comment.content }}</div>
+      <div v-if="!isModifyStatus" class="comment-content-wrapper">
+        <b>A.</b>
+        <p v-html="comment.content"></p>
+      </div>
       <div v-else class="comment-content-wrapper">
         <input class="comment-modify-input" :placeholder="`${comment.content}`" v-model="changedComment.content" />
       </div>
@@ -105,6 +108,11 @@ export default {
           console.log("관리자 확인 오류 : " + error);
         }
       );
+    }
+
+    if (this.comment.content !== null) {
+      // eslint-disable-next-line
+      this.comment.content = this.comment.content.split("\n").join("<br />");
     }
   },
 };

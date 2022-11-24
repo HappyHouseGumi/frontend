@@ -75,6 +75,11 @@ export default {
     registInterestRegion() {
       const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
 
+      if (this.selectedSido === 0 || this.selectedGugun === 0) {
+        alert("지역을 선택해주세요!");
+        return;
+      }
+
       const interest = {
         dongCode: this.selectedGugun,
         sidoName: this.selectedSidoName,
@@ -89,6 +94,7 @@ export default {
             this.$router.go();
           } else {
             // console.log("중복된 데이터 추가 오류");
+            alert("이미 추가된 관심지역 입니다.");
             this.selectedSido = 0;
             this.selectedGugun = 0;
           }

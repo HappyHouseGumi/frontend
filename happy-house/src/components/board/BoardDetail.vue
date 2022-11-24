@@ -28,7 +28,7 @@
         </div>
       </div>
       <!-- 게시글 내용 -->
-      <div class="detail-content-wrapper">{{ board.content }}</div>
+      <div class="detail-content-wrapper"><p v-html="board.content"></p></div>
     </div>
     <!-- 수정 삭제 영역 -->
     <div class="board-modify-delete-wrapper">
@@ -108,6 +108,7 @@ export default {
       ({ data }) => {
         if (data.flag === "success") {
           this.board = data.data[0];
+          this.board.content = this.board.content.split("\n").join("<br />");
           // console.log(data.data[0]);
         } else {
           console.log("Board 상세보기 오류: ", data.data[0].msg);
