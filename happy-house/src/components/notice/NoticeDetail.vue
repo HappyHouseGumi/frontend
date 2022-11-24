@@ -10,7 +10,7 @@
         </div>
       </div>
       <!-- 질문 내용 -->
-      <div class="detail-content-wrapper">{{ notice.content }}</div>
+      <div class="detail-content-wrapper"><p v-html="notice.content"></p></div>
     </div>
     <!-- 수정 삭제 영역 -->
     <div class="notice-modify-delete-wrapper">
@@ -70,7 +70,7 @@ export default {
       ({ data }) => {
         if (data.flag === "success") {
           this.notice = data.data[0];
-          // console.log(data.data[0]);
+          this.notice.content = this.notice.content.split("\n").join("<br />");
         } else {
           console.log("notice 상세보기 오류: ", data.data[0].msg);
         }

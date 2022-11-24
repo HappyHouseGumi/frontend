@@ -265,11 +265,11 @@ export default {
           y: {
             grid: {
               drawBorder: false,
-              color: "black",
-              lineWidth: 1,
+              // color: "black",
+              // lineWidth: 1,
             },
             min: 0,
-            max: 5,
+            max: 10,
             ticks: {
               stepSize: 1,
               padding: 5,

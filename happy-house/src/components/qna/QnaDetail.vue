@@ -11,7 +11,7 @@
         </div>
       </div>
       <!-- 질문 내용 -->
-      <div class="detail-content-wrapper">{{ question.content }}</div>
+      <div class="detail-content-wrapper"><p v-html="question.content"></p></div>
     </div>
     <!-- 수정 삭제 영역 -->
     <div class="qna-modify-delete-wrapper">
@@ -114,12 +114,14 @@ export default {
       this.originComments[idx].content = content.content;
     },
   },
+
   created() {
     getQnaDetail(
       this.$route.params.id,
       ({ data }) => {
         if (data.flag === "success") {
           this.question = data.data[0];
+          this.question.content = this.question.content.split("\n").join("<br />");
         }
       },
       (error) => {

@@ -30,11 +30,11 @@ export default {
   props: {
     width: {
       type: Number,
-      default: 1400,
+      default: 1350,
     },
     height: {
       type: Number,
-      default: 700,
+      default: 600,
     },
   },
   data() {

@@ -5,7 +5,10 @@
         <span>{{ changeComment.nickName }}</span> |
         <span>{{ changeComment.regDate }}</span>
       </div>
-      <div v-if="!isModifyStatus" class="comment-content-wrapper"><b>A.</b> {{ changeComment.content }}</div>
+      <div v-if="!isModifyStatus" class="comment-content-wrapper">
+        <b>A.</b>
+        <p v-html="changeComment.content"></p>
+      </div>
       <div v-else class="comment-content-wrapper">
         <input class="comment-modify-input" :placeholder="`${changeComment.content}`" v-model="changeComment.content" />
       </div>
@@ -53,6 +56,8 @@ export default {
       const id = JSON.parse(localStorage.getItem("loginUser")).userId;
       this.loginId = id;
     }
+
+    this.changeComment.content = this.changeComment.content.split("\n").join("<br />");
   },
 
   mounted() {},
