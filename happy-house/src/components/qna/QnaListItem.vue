@@ -10,7 +10,7 @@
     <tbody>
       <tr v-for="(question, index) in questions" :key="index" @click="(id) => moveQuestionDetail(question.id)">
         <td>
-          <b>{{ index + 1 }}</b>
+          <b>{{ questionsLength - index }}</b>
         </td>
         <td>
           {{ question.userName }}
@@ -26,6 +26,14 @@ export default {
   name: "QnaListItem",
   props: {
     questions: [],
+  },
+  data() {
+    return {
+      questionsLength: 0,
+    };
+  },
+  updated() {
+    if (this.questions) this.questionsLength = this.questions.length;
   },
   methods: {
     moveQuestionDetail(id) {
