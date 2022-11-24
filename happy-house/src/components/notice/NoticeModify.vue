@@ -8,7 +8,7 @@
       <tbody>
         <tr>
           <th>
-            <label>운영자</label>
+            <label>글 번호</label>
           </th>
           <td>{{ notice.id }}</td>
         </tr>
@@ -122,6 +122,7 @@ table {
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
+  border-collapse: collapse;
 }
 
 colgroup {

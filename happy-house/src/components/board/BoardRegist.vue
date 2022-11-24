@@ -106,8 +106,10 @@ export default {
   methods: {
     writeBoard() {
       this.board.userId = this.loginId;
-      this.board.subject = "".concat(this.subject2[0].sidoName, " ", this.selected2);
-      // console.log(this.board);
+
+      if (this.selected1 !== 0 && this.selected2 !== "") {
+        this.board.subject = "".concat(this.subject2[0].sidoName, " ", this.selected2);
+      }
 
       if (this.board.subject === "" || this.board.title === "" || this.board.content === "") {
         alert("빈칸을 모두 채워주세요.");
