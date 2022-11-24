@@ -67,25 +67,7 @@ const isAdmin = (to, from, next) => {
         console.log("관리자 확인 오류 : " + error);
       }
     );
-  }
-};
-
-// 글쓴이인지 확인
-// const isWriterUser = (to, from, next) => {
-//   if (to.meta.isWriter) {
-//     next();
-//   } else {
-//     alert("비정상적인 접근입니다.");
-//     router.push("/");
-//   }
-// };
-
-// 비정상적인 접근
-const abnormalAccess = (to, from, next) => {
-  const flag = false;
-
-  if (flag) next();
-  else {
+  } else {
     alert("비정상적인 접근입니다.");
     router.push("/");
   }
@@ -122,7 +104,6 @@ const routes = [
         path: "modify/:id",
         name: "qnamodify",
         component: QnaModify,
-        meta: { isWriter: true },
       },
     ],
   },
@@ -139,7 +120,6 @@ const routes = [
       {
         path: "oauthjoin",
         name: "useroauthjoin",
-        beforeEnter: abnormalAccess,
         component: UserOauthJoin,
       },
       {
@@ -182,7 +162,6 @@ const routes = [
         path: "modify/:id",
         name: "boardmodify",
         component: BoardModify,
-        meta: { isWriter: true },
       },
     ],
   },

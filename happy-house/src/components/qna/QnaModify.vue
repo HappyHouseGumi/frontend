@@ -107,7 +107,6 @@ table {
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
-  border-collapse: collapse;
 }
 
 colgroup {
