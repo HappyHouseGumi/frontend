@@ -1,14 +1,23 @@
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
-    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+    <div v-if="!isClickSchoolCategory" id="map-floating-btn-wrapper" @click="(type) => changeCategory('school')">
       <button @click="press('sc')" class="categoryDeactive">학교</button>
     </div>
-    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+    <div v-else id="map-floating-btn-wrapper" @click="(type) => changeCategory('school')">
+      <button @click="press('sc')" class="categoryActive">학교</button>
+    </div>
+    <div v-if="!isClickCafeCategory" id="map-floating-btn-wrapper" @click="(type) => changeCategory('cafe')">
       <button @click="press('ce')" class="categoryDeactive">카페</button>
     </div>
-    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+    <div v-else id="map-floating-btn-wrapper" @click="(type) => changeCategory('cafe')">
+      <button @click="press('ce')" class="categoryActive">카페</button>
+    </div>
+    <div v-if="!isClickStoreCategory" id="map-floating-btn-wrapper" @click="(type) => changeCategory('store')">
       <button @click="press('cs')" class="categoryDeactive">편의점</button>
+    </div>
+    <div v-else id="map-floating-btn-wrapper" @click="(type) => changeCategory('store')">
+      <button @click="press('cs')" class="categoryActive">편의점</button>
     </div>
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
@@ -44,6 +53,9 @@ export default {
   },
   data() {
     return {
+      isClickSchoolCategory: false,
+      isClickCafeCategory: false,
+      isClickStoreCategory: false,
       map: null,
       clusterer: null,
       sidos: null,
@@ -94,6 +106,7 @@ export default {
         sc: false,
       },
       select_toggle_cnt: 0,
+      isLoginStatus: false,
     };
   },
   computed: {
@@ -131,6 +144,24 @@ export default {
   },
   methods: {
     ...mapMutations(aptStore, ["SET_DEAL_LIST"]),
+    changeCategory(type) {
+      switch (type) {
+        case "school":
+          this.isClickSchoolCategory = !this.isClickSchoolCategory;
+          return;
+        case "cafe":
+          this.isClickCafeCategory = !this.isClickCafeCategory;
+          return;
+        case "store":
+          this.isClickStoreCategory = !this.isClickStoreCategory;
+          return;
+      }
+    },
+    initCategory() {
+      this.isClickSchoolCategory = false;
+      this.isClickCafeCategory = false;
+      this.isClickStoreCategory = false;
+    },
     closeAptDealInfo() {
       this.isMarkerClicked = false;
       this.closeCommarker();
@@ -388,6 +419,7 @@ export default {
                   image: markerImage,
                 });
                 kakao.maps.event.addListener(marker, "click", () => {
+                  this.initCategory();
                   this.closeCommarker();
                   if (this.select_marker) {
                     var selectMarkerImage = this.getMarkerImg("marker", 12, 12);
@@ -609,23 +641,17 @@ export default {
         );
       }
     },
-    registInterestMarker(aptcode) {
-      let user = JSON.parse(localStorage.getItem("loginUser"));
-      if (user) {
-        this.userId = user.userId;
-        var payload = { userId: this.userId, aptCode: aptcode };
-        addInterestApt(
-          JSON.stringify(payload),
-          ({ data }) => {
-            if (data.flag == "success") {
-              this.interestApt.add(aptcode);
-            }
-          },
-          (error) => console.log("registInterestMarker  error :" + error)
-        );
-      } else {
-        alert("회원만 등록 가능합니다.");
-      }
+    registInterestMarker(aptcode, userId) {
+      var payload = { userId: userId, aptCode: aptcode };
+      addInterestApt(
+        JSON.stringify(payload),
+        ({ data }) => {
+          if (data.flag == "success") {
+            this.interestApt.add(aptcode);
+          }
+        },
+        (error) => console.log("registInterestMarker  error :" + error)
+      );
     },
     deleteInterestMarker(aptcode) {
       let user = JSON.parse(localStorage.getItem("loginUser"));
@@ -643,17 +669,10 @@ export default {
         );
       }
     },
-    clickCategory(e) {
-      if (e.target.classList[0] === "categoryActive") {
-        e.target.classList.remove("categoryActive");
-        e.target.classList.add("categoryDeactive");
-      } else {
-        e.target.classList.remove("categoryDeactive");
-        e.target.classList.add("categoryActive");
-      }
-    },
     favorPress(aptcode, favor) {
       var selectMarkerImage = null;
+      let user = JSON.parse(localStorage.getItem("loginUser"));
+
       if (favor) {
         this.deleteInterestMarker(aptcode);
         if (this.select_marker) {
@@ -666,13 +685,18 @@ export default {
           return;
         }
 
-        this.registInterestMarker(aptcode);
-        if (this.select_marker) {
-          selectMarkerImage = this.getMarkerImg("marker_inter", 35, 35);
-          this.select_marker.setImage(selectMarkerImage);
+        if (user) {
+          this.registInterestMarker(aptcode, user.userId);
+          if (this.select_marker) {
+            selectMarkerImage = this.getMarkerImg("marker_inter", 35, 35);
+            this.select_marker.setImage(selectMarkerImage);
+          }
+        } else {
+          alert("회원만 등록 가능합니다!");
         }
       }
-      this.clickedMarker.favor = !this.clickedMarker.favor;
+
+      if (user) this.clickedMarker.favor = !this.clickedMarker.favor;
     },
   },
 };
