@@ -160,6 +160,7 @@ export default {
         maintainAspectRatio: false,
       },
       hasBoard: false,
+      tempBoardTitle: "",
     };
   },
   props: {
@@ -246,6 +247,13 @@ export default {
           if (data.flag === "success") {
             this.hasBoard = true;
             this.boards = data.data;
+
+            this.boards.map((el) => {
+              if (JSON.stringify(el.title.length) > 15) {
+                // eslint-disable-next-line
+                el.title = el.title.substr(0, 13) + "...";
+              }
+            });
           } else {
             this.hasBoard = false;
             this.boards = [];
