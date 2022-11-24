@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title>HappyHouse : 관통 프로젝트</title>
+    <script
+      type="text/javascript"
+      src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js"
+      charset="utf-8"
+    ></script>
+    <script>
+      window.GitpleConfig = { appCode: "OOMlZriMyV4nOh8cO1N0A77ufG55g3" };
+      !(function () {
+        function e() {
+          function e() {
+            var e = t.contentDocument,
+              a = e.createElement("script");
+            (a.type = "text/javascript"),
+              (a.async = !0),
+              (a.src =
+                window[n] && window[n].url
+                  ? window[n].url + "/inapp-web/gitple-loader.js"
+                  : "https://app.gitple.io/inapp-web/gitple-loader.js"),
+              (a.charset = "UTF-8"),
+              e.head && e.head.appendChild(a);
+          }
+          var t = document.getElementById(a);
+          t ||
+            (((t = document.createElement("iframe")).id = a),
+            (t.style.display = "none"),
+            (t.style.width = "0"),
+            (t.style.height = "0"),
+            t.addEventListener
+              ? t.addEventListener("load", e, !1)
+              : t.attachEvent
+              ? t.attachEvent("onload", e)
+              : (t.onload = e),
+            document.body.appendChild(t));
+        }
+        var t = window,
+          n = "GitpleConfig",
+          a = "gitple-loader-frame";
+        if (!window.Gitple) {
+          document;
+          var i = function () {
+            i.ex && i.ex(arguments);
+          };
+          (i.q = []),
+            (i.ex = function (e) {
+              i.processApi ? i.processApi.apply(void 0, e) : i.q && i.q.push(e);
+            }),
+            (window.Gitple = i),
+            t.attachEvent
+              ? t.attachEvent("onload", e)
+              : t.addEventListener("load", e, !1);
+        }
+      })();
+      Gitple("boot");
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
+        properly without JavaScript enabled. Please enable it to
+        continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
