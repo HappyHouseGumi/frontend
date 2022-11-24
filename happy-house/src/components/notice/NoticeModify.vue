@@ -8,12 +8,6 @@
       <tbody>
         <tr>
           <th>
-            <label>글 번호</label>
-          </th>
-          <td>{{ notice.id }}</td>
-        </tr>
-        <tr>
-          <th>
             <label>제목</label>
             <span class="essentail-mark">*</span>
           </th>
@@ -62,7 +56,6 @@ export default {
       ({ data }) => {
         if (data.flag === "success") {
           this.notice = data.data[0];
-          // console.log(data.data[0]);
           this.origin.title = this.notice.title;
           this.origin.content = this.notice.content;
         } else {
@@ -90,25 +83,20 @@ export default {
         this.sendingData.content = this.notice.content;
       }
 
-      if (confirm("정말 수정하시겠습니까?")) {
-        modifyNotice(
-          this.notice.id,
-          this.sendingData,
-          ({ data }) => {
-            if (data.flag === "success") {
-              this.moveDetailNotice();
-            } else {
-              console.log("notice 게시글 수정 오류: ", data.data[0].msg);
-            }
-          },
-          (error) => {
-            console.log("notice 게시글 수정 오류 : " + error);
+      modifyNotice(
+        this.notice.id,
+        this.sendingData,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.moveDetailNotice();
+          } else {
+            console.log("notice 게시글 수정 오류: ", data.data[0].msg);
           }
-        );
-      } else {
-        // 수정 취소 시
-        return;
-      }
+        },
+        (error) => {
+          console.log("notice 게시글 수정 오류 : " + error);
+        }
+      );
     },
     moveDetailNotice() {
       this.$router.push({ name: "noticedetail", params: { id: this.notice.id } });

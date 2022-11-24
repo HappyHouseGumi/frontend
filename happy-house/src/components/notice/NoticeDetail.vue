@@ -14,7 +14,7 @@
     </div>
     <!-- 수정 삭제 영역 -->
     <div class="notice-modify-delete-wrapper">
-      <div v-if="loginId != null && loginId === notice.userId">
+      <div v-if="isAdmin">
         <!-- <div v-if="isWriter"> -->
         <button class="notice-modify-btn" @click="moveModifyNotice">수정</button>
         <button class="notice-delete-btn" @click="deleteNotice">삭제</button>
@@ -29,6 +29,7 @@
 
 <script type="module">
 import { getNoticeDetail, deleteNotice } from "@/api/notice";
+import { getIsUserAdmin } from "@/api/user";
 
 export default {
   name: "NoticeDetail",
@@ -37,13 +38,31 @@ export default {
     return {
       notice: {},
       loginId: null,
+      isAdmin: false,
     };
   },
 
   created() {
-    if (localStorage.getItem("loginUser") != null) {
-      const id = JSON.parse(localStorage.getItem("loginUser")).userId;
-      this.loginId = id;
+    const loginUser = JSON.parse(localStorage.getItem("loginUser"));
+
+    let userId = "";
+
+    if (loginUser) userId = loginUser.userId;
+
+    if (userId) {
+      getIsUserAdmin(
+        userId,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.isAdmin = true;
+          } else {
+            this.isAdmin = false;
+          }
+        },
+        (error) => {
+          console.log("관리자 확인 오류 : " + error);
+        }
+      );
     }
 
     getNoticeDetail(

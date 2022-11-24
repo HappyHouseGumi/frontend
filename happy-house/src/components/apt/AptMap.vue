@@ -1,14 +1,23 @@
 <template>
   <div class="map-wrapper">
     <div id="map"></div>
-    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+    <div v-if="!isClickSchoolCategory" id="map-floating-btn-wrapper" @click="(type) => changeCategory('school')">
       <button @click="press('sc')" class="categoryDeactive">학교</button>
     </div>
-    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+    <div v-else id="map-floating-btn-wrapper" @click="(type) => changeCategory('school')">
+      <button @click="press('sc')" class="categoryActive">학교</button>
+    </div>
+    <div v-if="!isClickCafeCategory" id="map-floating-btn-wrapper" @click="(type) => changeCategory('cafe')">
       <button @click="press('ce')" class="categoryDeactive">카페</button>
     </div>
-    <div id="map-floating-btn-wrapper" @click="(e) => clickCategory(e)">
+    <div v-else id="map-floating-btn-wrapper" @click="(type) => changeCategory('cafe')">
+      <button @click="press('ce')" class="categoryActive">카페</button>
+    </div>
+    <div v-if="!isClickStoreCategory" id="map-floating-btn-wrapper" @click="(type) => changeCategory('store')">
       <button @click="press('cs')" class="categoryDeactive">편의점</button>
+    </div>
+    <div v-else id="map-floating-btn-wrapper" @click="(type) => changeCategory('store')">
+      <button @click="press('cs')" class="categoryActive">편의점</button>
     </div>
     <div v-if="isMarkerClicked" class="apt-deal-wrapper">
       <AptDealInfo
@@ -16,7 +25,8 @@
         :select_marker="select_marker"
         @closeAptDealInfo="closeAptDealInfo"
         @moveTo="moveTo"
-        @favorPress="favorPress" />
+        @favorPress="favorPress"
+      />
     </div>
   </div>
 </template>
@@ -43,6 +53,9 @@ export default {
   },
   data() {
     return {
+      isClickSchoolCategory: false,
+      isClickCafeCategory: false,
+      isClickStoreCategory: false,
       map: null,
       clusterer: null,
       sidos: null,
@@ -93,6 +106,7 @@ export default {
         sc: false,
       },
       select_toggle_cnt: 0,
+      isLoginStatus: false,
     };
   },
   computed: {
@@ -130,6 +144,24 @@ export default {
   },
   methods: {
     ...mapMutations(aptStore, ["SET_DEAL_LIST"]),
+    changeCategory(type) {
+      switch (type) {
+        case "school":
+          this.isClickSchoolCategory = !this.isClickSchoolCategory;
+          return;
+        case "cafe":
+          this.isClickCafeCategory = !this.isClickCafeCategory;
+          return;
+        case "store":
+          this.isClickStoreCategory = !this.isClickStoreCategory;
+          return;
+      }
+    },
+    initCategory() {
+      this.isClickSchoolCategory = false;
+      this.isClickCafeCategory = false;
+      this.isClickStoreCategory = false;
+    },
     closeAptDealInfo() {
       this.isMarkerClicked = false;
       this.closeCommarker();
@@ -294,8 +326,7 @@ export default {
 
             // 인포윈도우로 장소에 대한 설명을 표시합니다
             this.info = new kakao.maps.InfoWindow({
-              content:
-                '<div style="width:150px;text-align:center;padding:6px 0;">검색 위치</div>',
+              content: '<div style="width:150px;text-align:center;padding:6px 0;">검색 위치</div>',
             });
             this.info.open(this.map, this.info_marker);
 
@@ -312,11 +343,7 @@ export default {
     },
     searchAddrFromCoords(coords, callback) {
       // 좌표로 행정동 주소 정보를 요청합니다
-      this.geocoder.coord2RegionCode(
-        coords.getLng(),
-        coords.getLat(),
-        callback
-      );
+      this.geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
     },
     searchDetailAddrFromCoords(coords, callback) {
       // 좌표로 법정동 상세 주소 정보를 요청합니다
@@ -362,10 +389,7 @@ export default {
 
         if (sidoName == "세종특별자치시") gugunName = "세종특별자치시";
 
-        if (
-          this.map.getLevel() <= 5 &&
-          (this.cur_sido != sidoName || this.cur_gugun != gugunName)
-        ) {
+        if (this.map.getLevel() <= 5 && (this.cur_sido != sidoName || this.cur_gugun != gugunName)) {
           // 시도 클러스터 삭제
           for (let i = 0; i < this.sidos.length; i++) {
             this.sidos[i].style.display = "none";
@@ -395,15 +419,12 @@ export default {
                   image: markerImage,
                 });
                 kakao.maps.event.addListener(marker, "click", () => {
+                  this.initCategory();
                   this.closeCommarker();
                   if (this.select_marker) {
                     var selectMarkerImage = this.getMarkerImg("marker", 12, 12);
                     if (this.interestApt.has(this.clickedMarker.code)) {
-                      selectMarkerImage = this.getMarkerImg(
-                        "marker_inter",
-                        25,
-                        25
-                      );
+                      selectMarkerImage = this.getMarkerImg("marker_inter", 25, 25);
                     }
                     this.select_marker.setImage(selectMarkerImage);
                   }
@@ -412,8 +433,7 @@ export default {
                     pos.La,
                     pos.Ma,
                     ({ data }) => {
-                      this.clickedMarker.addressName =
-                        data.documents[0].road_address.address_name;
+                      this.clickedMarker.addressName = data.documents[0].road_address.address_name;
                     },
                     (error) => {
                       console.log("kakao api 좌표로 주소얻기 오류 : " + error);
@@ -505,11 +525,7 @@ export default {
         imageOption = { offset: new kakao.maps.Point(0, 0) }; // 마커이미지의 옵션. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정
 
       // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-      var markerImage = new kakao.maps.MarkerImage(
-        imageSrc,
-        imageSize,
-        imageOption
-      );
+      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
       return markerImage;
     },
     showCommarker() {
@@ -625,23 +641,17 @@ export default {
         );
       }
     },
-    registInterestMarker(aptcode) {
-      let user = JSON.parse(localStorage.getItem("loginUser"));
-      if (user) {
-        this.userId = user.userId;
-        var payload = { userId: this.userId, aptCode: aptcode };
-        addInterestApt(
-          JSON.stringify(payload),
-          ({ data }) => {
-            if (data.flag == "success") {
-              this.interestApt.add(aptcode);
-            }
-          },
-          (error) => console.log("registInterestMarker  error :" + error)
-        );
-      } else {
-        alert("회원만 등록 가능합니다.");
-      }
+    registInterestMarker(aptcode, userId) {
+      var payload = { userId: userId, aptCode: aptcode };
+      addInterestApt(
+        JSON.stringify(payload),
+        ({ data }) => {
+          if (data.flag == "success") {
+            this.interestApt.add(aptcode);
+          }
+        },
+        (error) => console.log("registInterestMarker  error :" + error)
+      );
     },
     deleteInterestMarker(aptcode) {
       let user = JSON.parse(localStorage.getItem("loginUser"));
@@ -659,17 +669,10 @@ export default {
         );
       }
     },
-    clickCategory(e) {
-      if (e.target.classList[0] === "categoryActive") {
-        e.target.classList.remove("categoryActive");
-        e.target.classList.add("categoryDeactive");
-      } else {
-        e.target.classList.remove("categoryDeactive");
-        e.target.classList.add("categoryActive");
-      }
-    },
     favorPress(aptcode, favor) {
       var selectMarkerImage = null;
+      let user = JSON.parse(localStorage.getItem("loginUser"));
+
       if (favor) {
         this.deleteInterestMarker(aptcode);
         if (this.select_marker) {
@@ -682,13 +685,18 @@ export default {
           return;
         }
 
-        this.registInterestMarker(aptcode);
-        if (this.select_marker) {
-          selectMarkerImage = this.getMarkerImg("marker_inter", 35, 35);
-          this.select_marker.setImage(selectMarkerImage);
+        if (user) {
+          this.registInterestMarker(aptcode, user.userId);
+          if (this.select_marker) {
+            selectMarkerImage = this.getMarkerImg("marker_inter", 35, 35);
+            this.select_marker.setImage(selectMarkerImage);
+          }
+        } else {
+          alert("회원만 등록 가능합니다!");
         }
       }
-      this.clickedMarker.favor = !this.clickedMarker.favor;
+
+      if (user) this.clickedMarker.favor = !this.clickedMarker.favor;
     },
   },
 };
@@ -743,15 +751,15 @@ export default {
 #map-floating-btn-wrapper > button:hover {
   background: gray;
   color: white;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .categoryDeactive {
   background: white;
   color: black;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
 }
 
 .categoryActive {
