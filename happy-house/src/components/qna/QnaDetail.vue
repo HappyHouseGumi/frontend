@@ -64,7 +64,7 @@ export default {
       comment: {
         content: "",
         qnaId: this.$route.params.id,
-        userId: 23, // 임시 데이터
+        userId: 0,
       },
       originComments: [], // 서버로부터 받는 댓글 리스트
     };
@@ -141,13 +141,11 @@ export default {
 
     const loginUser = JSON.parse(localStorage.getItem("loginUser"));
 
-    let userId = "";
+    if (loginUser) this.comment.userId = loginUser.userId;
 
-    if (loginUser) userId = loginUser.userId;
-
-    if (userId) {
+    if (this.comment.userId) {
       getIsUserAdmin(
-        userId,
+        this.comment.userId,
         ({ data }) => {
           if (data.flag === "success") {
             this.isAdmin = true;

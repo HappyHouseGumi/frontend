@@ -12,9 +12,9 @@ export default {
   },
   created() {
     if (this.news) {
-      if (JSON.stringify(this.news.title.length) > 20) {
+      if (JSON.stringify(this.news.title.length) > 30) {
         // eslint-disable-next-line
-        this.news.title = this.news.title.substr(0, 18) + "...";
+        this.news.title = this.news.title.substr(0, 28) + "...";
       }
     }
   },
