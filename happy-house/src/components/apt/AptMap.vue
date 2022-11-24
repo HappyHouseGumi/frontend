@@ -81,6 +81,11 @@ export default {
         code: "",
         favor: false,
         pos: null,
+        com: {
+          cs: [],
+          ce: [],
+          sc: [],
+        },
       },
       toggle: {
         cs: false,
@@ -458,7 +463,7 @@ export default {
 
                   this.circle = new kakao.maps.Circle({
                     center: pos, // 원의 중심좌표 입니다
-                    radius: 1500, // 미터 단위의 원의 반지름입니다
+                    radius: 600, // 미터 단위의 원의 반지름입니다
                     strokeWeight: 5, // 선의 두께입니다
                     strokeColor: "#75B8FA", // 선의 색깔입니다
                     strokeOpacity: 0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
@@ -511,20 +516,24 @@ export default {
       if (this.circle) {
         this.circle.setMap(this.map);
       }
-      this.commakers["sc"].forEach((element) => {
-        element.setMap(this.map);
-      });
-      this.commakers["ce"].forEach((element) => {
-        element.setMap(this.map);
-      });
-      this.commakers["cs"].forEach((element) => {
-        element.setMap(this.map);
-      });
+      if (this.toggle["sc"])
+        this.commakers["sc"].forEach((element) => {
+          element.setMap(this.map);
+        });
+      if (this.toggle["ce"])
+        this.commakers["ce"].forEach((element) => {
+          element.setMap(this.map);
+        });
+      if (this.toggle["cs"])
+        this.commakers["cs"].forEach((element) => {
+          element.setMap(this.map);
+        });
     },
     hideCommarker() {
       if (this.circle) {
         this.circle.setMap(null);
       }
+
       this.commakers["sc"].forEach((element) => {
         element.setMap(null);
       });
@@ -562,6 +571,7 @@ export default {
       this.select_toggle_cnt = 0;
     },
     createCommarker(data, category) {
+      this.clickedMarker.com[category] = data;
       data.documents.forEach((com) => {
         var position = new kakao.maps.LatLng(com.y, com.x);
         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다

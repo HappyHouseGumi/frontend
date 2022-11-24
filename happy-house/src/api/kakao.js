@@ -25,7 +25,7 @@ function getFindLocation(info, success, fail) {
         info.category
       )}&x=${encodeURIComponent(info.lng)}&y=${encodeURIComponent(
         info.lat
-      )}&radius=1500`,
+      )}&radius=600`,
       {
         headers: {
           Authorization: `KakaoAK ${process.env.VUE_APP_KAKAO_REST_API_KEY}`,
