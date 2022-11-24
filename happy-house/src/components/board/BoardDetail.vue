@@ -217,26 +217,23 @@ export default {
       }
     },
     registReply() {
-      if (confirm("댓글을 등록하시겠습니까?")) {
-        this.reply.boardId = this.board.id;
-        this.reply.userId = this.loginId;
-        writeComment(
-          this.reply,
-          ({ data }) => {
-            if (data.flag === "success") {
-              this.reply.content = "";
-              this.$router.go();
-            } else {
-              console.log("댓글 등록 오류: ", data.data[0].msg);
-            }
-          },
-          (error) => {
-            console.log("댓글 등록 오류 : " + error);
+      this.reply.boardId = this.board.id;
+      this.reply.userId = this.loginId;
+
+      writeComment(
+        this.reply,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.reply.content = "";
+            this.$router.go();
+          } else {
+            console.log("댓글 등록 오류: ", data.data[0].msg);
           }
-        );
-      } else {
-        //
-      }
+        },
+        (error) => {
+          console.log("댓글 등록 오류 : " + error);
+        }
+      );
     },
     changData(idx, content) {
       this.comments[idx].content = content.content;
@@ -325,7 +322,7 @@ export default {
 
 .detail-content-wrapper {
   width: 100%;
-  height: 500px;
+  height: 400px;
   padding: 25px 40px;
   color: #4f5a66;
   font-size: 0.9rem;

@@ -177,12 +177,13 @@ hr {
   height: 2px;
   background-color: #e9ecef;
   margin: auto;
+  margin-bottom: 40px;
 }
 .title {
-  font-size: 30px;
+  font-size: 1.8rem;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 50px;
 }
 
 .chart-title {

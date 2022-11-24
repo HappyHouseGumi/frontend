@@ -143,7 +143,7 @@ export default {
   color: #4f5a66;
   font-size: 0.9rem;
   border-bottom: 1px solid #e3e7eb;
-  height: 600px;
+  height: 450px;
   overflow-y: scroll;
 }
 

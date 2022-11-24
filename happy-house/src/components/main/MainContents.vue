@@ -15,7 +15,7 @@
           <MainNewsItem v-for="(news, index) in recentNews" :key="index" :news="news" />
         </div>
       </div>
-      <div class="chart" v-if="isLoginStatus">
+      <div class="chart">
         <span>관심 차트</span>
         <div class="divide-line"></div>
         <router-link :to="{ name: 'chart' }"
@@ -56,7 +56,6 @@ export default {
   data() {
     return {
       recentNotices: [],
-      isLoginStatus: false,
       recentNews: [],
       isNotice: true,
     };
@@ -80,11 +79,6 @@ export default {
   },
   created() {
     this.isNotice = true;
-    const loginUser = localStorage.getItem("loginUser");
-
-    if (loginUser) {
-      this.isLoginStatus = true;
-    } else this.isLoginStatus = false;
 
     getNoticeList(
       {},
