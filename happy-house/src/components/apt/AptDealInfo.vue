@@ -8,7 +8,8 @@
         <button
           v-if="clickedMarker.favor === false"
           style="color: #ffc10a"
-          @click="favorPress">
+          @click="favorPress"
+        >
           <font-awesome-icon icon="fa-regular fa-star" />
         </button>
 
@@ -16,10 +17,10 @@
           <font-awesome-icon icon="fa-solid fa-star" />
         </button>
         <span style="font-size: 15px">학교 : </span>
-        <span style="font-size: 15px; color: #46bd7b" v-if="cs.length > 3"
+        <span style="font-size: 15px; color: #46bd7b" v-if="sc.length > 3"
           >좋음
         </span>
-        <span style="font-size: 15px; color: #ff8c0a" v-else-if="cs.length > 1"
+        <span style="font-size: 15px; color: #ff8c0a" v-else-if="sc.length > 1"
           >보통
         </span>
         <span style="font-size: 15px; color: #cd0000" v-else>나쁨 </span>
@@ -53,7 +54,8 @@
           height: 300px;
           margin-bottom: 30px;
           border-radius: 10px;
-        "></div>
+        "
+      ></div>
       <div style="margin-bottom: 20px">
         <div style="margin-bottom: 10px">
           <span
@@ -82,7 +84,8 @@
       <div class="chart-wrapper" style="margin-bottom: 20px">
         <LineChartGenerator
           :chart-options="chartOptions"
-          :chart-data="chartData" />
+          :chart-data="chartData"
+        />
       </div>
       <table>
         <thead>
@@ -112,16 +115,14 @@
         <button
           :disabled="pageNum >= pageCount - 1"
           @click="nextPage"
-          class="page-btn">
+          class="page-btn"
+        >
           다음
         </button>
       </div>
       <div
-        style="
-          border: 1px solid #f5f5f5;
-          margin-top: 20px;
-          margin-bottom: 20px;
-        "></div>
+        style="border: 1px solid #f5f5f5; margin-top: 20px; margin-bottom: 20px"
+      ></div>
       <span style="font-weight: bold; font-size: 1.1rem">지역 관련 게시글</span>
       <table style="margin-top: 20px">
         <thead style="background: #008c8c">
@@ -134,7 +135,8 @@
           <tr
             v-for="(board, index) in boards"
             :key="index"
-            @click="(el) => showModal(el, board)">
+            @click="(el) => showModal(el, board)"
+          >
             <td>
               {{ board.title }}
             </td>
@@ -143,7 +145,8 @@
           <AptBoardModal
             v-if="isShowModal"
             @close="isShowModal = false"
-            :modalInfo="modalInfo" />
+            :modalInfo="modalInfo"
+          />
         </tbody>
       </table>
     </div>
@@ -250,9 +253,9 @@ export default {
       var roadviewContainer = document.getElementById("roadview");
       var roadview = new window.kakao.maps.Roadview(roadviewContainer);
       var roadviewClient = new window.kakao.maps.RoadviewClient();
-      this.sc = this.clickedMarker.com["sc"];
-      this.ce = this.clickedMarker.com["ce"];
-      this.cs = this.clickedMarker.com["cs"];
+      this.sc = this.clickedMarker.com["sc"].documents;
+      this.ce = this.clickedMarker.com["ce"].documents;
+      this.cs = this.clickedMarker.com["cs"].documents;
       roadviewClient.getNearestPanoId(position, 50, function (panoId) {
         if (panoId) roadview.setPanoId(panoId, position);
         else {
