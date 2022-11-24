@@ -68,7 +68,6 @@ export default {
       ({ data }) => {
         if (data.flag === "success") {
           this.board = data.data[0];
-          // console.log(data.data[0]);
           this.origin.title = this.board.title;
           this.origin.content = this.board.content;
         } else {
@@ -92,24 +91,20 @@ export default {
         this.sendingData.content = this.board.content;
       }
 
-      if (confirm("정말 수정하시겠습니까?")) {
-        modifyBoard(
-          this.board.id,
-          this.sendingData,
-          ({ data }) => {
-            if (data.flag === "success") {
-              this.moveDetailBoard();
-            } else {
-              console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
-            }
-          },
-          (error) => {
-            console.log("Board 게시글 삭제 오류 : " + error);
+      modifyBoard(
+        this.board.id,
+        this.sendingData,
+        ({ data }) => {
+          if (data.flag === "success") {
+            this.moveDetailBoard();
+          } else {
+            console.log("Board 게시글 삭제 오류: ", data.data[0].msg);
           }
-        );
-      } else {
-        // 수정 취소 시
-      }
+        },
+        (error) => {
+          console.log("Board 게시글 삭제 오류 : " + error);
+        }
+      );
     },
     moveDetailBoard() {
       this.$router.push({ name: "boarddetail", params: { id: this.board.id } });
@@ -123,6 +118,7 @@ table {
   width: 100%;
   table-layout: fixed;
   border-top: 2px solid #222;
+  border-collapse: collapse;
 }
 
 colgroup {
