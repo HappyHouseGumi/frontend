@@ -1,6 +1,6 @@
 <template>
   <div class="line-chart-layout">
-    <LineChartGenerator :chart-options="chartOptions" :chart-data="chartData" />
+    <LineChartGenerator :chart-options="chartOptions" :chart-data="chartData" :width="width" :height="height" />
   </div>
 </template>
 
@@ -27,21 +27,31 @@ export default {
   components: {
     LineChartGenerator,
   },
+  props: {
+    width: {
+      type: Number,
+      default: 1400,
+    },
+    height: {
+      type: Number,
+      default: 700,
+    },
+  },
   data() {
     return {
       cityName: [
+        "서울특별시",
+        "부산광역시",
+        "대구광역시",
+        "인천광역시",
+        "광주광역시",
+        "대전광역시",
+        "울산광역시",
         // "강원도",
         // "경기도",
         // "경상남도",
         // "경상북도",
-        "광주광역시",
-        "대구광역시",
-        "대전광역시",
-        "부산광역시",
-        "서울특별시",
         // "세종특별자치시",
-        "울산광역시",
-        "인천광역시",
         // "전라남도",
         // "전라북도",
         // "제주특별자치도",
@@ -58,11 +68,11 @@ export default {
         plugins: {
           title: {
             display: true,
-            text: "보고 싶은 지역을 선택해주세요.",
+            text: "지역별 데이터, 제외할 지역을 선택해주세요.",
           },
           legend: {
             display: true,
-            position: "left",
+            position: "bottom",
             labels: {
               fontSize: 20,
               fillStyle: "rgba(54, 162, 235, 1)",
@@ -124,7 +134,7 @@ export default {
 <style scoped>
 .line-chart-layout {
   margin: 0px 40px 100px;
-  height: 400px;
-  width: 1000px;
+  height: 700px;
+  width: 1400px;
 }
 </style>

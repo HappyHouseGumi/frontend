@@ -70,13 +70,174 @@ export default {
       cityCode: [11, 26, 27, 28, 29, 30, 31],
       chartData: [
         // Seoul, Busan, Daegu, Incheon, Gwangju, Daejeon, Ulsan
-        { city: ["Seoul"], labels: [], datasets: [{ data: [] }] },
-        { city: ["Busan"], labels: [], datasets: [{ data: [] }] },
-        { city: ["Daegu"], labels: [], datasets: [{ data: [] }] },
-        { city: ["Incheon"], labels: [], datasets: [{ data: [] }] },
-        { city: ["Gwangju"], labels: [], datasets: [{ data: [] }] },
-        { city: ["Daejeon"], labels: [], datasets: [{ data: [] }] },
-        { city: ["Ulsan"], labels: [], datasets: [{ data: [] }] },
+        {
+          city: ["Seoul"],
+          labels: [],
+          datasets: [
+            {
+              data: [],
+              backgroundColor: [
+                "rgba(115, 38, 52, 0.2)",
+                "rgba(140, 38, 65, 0.2)",
+                "rgba(250, 172, 196, 0.2)",
+                "rgba(217, 180, 190, 0.2)",
+                "rgba(242, 206, 216, 0.2)",
+              ],
+              borderColor: [
+                "rgba(115, 38, 52, 1)",
+                "rgba(140, 38, 65, 1)",
+                "rgba(250, 172, 196, 1)",
+                "rgba(217, 180, 190, 1)",
+                "rgba(242, 206, 216, 1)",
+              ],
+              borderWidth: 1.5,
+            },
+          ],
+        },
+        {
+          city: ["Busan"],
+          labels: [],
+          datasets: [
+            {
+              data: [],
+              backgroundColor: [
+                "rgba(64, 18, 14, 0.2)",
+                "rgba(115, 44, 29, 0.2)",
+                "rgba(115, 44, 29, 0.2)",
+                "rgba(166, 104, 81, 0.2)",
+                "rgba(166, 141, 96, 0.2)",
+              ],
+              borderColor: [
+                "rgba(64, 18, 14, 1)",
+                "rgba(115, 44, 29, 1)",
+                "rgba(115, 44, 29, 1)",
+                "rgba(166, 104, 81, 1)",
+                "rgba(166, 141, 96, 1)",
+              ],
+              borderWidth: 1.5,
+            },
+          ],
+        },
+        {
+          city: ["Daegu"],
+          labels: [],
+          datasets: [
+            {
+              data: [],
+              backgroundColor: [
+                "rgba(4, 41, 64, 0.2)",
+                "rgba(0, 92, 83, 0.2)",
+                "rgba(159, 193, 49, 0.2)",
+                "rgba(219, 242, 39, 0.2)",
+                "rgba(214, 213, 142, 0.2)",
+              ],
+              borderColor: [
+                "rgba(4, 41, 64, 1)",
+                "rgba(0, 92, 83, 1)",
+                "rgba(159, 193, 49, 1)",
+                "rgba(219, 242, 39, 1)",
+                "rgba(214, 213, 142, 1)",
+              ],
+              borderWidth: 1.5,
+            },
+          ],
+        },
+        {
+          city: ["Incheon"],
+          labels: [],
+          datasets: [
+            {
+              data: [],
+              backgroundColor: [
+                "rgba(5, 17, 242, 0.2)",
+                "rgba(73, 81, 242, 0.2)",
+                "rgba(153, 157, 242, 0.2)",
+                "rgba(182, 185, 242, 0.2)",
+                "rgba(206, 194, 249, 0.2)",
+              ],
+              borderColor: [
+                "rgba(5, 17, 242, 1)",
+                "rgba(73, 81, 242, 1)",
+                "rgba(153, 157, 242, 1)",
+                "rgba(182, 185, 242, 1)",
+                "rgba(206, 194, 249, 1)",
+              ],
+              borderWidth: 1.5,
+            },
+          ],
+        },
+        {
+          city: ["Gwangju"],
+          labels: [],
+          datasets: [
+            {
+              data: [],
+              backgroundColor: [
+                "rgba(218, 165, 32, 0.2)",
+                "rgba(220, 182, 30, 0.2)",
+                "rgba(255, 215, 0, 0.2)",
+                "rgba(255, 222, 92, 0.2)",
+                "rgba(242, 216, 114, 0.2)",
+              ],
+              borderColor: [
+                "rgba(218, 165, 32, 1)",
+                "rgba(220, 182, 30, 1)",
+                "rgba(255, 215, 0, 1)",
+                "rgba(255, 222, 92, 1)",
+                "rgba(242, 216, 114, 1)",
+              ],
+              borderWidth: 1.5,
+            },
+          ],
+        },
+        {
+          city: ["Daejeon"],
+          labels: [],
+          datasets: [
+            {
+              data: [],
+              backgroundColor: [
+                "rgba(77, 82, 92, 0.2)",
+                "rgba(141, 149, 168, 0.2)",
+                "rgba(163, 172, 194, 0.2)",
+                "rgba(183, 194, 219, 0.2)",
+                "rgba(195, 206, 232, 0.2)",
+              ],
+              borderColor: [
+                "rgba(77, 82, 92, 1)",
+                "rgba(141, 149, 168, 1)",
+                "rgba(163, 172, 194, 1)",
+                "rgba(183, 194, 219, 1)",
+                "rgba(195, 206, 232, 1)",
+              ],
+              borderWidth: 1.5,
+            },
+          ],
+        },
+        {
+          city: ["Ulsan"],
+          labels: [],
+          datasets: [
+            {
+              data: [],
+              backgroundColor: [
+                "rgba(230, 105, 78, 0.2)",
+                "rgba(240, 132, 81, 0.2)",
+                "rgba(217, 146, 85, 0.2)",
+                "rgba(240, 177, 81, 0.2)",
+                "rgba(230, 185, 78, 0.2)",
+              ],
+              borderColor: [
+                "rgba(230, 105, 78, 1)",
+                "rgba(240, 132, 81, 1)",
+                "rgba(217, 146, 85, 1)",
+                "rgba(240, 177, 81, 1)",
+                "rgba(230, 185, 78, 1)",
+              ],
+              borderWidth: 1.5,
+            },
+          ],
+        },
       ],
       chartOptions: {
         responsive: true,
@@ -116,22 +277,6 @@ export default {
             beginAtZero: true,
           },
         },
-
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255,99,132,1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-        ],
-        borderWidth: 1.5,
       },
     };
   },

@@ -87,6 +87,10 @@ export default {
         ({ data }) => {
           if (data.flag === "success") {
             this.$router.go();
+          } else {
+            // console.log("중복된 데이터 추가 오류");
+            this.selectedSido = 0;
+            this.selectedGugun = 0;
           }
         },
         (error) => {
