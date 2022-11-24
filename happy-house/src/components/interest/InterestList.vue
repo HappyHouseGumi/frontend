@@ -11,7 +11,7 @@
       <tbody>
         <tr v-for="(interest, index) in interests" :key="index">
           <td>
-            <b>{{ index + 1 }}</b>
+            <b>{{ interestsLength - index }}</b>
           </td>
           <td>
             <a @click="(dongcode) => moveInterestLocationMap(interest.dongCode)"
@@ -19,9 +19,7 @@
             >
           </td>
           <td>
-            <button
-              class="delete-interest-btn"
-              @click="(dongcode) => deleteInterestFunc(interest.dongCode)">
+            <button class="delete-interest-btn" @click="(dongcode) => deleteInterestFunc(interest.dongCode)">
               <font-awesome-icon icon="fa-solid fa-ban" class="fa-lg" />
             </button>
           </td>
@@ -42,9 +40,12 @@ export default {
   data() {
     return {
       interests: [],
+      interestsLength: 0,
     };
   },
-
+  updated() {
+    if (this.interests) this.interestsLength = this.interests.length;
+  },
   created() {
     const userId = JSON.parse(localStorage.getItem("loginUser")).userId;
 
@@ -91,9 +92,7 @@ export default {
     },
 
     moveInterestLocationMap(dongcode) {
-      const [filtered] = this.interests.filter(
-        (interest) => interest.dongCode === dongcode
-      );
+      const [filtered] = this.interests.filter((interest) => interest.dongCode === dongcode);
       const x = filtered.lat;
       const y = filtered.lng;
       let fullname = filtered.sidoName + " " + filtered.gugunName;

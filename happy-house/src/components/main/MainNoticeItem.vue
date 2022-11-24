@@ -11,6 +11,14 @@ export default {
   props: {
     notice: {},
   },
+  created() {
+    if (this.notice) {
+      if (JSON.stringify(this.notice.title.length) > 20) {
+        // eslint-disable-next-line
+        this.notice.title = this.notice.title.substr(0, 18) + "...";
+      }
+    }
+  },
 };
 </script>
 

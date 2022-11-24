@@ -2,7 +2,7 @@
   <table>
     <thead>
       <tr>
-        <th>글번호</th>
+        <th>No.</th>
         <th>제목</th>
         <th>작성자</th>
         <th>등록일</th>
@@ -17,7 +17,7 @@
         @click="(id) => moveNoticeDetail(notice.id)"
       >
         <td>
-          <b>{{ index + 1 }}</b>
+          <b>{{ noticesLength - index }}</b>
         </td>
         <td>
           {{ notice.title }}
@@ -34,6 +34,14 @@ export default {
   name: "NoticeListItem",
   props: {
     notices: [],
+  },
+  data() {
+    return {
+      noticesLength: 0,
+    };
+  },
+  updated() {
+    if (this.notices) this.noticesLength = this.notices.length;
   },
   methods: {
     moveNoticeDetail(id) {

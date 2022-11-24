@@ -2,7 +2,7 @@
   <table>
     <thead>
       <tr>
-        <th>글번호</th>
+        <th>No.</th>
         <th>지역</th>
         <th>제목</th>
         <th>작성자</th>
@@ -18,7 +18,7 @@
         @click="(id) => moveBoardDetail(board.id)"
       >
         <td>
-          <b>{{ index + 1 }}</b>
+          <b>{{ boardsLength - index }}</b>
         </td>
         <td>{{ board.subject }}</td>
         <td>{{ board.title }}</td>
@@ -34,6 +34,14 @@ export default {
   name: "BoardListItem",
   props: {
     boards: [],
+  },
+  data() {
+    return {
+      boardsLength: 0,
+    };
+  },
+  updated() {
+    if (this.boards) this.boardsLength = this.boards.length;
   },
   methods: {
     moveBoardDetail(id) {
