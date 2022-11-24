@@ -2,7 +2,7 @@
   <table>
     <thead>
       <tr>
-        <th>글번호</th>
+        <th>No.</th>
         <th>지역</th>
         <th>제목</th>
         <th>작성자</th>
@@ -17,7 +17,7 @@
         @click="(id) => moveBoardDetail(like.boardId)"
       >
         <td>
-          <b>{{ index + 1 }}</b>
+          <b>{{ likesLength - index }}</b>
         </td>
         <td>{{ like.subject }}</td>
         <td>{{ like.title }}</td>
@@ -32,6 +32,14 @@ export default {
   name: "LikeListItem",
   props: {
     likes: [],
+  },
+  data() {
+    return {
+      likesLength: 0,
+    };
+  },
+  updated() {
+    if (this.likes) this.likesLength = this.likes.length;
   },
   methods: {
     moveBoardDetail(id) {

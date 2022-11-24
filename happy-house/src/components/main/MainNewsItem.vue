@@ -1,6 +1,6 @@
 <template>
   <div class="notice-item-wrapper">
-    <a :href="news.href">{{news.title}}</a>
+    <a :href="news.href">{{ news.title }}</a>
   </div>
 </template>
 
@@ -9,6 +9,14 @@ export default {
   name: "MainNewsItem",
   props: {
     news: {},
+  },
+  created() {
+    if (this.news) {
+      if (JSON.stringify(this.news.title.length) > 20) {
+        // eslint-disable-next-line
+        this.news.title = this.news.title.substr(0, 18) + "...";
+      }
+    }
   },
 };
 </script>
