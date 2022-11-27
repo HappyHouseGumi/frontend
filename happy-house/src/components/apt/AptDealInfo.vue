@@ -137,7 +137,7 @@ export default {
       roadview: null,
       roadviewContainer: null,
       roadviewClient: null,
-      favor: null,
+      favor: false,
       boards: null,
       searchName: "",
       pageSize: 10,
@@ -206,8 +206,10 @@ export default {
       if (!this.cs) {
         this.cs = [];
       }
-      if (this.clickedMarker.favor) {
+      if (this.clickedMarker.favor == true) {
         this.favor = this.clickedMarker.favor;
+      } else {
+        this.favor = false;
       }
       roadviewClient.getNearestPanoId(position, 50, function (panoId) {
         if (panoId) roadview.setPanoId(panoId, position);
@@ -295,6 +297,7 @@ export default {
     },
     favorPress() {
       this.$emit("favorPress", this.clickedMarker.code, this.clickedMarker.favor);
+      this.favor = !this.favor;
     },
   },
 };
